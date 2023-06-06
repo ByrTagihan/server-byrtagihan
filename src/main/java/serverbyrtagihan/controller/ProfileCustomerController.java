@@ -14,7 +14,7 @@ import serverbyrtagihan.response.ResponseHelper;
 import java.util.List;
 
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/customer")
 @CrossOrigin(origins = " http://127.0.0.1:5173")
 public class ProfileCustomerController {
     @Autowired
@@ -22,7 +22,7 @@ public class ProfileCustomerController {
     @Autowired
     private ModelMapper modelMapper;
 
-    @PostMapping(consumes = "multipart/form-data")
+    @PostMapping(path = "/profile",consumes = "multipart/form-data")
     public CommonResponse<Profile> add(ProfileDTO profileDTO, @RequestPart("file") MultipartFile multipartFile) {
         return ResponseHelper.ok(profileService.add(modelMapper.map(profileDTO, Profile.class), multipartFile));
     }
