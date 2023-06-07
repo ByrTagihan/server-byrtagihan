@@ -1,4 +1,4 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.service;
 
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.model.Profile;
+import serverbyrtagihan.repository.ProfileRepository;
 
 import java.io.File;
 import java.io.FileInputStream;

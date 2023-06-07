@@ -1,4 +1,4 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.model;
 
 import serverbyrtagihan.auditing.DateConfig;
 

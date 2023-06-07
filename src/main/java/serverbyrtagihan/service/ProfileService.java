@@ -1,6 +1,7 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.model.Profile;
 
 import java.util.List;
 import java.util.Map;
