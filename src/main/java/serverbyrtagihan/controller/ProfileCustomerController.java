@@ -4,10 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.customerProfile.PictureDTO;
-import serverbyrtagihan.customerProfile.Profile;
-import serverbyrtagihan.customerProfile.ProfileDTO;
-import serverbyrtagihan.customerProfile.ProfileService;
+import serverbyrtagihan.dto.PictureDTO;
+import serverbyrtagihan.Modal.Profile;
+import serverbyrtagihan.dto.ProfileDTO;
+import serverbyrtagihan.Service.ProfileService;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
 

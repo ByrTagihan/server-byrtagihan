@@ -1,10 +1,12 @@
 package serverbyrtagihan.Modal;
 
+import serverbyrtagihan.Auditing.DateConfig;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "table_byr_tagihan")
-public class ByrTagihan {
+public class ByrTagihan extends DateConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

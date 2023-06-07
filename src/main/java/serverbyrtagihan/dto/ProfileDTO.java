@@ -1,4 +1,4 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.dto;
 
 import javax.persistence.Lob;
 

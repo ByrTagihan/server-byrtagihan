@@ -1,8 +1,8 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.Repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.customerProfile.CustomerOrganizationModel;
+import serverbyrtagihan.Modal.CustomerOrganizationModel;
 
 
 @Repository

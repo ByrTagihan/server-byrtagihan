@@ -2,13 +2,11 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.ByrTagihan;
-import serverbyrtagihan.Modal.Login;
-import serverbyrtagihan.Modal.Password;
-import serverbyrtagihan.Modal.Update;
+import serverbyrtagihan.dto.Login;
+import serverbyrtagihan.dto.Password;
+import serverbyrtagihan.dto.Update;
 import serverbyrtagihan.Service.ByrTagihanService;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;

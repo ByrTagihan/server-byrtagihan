@@ -1,9 +1,7 @@
 package serverbyrtagihan.Service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.ByrTagihan;
-import serverbyrtagihan.Modal.Login;
+import serverbyrtagihan.dto.Login;
 
 import java.util.List;
 import java.util.Map;

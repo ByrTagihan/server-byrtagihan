@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.dto;
 
 public class Password {
 

@@ -1,13 +1,7 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.dto;
 
+public class CustomerOrganizationDTO {
 
-import javax.persistence.*;
-
-@Entity
-@Table(name = "customerOrganization")
-public class CustomerOrganizationModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
@@ -21,20 +15,20 @@ public class CustomerOrganizationModel {
     private String bank_account_name;
     private String bank_name;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public String getHp() {
         return hp;
     }
 
     public void setHp(String hp) {
         this.hp = hp;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {

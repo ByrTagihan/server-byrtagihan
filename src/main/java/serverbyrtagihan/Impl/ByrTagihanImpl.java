@@ -10,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.Jwt.JwtProvider;
 import serverbyrtagihan.Modal.ByrTagihan;
-import serverbyrtagihan.Modal.Login;
+import serverbyrtagihan.dto.Login;
 import serverbyrtagihan.Repository.ByrTagihanRepository;
 import serverbyrtagihan.Service.ByrTagihanService;
 import serverbyrtagihan.exception.InternalErrorException;

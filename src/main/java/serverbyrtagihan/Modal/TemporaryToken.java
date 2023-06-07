@@ -1,11 +1,13 @@
 package serverbyrtagihan.Modal;
 
+import serverbyrtagihan.Auditing.DateConfig;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "temporary_token")
-public class TemporaryToken {
+public class TemporaryToken extends DateConfig {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

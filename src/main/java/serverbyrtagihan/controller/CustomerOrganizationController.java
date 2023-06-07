@@ -8,9 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import serverbyrtagihan.customerProfile.CustomerOrganizationDTO;
-import serverbyrtagihan.customerProfile.CustomerOrganizationModel;
-import serverbyrtagihan.customerProfile.JwtCustomerOrganizationDetailsService;
+import serverbyrtagihan.dto.CustomerOrganizationDTO;
+import serverbyrtagihan.Modal.CustomerOrganizationModel;
+import serverbyrtagihan.Impl.JwtCustomerOrganizationDetailsService;
 import serverbyrtagihan.util.CustomErrorType;
 
 

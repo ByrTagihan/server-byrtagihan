@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.dto;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

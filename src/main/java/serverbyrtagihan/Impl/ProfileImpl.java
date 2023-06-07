@@ -1,4 +1,4 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.Impl;
 
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -9,6 +9,9 @@ import com.google.cloud.storage.StorageOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.Modal.Profile;
+import serverbyrtagihan.Repository.ProfileRepository;
+import serverbyrtagihan.Service.ProfileService;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 

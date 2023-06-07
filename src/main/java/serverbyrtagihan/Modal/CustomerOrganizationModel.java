@@ -1,7 +1,15 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.Modal;
 
-public class CustomerOrganizationDTO {
 
+import serverbyrtagihan.Auditing.DateConfig;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "customerOrganization")
+public class CustomerOrganizationModel extends DateConfig {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
@@ -15,20 +23,20 @@ public class CustomerOrganizationDTO {
     private String bank_account_name;
     private String bank_name;
 
-    public String getHp() {
-        return hp;
-    }
-
-    public void setHp(String hp) {
-        this.hp = hp;
-    }
-
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getHp() {
+        return hp;
+    }
+
+    public void setHp(String hp) {
+        this.hp = hp;
     }
 
     public String getName() {

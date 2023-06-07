@@ -1,8 +1,11 @@
-package serverbyrtagihan.customerProfile;
+package serverbyrtagihan.Impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.Modal.CustomerOrganizationModel;
+import serverbyrtagihan.Repository.CustomerOrganizationRepository;
+import serverbyrtagihan.dto.CustomerOrganizationDTO;
 
 
 import java.util.ArrayList;
