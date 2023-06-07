@@ -42,7 +42,7 @@ public class ProfileCustomerController {
         return ResponseHelper.ok(profileService.putPicture(modelMapper.map(profile, Profile.class), multipartFile, id));
     }
     @PutMapping(path = "/customer/profile/{id}")
-    public CommonResponse<Profile> put(@PathVariable("id") Long id , ProfileDTO profile){
+    public CommonResponse<Profile> put(@PathVariable("id") Long id , @RequestBody ProfileDTO profile){
         return ResponseHelper.ok(profileService.put(modelMapper.map(profile, Profile.class), id));
     }
     @DeleteMapping(path = "/customer/profile/{id}")

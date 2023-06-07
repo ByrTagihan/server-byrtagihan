@@ -1,10 +1,12 @@
 package serverbyrtagihan.customerProfile;
 
+import serverbyrtagihan.auditing.DateConfig;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "profile_customer")
-public class Profile {
+public class Profile extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
