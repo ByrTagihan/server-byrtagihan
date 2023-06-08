@@ -2,6 +2,7 @@ package serverbyrtagihan.service;
 
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.auth.oauth2.JwtProvider;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.model.Profile;
-import serverbyrtagihan.repository.ProfileRepository;
+import serverbyrtagihan.model.Customer;
+import serverbyrtagihan.repository.CustomerRepository;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,7 +32,8 @@ public class ProfileImpl implements ProfileService {
 
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private CustomerRepository customerRepository;
+
 
     private String uploadFile(File file, String fileName) throws IOException {
         BlobId blobId = BlobId.of("byrtagihan-ca34f.appspot.com", fileName);
@@ -70,48 +72,48 @@ public class ProfileImpl implements ProfileService {
 
 
     @Override
-    public Profile add(Profile profile, MultipartFile multipartFile) {
+    public Customer add(Customer customer, MultipartFile multipartFile) {
         String picture = imageConverter(multipartFile);
-        Profile profile1 = new Profile();
-        profile1.setPicture(picture);
-        profile1.setEmail(profile.getEmail());
-        profile1.setName(profile.getName());
-        profile1.setAddress(profile.getAddress());
-        profile1.setHp(profile.getHp());
-        return profileRepository.save(profile1);
+        Customer customer1 = new Customer();
+        customer1.setPicture(picture);
+        customer1.setEmail(customer.getEmail());
+        customer1.setName(customer.getName());
+        customer1.setAddress(customer.getAddress());
+        customer1.setHp(customer.getHp());
+        return customerRepository.save(customer1);
     }
 
     @Override
-    public Profile getById(Long id) {
-        return profileRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public Customer getById(Long id) {
+        return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
     @Override
-    public List<Profile> getAll() {
-        return profileRepository.findAll();
+    public List<Customer> getAll() {
+        return customerRepository.findAll();
     }
 
     @Override
-    public Profile put(Profile profile, Long id) {
-        Profile update = profileRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        update.setName(profile.getName());
-        update.setAddress(profile.getAddress());
-        update.setHp(profile.getHp());
-        return profileRepository.save(update);
+    public Customer put(Customer customer, Long id) {
+        Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        update.setName(customer.getName());
+        update.setAddress(customer.getAddress());
+        update.setHp(customer.getHp());
+        return customerRepository.save(update);
     }
 
     @Override
-    public Profile putPicture(Profile profile, MultipartFile multipartFile, Long id) {
-        Profile update = profileRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public Customer putPicture(Customer customer, MultipartFile multipartFile, Long id) {
+        Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         String picture = imageConverter(multipartFile);
         update.setPicture(picture);
-        return profileRepository.save(update);
+        return customerRepository.save(update);
     }
 
     @Override
     public Map<String, Boolean> delete(Long id) {
         try {
-            profileRepository.deleteById(id);
+            customerRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();
             res.put("Deleted" , Boolean.TRUE);
             return res;
