@@ -11,14 +11,14 @@ import java.util.Objects;
 public class CustomerDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String email;
+    private String username;
 
     @JsonIgnore
     private String password;
 
     public CustomerDetailsImpl(Long id, String email, String password) {
         this.id = id;
-        this.email = email;
+        this.username = email;
         this.password = password;
     }
 
@@ -35,7 +35,7 @@ public class CustomerDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override

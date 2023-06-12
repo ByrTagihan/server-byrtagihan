@@ -2,19 +2,25 @@ package serverbyrtagihan.service;
 
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
-import com.google.auth.oauth2.JwtProvider;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.model.Customer;
 import serverbyrtagihan.repository.CustomerRepository;
+import serverbyrtagihan.security.jwt.JwtUtils;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,6 +31,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class ProfileImpl implements ProfileService {
@@ -33,6 +40,24 @@ public class ProfileImpl implements ProfileService {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
+    PasswordEncoder encoder;
+
+    private String newPassword() {
+        Random random = new Random();
+        String result = "";
+        String character = "0123456789qwertyuiopasdfghjklzxcvbnm";
+        for (int i = 0; i < 9; i++) {
+            result += character.charAt(random.nextInt(character.length()));
+        }
+        return result;
+    }
 
 
     private String uploadFile(File file, String fileName) throws IOException {
@@ -70,22 +95,37 @@ public class ProfileImpl implements ProfileService {
         return file;
     }
 
-
     @Override
-    public Customer add(Customer customer, MultipartFile multipartFile) {
-        String picture = imageConverter(multipartFile);
-        Customer customer1 = new Customer();
-        customer1.setPicture(picture);
-        customer1.setEmail(customer.getEmail());
-        customer1.setName(customer.getName());
-        customer1.setAddress(customer.getAddress());
-        customer1.setHp(customer.getHp());
-        return customerRepository.save(customer1);
+    public void sendEmail(String to) throws MessagingException {
+        String newPassword = newPassword();
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        if (customerRepository.findByEmail(to).isPresent()) {
+            Customer update = customerRepository.findByEmail(to).get();
+            update.setPassword(encoder.encode(newPassword));
+            customerRepository.save(update);
+            helper.setTo(to);
+            helper.setSubject("Password Baru");
+            String messageText = "Terima kasih telah menggunakan layanan Bayar Tagihan.\n" +
+                    "Harap gunakan password ini untuk login akun Anda.\n" +
+                    "Jangan berikan password ini kepada siapa pun, termasuk pihak Bayar Tagihan.\n" +
+                    "Jika Anda tidak meminta password ini, abaikan pesan ini.\n" +
+                    "Berikut adalah password baru Anda: " + newPassword + "\nTerima kasih, \n byrtagihan.com";
+            helper.setText(messageText);
+            javaMailSender.send(message);
+        } else {
+
+
+
+            throw new NotFoundException("Email not found");
+        }
     }
 
     @Override
-    public Customer getById(Long id) {
-        return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public Customer getProfileCustomer(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        return customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
     @Override
@@ -94,17 +134,29 @@ public class ProfileImpl implements ProfileService {
     }
 
     @Override
-    public Customer put(Customer customer, Long id) {
-        Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public Customer put(Customer customer, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setName(customer.getName());
         update.setAddress(customer.getAddress());
         update.setHp(customer.getHp());
         return customerRepository.save(update);
     }
+    @Override
+    public Customer putPassword(Customer customer, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        update.setPassword(encoder.encode(customer.getPassword()));
+        return customerRepository.save(update);
+    }
 
     @Override
-    public Customer putPicture(Customer customer, MultipartFile multipartFile, Long id) {
-        Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public Customer putPicture(Customer customer, MultipartFile multipartFile, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
         String picture = imageConverter(multipartFile);
         update.setPicture(picture);
         return customerRepository.save(update);
@@ -115,7 +167,7 @@ public class ProfileImpl implements ProfileService {
         try {
             customerRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();
-            res.put("Deleted" , Boolean.TRUE);
+            res.put("Deleted", Boolean.TRUE);
             return res;
         } catch (Exception e) {
             return null;

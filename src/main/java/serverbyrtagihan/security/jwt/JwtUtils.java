@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import serverbyrtagihan.service.CustomerDetailsImpl;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 
 import java.util.Date;
 
@@ -18,6 +21,7 @@ public class JwtUtils {
     private String jwtSecret;
     @Value("${bezkoder.app.jwtExpirationMs}")
     private int jwtExpirationMs;
+    private static final String SECRET_KEY = "codingshooltelogosari";
 
     public String generateJwtToken(Authentication authentication) {
         Date now = new Date();
@@ -25,13 +29,18 @@ public class JwtUtils {
         CustomerDetailsImpl adminPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .claim("id" , adminPrincipal.getId())
-                .claim("email" , adminPrincipal.getUsername())
-                .setIssuedAt(new Date())
+                .setSubject((adminPrincipal.getUsername()))
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+    public static Claims decodeJwt(String jwtToken) {
+        Jws<Claims> jwsClaims = Jwts.parser()
+                .setSigningKey(SECRET_KEY)
+                .parseClaimsJws(jwtToken);
 
+        return jwsClaims.getBody();
+    }
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }

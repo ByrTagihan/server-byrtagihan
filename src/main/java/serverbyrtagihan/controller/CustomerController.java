@@ -1,5 +1,8 @@
 package serverbyrtagihan.controller;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.model.Customer;
 import serverbyrtagihan.dto.ProfileDTO;
@@ -19,8 +23,9 @@ import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.CustomerDetailsImpl;
 import serverbyrtagihan.service.ProfileService;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -44,25 +49,28 @@ public class CustomerController {
     JwtUtils jwtUtils;
 
 
-    @GetMapping(path = "/customer/profile/{id}")
-    public CommonResponse<Customer> getByID(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(profileService.getById(id));
+    @GetMapping(path = "/customer/profile")
+    public CommonResponse<Customer> getByID(HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(profileService.getProfileCustomer(jwtToken));
     }
 
-    @GetMapping(path ="/customer/profile")
-    public CommonResponse<List<Customer>> getAll() {
-        return ResponseHelper.ok(profileService.getAll());
-    }
-
-    @PutMapping(path = "/customer/picture/{id}", consumes = "multipart/form-data")
-    public CommonResponse<Customer> putPicture(@PathVariable("id") Long id, PictureDTO profile, @RequestPart("file") MultipartFile multipartFile) {
-        return ResponseHelper.ok(profileService.putPicture(modelMapper.map(profile, Customer.class), multipartFile, id));
+    @PutMapping(path = "/customer/picture", consumes = "multipart/form-data")
+    public CommonResponse<Customer> putPicture(HttpServletRequest request, PictureDTO profile, @RequestPart("file") MultipartFile multipartFile) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(profileService.putPicture(modelMapper.map(profile, Customer.class), multipartFile, jwtToken));
     }
     @PutMapping(path = "/customer/profile")
-    public CommonResponse<Customer> put(Long id , @RequestBody ProfileDTO profile){
-        return ResponseHelper.ok(profileService.put(modelMapper.map(profile, Customer.class), id));
+    public CommonResponse<Customer> put(@RequestBody ProfileDTO profile , HttpServletRequest request){
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(profileService.put(modelMapper.map(profile, Customer.class) , jwtToken));
     }
-    @DeleteMapping(path = "/customer/profile/{id}")
+    @PutMapping(path = "/customer/password")
+    public CommonResponse<Customer> putPassword(@RequestBody PasswordDTO password , HttpServletRequest request){
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(profileService.putPassword(modelMapper.map(password, Customer.class) , jwtToken));
+    }
+    @DeleteMapping(path = "/customer/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(profileService.delete(id));
     }
@@ -81,13 +89,23 @@ public class CustomerController {
                 userDetails.getUsername()
         ));
     }
-
     @PostMapping("/customer/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws FirebaseAuthException {
+        UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest()
+                .setEmail(signUpRequest.getEmail())
+                .setPassword(encoder.encode(signUpRequest.getPassword()))
+                .setDisplayName(signUpRequest.getName());
+
+        UserRecord userRecord = FirebaseAuth.getInstance().createUser(createRequest);
         if (adminRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Kesalahan: Email telah digunakan!"));
+        }
+        String UserEmail = signUpRequest.getEmail().trim();
+        boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
+        if (EmailIsNotValid){
+            return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Email tidak valid"));
         }
         String UserPassword = signUpRequest.getPassword().trim();
         boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
@@ -95,10 +113,18 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Password tidak valid"));
         }
         // Create new user's account
-        Customer admin = new Customer(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),signUpRequest.getName()  , signUpRequest.getAddress() , signUpRequest.getHp() , signUpRequest.isActive());
+        Customer admin = new Customer(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()),signUpRequest.getName()  , signUpRequest.getHp() , signUpRequest.getAddress() , signUpRequest.isActive());
         adminRepository.save(admin);
-        return ResponseEntity.ok(new MessageResponse(" Register telah berhasil!"));
+        return ResponseEntity.ok(new MessageResponse(" Register telah berhasil!  "  +" UID pengguna:  " + userRecord));
     }
 
-
+    @PostMapping("/customer/forgot_password")
+    public String sendEmail(@RequestBody EmailRequest emailRequest) {
+        try {
+            profileService.sendEmail(emailRequest.getEmail());
+            return "Email sent successfully";
+        } catch (MessagingException e) {
+            return "Failed to send email: " + e.getMessage();
+        }
+    }
 }
