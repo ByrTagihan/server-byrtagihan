@@ -13,6 +13,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> notFound(NotFoundException notFoundException) {
         return ResponseHelper.error(notFoundException.getMessage(), HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<?> BadRequest(BadRequestException badRequestException) {
+        return ResponseHelper.error(badRequestException.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(InternalErrorException.class)
     public ResponseEntity<?> InternalError(InternalErrorException internalErrorException) {

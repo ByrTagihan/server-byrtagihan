@@ -9,7 +9,6 @@ public class ResponseHelper {
         CommonResponse<T> response = new CommonResponse<T>();
         response.setMessage("success");
         response.setStatus("200 OK");
-        response.setCode(200);
         response.setData(data);
         return response;
     }

@@ -2,6 +2,7 @@ package serverbyrtagihan.service;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.model.Customer;
 
 import javax.mail.MessagingException;
@@ -18,9 +19,11 @@ public interface ProfileService {
 
     Customer put(Customer customer , String jwtToken);
 
-    Customer putPassword(Customer customer, String jwtToken);
+    Customer putPassword(PasswordDTO passwordDTO, String jwtToken);
 
     Customer putPicture(Customer customer, MultipartFile multipartFile, String jwtToken);
+
+    Customer putPass(Customer customer, Long id);
 
     Map<String, Boolean> delete(Long id);
 }
