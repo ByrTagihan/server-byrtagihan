@@ -1,14 +1,23 @@
-
+<<<<<<<< HEAD:src/main/java/serverbyrtagihan/model/Customer.java
 package serverbyrtagihan.model;
 
 import serverbyrtagihan.auditing.DateConfig;
+========
+package serverbyrtagihan.Modal;
 
+import serverbyrtagihan.Auditing.DateConfig;
+>>>>>>>> main:src/main/java/serverbyrtagihan/Modal/Profile.java
 
 import javax.persistence.*;
 
 @Entity
+<<<<<<<< HEAD:src/main/java/serverbyrtagihan/model/Customer.java
 @Table(name = "customer")
 public class Customer extends DateConfig  {
+========
+@Table(name = "profile_customer")
+public class Profile extends DateConfig {
+>>>>>>>> main:src/main/java/serverbyrtagihan/Modal/Profile.java
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

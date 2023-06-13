@@ -36,7 +36,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class ProfileImpl implements ProfileService {
+public class ProfileImpl implements CustomerService {
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/byrtagihan-ca34f.appspot.com/o/%s?alt=media";
 
 

@@ -23,7 +23,7 @@ import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.CustomerDetailsImpl;
-import serverbyrtagihan.service.ProfileService;
+import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -35,7 +35,7 @@ import javax.validation.Valid;
 @CrossOrigin(origins = " http://127.0.0.1:5173")
 public class CustomerController {
     @Autowired
-    private ProfileService profileService;
+    private CustomerService customerService;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -57,35 +57,35 @@ public class CustomerController {
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> getByID(HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(profileService.getProfileCustomer(jwtToken));
+        return ResponseHelper.ok(customerService.getProfileCustomer(jwtToken));
     }
 
     @PutMapping(path = "/customer/picture", consumes = "multipart/form-data")
     public CommonResponse<Customer> putPicture(HttpServletRequest request, PictureDTO profile, @RequestPart("file") MultipartFile multipartFile) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(profileService.putPicture(modelMapper.map(profile, Customer.class), multipartFile, jwtToken));
+        return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class), multipartFile, jwtToken));
     }
 
     @PutMapping(path = "/customer/profile")
     public CommonResponse<Customer> put(@RequestBody ProfileDTO profile, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(profileService.put(modelMapper.map(profile, Customer.class), jwtToken));
+        return ResponseHelper.ok(customerService.put(modelMapper.map(profile, Customer.class), jwtToken));
     }
 
     @PutMapping(path = "/customer/password")
     public CommonResponse<Customer> putPassword(@RequestBody PasswordDTO password, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(profileService.putPassword(password, jwtToken));
+        return ResponseHelper.ok(customerService.putPassword(password, jwtToken));
     }
 
     @PutMapping(path = "/customer/password/{id}")
     public CommonResponse<Customer> putPass(@RequestBody Customer password, @PathVariable("id") Long id) {
-        return ResponseHelper.ok(profileService.putPass(password, id));
+        return ResponseHelper.ok(customerService.putPass(password, id));
     }
 
     @DeleteMapping(path = "/customer/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(profileService.delete(id));
+        return ResponseHelper.ok(customerService.delete(id));
     }
 
 
@@ -469,7 +469,7 @@ public class CustomerController {
     @PostMapping("/customer/forgot_password")
     public String sendEmail(@RequestBody EmailRequest emailRequest) {
         try {
-            profileService.sendEmail(emailRequest.getEmail());
+            customerService.sendEmail(emailRequest.getEmail());
             return "Email sent successfully";
         } catch (MessagingException e) {
             return "Failed to send email: " + e.getMessage();

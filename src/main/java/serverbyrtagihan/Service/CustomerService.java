@@ -1,6 +1,5 @@
 package serverbyrtagihan.service;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.model.Customer;
@@ -9,7 +8,7 @@ import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 
-public interface ProfileService {
+public interface CustomerService {
 
     void sendEmail(String to) throws MessagingException;
 
