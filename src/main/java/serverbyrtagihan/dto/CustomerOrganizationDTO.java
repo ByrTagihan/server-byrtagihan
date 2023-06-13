@@ -2,18 +2,18 @@ package serverbyrtagihan.dto;
 
 public class CustomerOrganizationDTO {
 
-    private long id;
+    public long id;
 
-    private String name;
-    private String addres;
-    private String hp;
-    private String email;
-    private String city;
-    private String provinsi;
-    private String balance;
-    private int bank_acount_number;
-    private String bank_account_name;
-    private String bank_name;
+    public String name;
+    public String addres;
+    public String hp;
+    public String email;
+    public String city;
+    public String provinsi;
+    public String balance;
+    public int bank_acount_number;
+    public String bank_account_name;
+    public String bank_name;
 
     public String getHp() {
         return hp;
