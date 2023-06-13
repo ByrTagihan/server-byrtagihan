@@ -24,12 +24,12 @@ public class ByrTagihanController {
     @Autowired
     ModelMapper modelMapper;
 
-    @PostMapping("/register")
+    @PostMapping("/api/customer/register")
     public CommonResponse<ByrTagihan> register (@RequestBody ByrTagihan byrTagihan) {
         return ResponseHelper.ok(byrTagihanService.register(byrTagihan));
     }
 
-    @PostMapping("/login")
+    @PostMapping("/api/customer/login")
     public CommonResponse<Map<String, Object>> login(@RequestBody Login login) {
         return ResponseHelper.ok(byrTagihanService.login(login));
     }
@@ -39,21 +39,21 @@ public class ByrTagihanController {
         return ResponseHelper.ok(byrTagihanService.getById(id));
     }
 
-    @PutMapping(path = "/{id}")
+    @PutMapping(path = "/api/customer/update/{id}")
     public CommonResponse<ByrTagihan> update(@PathVariable("id") Long id,@RequestBody Update update) {
         return ResponseHelper.ok(byrTagihanService.update(id, modelMapper.map(update , ByrTagihan.class)));
     }
 
-    @PutMapping(path = "/password/{id}")
+    @PutMapping(path = "/api/customer/password/{id}")
     public CommonResponse<ByrTagihan> updatePassword(@PathVariable("id") Long id,@RequestBody Password password) {
         return ResponseHelper.ok(byrTagihanService.updatePassword(id, modelMapper.map(password , ByrTagihan.class)));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/customer/delete/{id}")
     public CommonResponse<Map<String, Boolean>> deleteAkun(@PathVariable("id") Long id) {
         return ResponseHelper.ok(byrTagihanService.deleteRegister(id));
     }
-    @GetMapping
+    @GetMapping("/api/customer/getAll")
     public CommonResponse<List<ByrTagihan>> getAll() {
         return ResponseHelper.ok(byrTagihanService.getAllTagihan());
     }
