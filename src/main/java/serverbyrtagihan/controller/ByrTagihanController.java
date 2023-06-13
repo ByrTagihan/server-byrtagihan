@@ -7,7 +7,7 @@ import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.dto.Login;
 import serverbyrtagihan.dto.Password;
 import serverbyrtagihan.dto.Update;
-import serverbyrtagihan.Service.ByrTagihanService;
+import serverbyrtagihan.service.ByrTagihanService;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
 
@@ -16,7 +16,6 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/register")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ByrTagihanController {
 
     @Autowired

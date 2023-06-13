@@ -1,9 +1,10 @@
-package serverbyrtagihan.service;
+package serverbyrtagihan.Impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import serverbyrtagihan.model.Customer;
+import serverbyrtagihan.Modal.ByrTagihan;
+import serverbyrtagihan.Modal.Customer;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -22,7 +23,7 @@ public class CustomerDetailsImpl implements UserDetails {
         this.password = password;
     }
 
-    public static CustomerDetailsImpl build(Customer admin) {
+    public static CustomerDetailsImpl build(Customer admin, ByrTagihan users) {
         return new CustomerDetailsImpl(
                 admin.getId(),
                 admin.getEmail(),

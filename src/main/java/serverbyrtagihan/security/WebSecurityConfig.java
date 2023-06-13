@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import serverbyrtagihan.security.jwt.AuthEntryPointJwt;
 import serverbyrtagihan.security.jwt.AuthTokenFilter;
-import serverbyrtagihan.service.CustomerDetailsServiceImpl;
+import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity

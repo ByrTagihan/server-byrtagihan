@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.Modal.TemporaryToken;
-import serverbyrtagihan.Repository.ByrTagihanRepository;
+import serverbyrtagihan.repository.ByrTagihanRepository;
 import serverbyrtagihan.Repository.TokenRepository;
 import serverbyrtagihan.exception.InternalErrorException;
 

@@ -1,4 +1,4 @@
-package serverbyrtagihan.service;
+package serverbyrtagihan.Impl;
 
 import com.google.auth.Credentials;
 import com.google.auth.oauth2.GoogleCredentials;
@@ -13,13 +13,14 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.model.Customer;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

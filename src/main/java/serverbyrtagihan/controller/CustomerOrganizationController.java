@@ -20,8 +20,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/api/organization")
 public class CustomerOrganizationController{
 
     public static final Logger logger = LoggerFactory.getLogger(CustomerOrganizationController.class);

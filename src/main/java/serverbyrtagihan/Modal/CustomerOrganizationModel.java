@@ -1,7 +1,7 @@
 package serverbyrtagihan.Modal;
 
 
-import serverbyrtagihan.Auditing.DateConfig;
+import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
 

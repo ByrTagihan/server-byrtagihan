@@ -1,8 +1,8 @@
 package serverbyrtagihan.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.dto.PasswordDTO;
-import serverbyrtagihan.model.Customer;
 
 import javax.mail.MessagingException;
 import java.util.List;

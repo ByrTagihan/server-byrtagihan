@@ -2,7 +2,7 @@ package serverbyrtagihan.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.model.Customer;
+import serverbyrtagihan.Modal.Customer;
 
 import java.util.Optional;
 

@@ -1,4 +1,4 @@
-package serverbyrtagihan.Service;
+package serverbyrtagihan.service;
 
 import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.dto.Login;

@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import serverbyrtagihan.Modal.TemporaryToken;
-import serverbyrtagihan.Repository.ByrTagihanRepository;
+import serverbyrtagihan.repository.ByrTagihanRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

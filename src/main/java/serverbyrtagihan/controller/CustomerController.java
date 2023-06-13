@@ -15,14 +15,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
-import serverbyrtagihan.model.Customer;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.service.CustomerDetailsImpl;
+import serverbyrtagihan.Impl.CustomerDetailsImpl;
 import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
@@ -83,7 +83,7 @@ public class CustomerController {
         return ResponseHelper.ok(customerService.putPass(password, id));
     }
 
-    @DeleteMapping(path = "/customer/{id}")
+    @DeleteMapping(path = "/customer/delete/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(customerService.delete(id));
     }
