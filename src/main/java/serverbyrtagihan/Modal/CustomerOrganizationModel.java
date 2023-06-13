@@ -12,16 +12,38 @@ public class CustomerOrganizationModel extends DateConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "addres")
     private String addres;
+
+    @Column(name = "hp")
     private String hp;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "city")
     private String city;
+
+    @Column(name = "provinsi")
     private String provinsi;
+
+    @Column(name = "balance")
     private String balance;
-    private int bank_acount_number;
+
+    @Column(name = "bank_account_number")
+    private int bank_account_number;
+
+    @Column(name = "bank_account_name")
     private String bank_account_name;
+
+    @Column(name = "bank_name")
     private String bank_name;
+
+    public CustomerOrganizationModel() {
+    }
 
     public long getId() {
         return id;
@@ -29,14 +51,6 @@ public class CustomerOrganizationModel extends DateConfig {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getHp() {
-        return hp;
-    }
-
-    public void setHp(String hp) {
-        this.hp = hp;
     }
 
     public String getName() {
@@ -55,7 +69,13 @@ public class CustomerOrganizationModel extends DateConfig {
         this.addres = addres;
     }
 
+    public String getHp() {
+        return hp;
+    }
 
+    public void setHp(String hp) {
+        this.hp = hp;
+    }
 
     public String getEmail() {
         return email;
@@ -89,12 +109,12 @@ public class CustomerOrganizationModel extends DateConfig {
         this.balance = balance;
     }
 
-    public int getBank_acount_number() {
-        return bank_acount_number;
+    public int getBank_account_number() {
+        return bank_account_number;
     }
 
-    public void setBank_acount_number(int bank_acount_number) {
-        this.bank_acount_number = bank_acount_number;
+    public void setBank_account_number(int bank_account_number) {
+        this.bank_account_number = bank_account_number;
     }
 
     public String getBank_account_name() {
