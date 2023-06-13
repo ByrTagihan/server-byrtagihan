@@ -6,24 +6,29 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.Modal.ByrTagihan;
+import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.UserPrinciple;
-import serverbyrtagihan.Repository.ByrTagihanRepository;
+import serverbyrtagihan.repository.ByrTagihanRepository;
+import serverbyrtagihan.repository.CustomerRepository;
 
+import javax.transaction.Transactional;
 import java.util.regex.Pattern;
 
 @Service
-public class UserDetailsImpl implements UserDetailsService {
-
+public class CustomerDetailsServiceImpl implements UserDetailsService {
+    @Autowired
+    CustomerRepository adminRepository;
     @Autowired
     private ByrTagihanRepository byrTagihanRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        //        mengecek email
-       boolean isEmail = Pattern.compile("^(.+)@(\\S+)$")
-              .matcher(username).matches();
         ByrTagihan users = byrTagihanRepository.findByEmail(username);
-        System.out.println("is Email " + isEmail);
-        return UserPrinciple.build(users);
+        Customer admin = adminRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+        return CustomerDetailsImpl.build(admin , users);
     }
+
+
 }

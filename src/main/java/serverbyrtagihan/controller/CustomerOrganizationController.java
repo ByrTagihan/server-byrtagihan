@@ -12,9 +12,10 @@ import serverbyrtagihan.response.ResponseHelper;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = " http://127.0.0.1:5173")
-public class CustomerOrganizationController {
+@RequestMapping("/api/organization")
+public class CustomerOrganizationController{
+
+    public static final Logger logger = LoggerFactory.getLogger(CustomerOrganizationController.class);
     @Autowired
     private CustomerOrganizationService customerOrganization;
     @Autowired
