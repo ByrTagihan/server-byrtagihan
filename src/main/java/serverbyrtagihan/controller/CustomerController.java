@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
@@ -23,7 +24,6 @@ import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

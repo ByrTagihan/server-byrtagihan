@@ -14,13 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
