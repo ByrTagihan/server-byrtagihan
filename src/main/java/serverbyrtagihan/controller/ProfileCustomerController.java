@@ -28,6 +28,7 @@ public class ProfileCustomerController {
     }
 
     @GetMapping(path = "/customer/profile/{id}")
+
     public CommonResponse<Profile> getByID(@PathVariable("id") Long id) {
         return ResponseHelper.ok(profileService.getById(id));
     }
