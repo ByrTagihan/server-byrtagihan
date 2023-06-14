@@ -21,6 +21,9 @@ public class TemporaryToken extends DateConfig {
     @Column(name = "register_id")
     private long registerId;
 
+    @Column(name = "member_id")
+    private long memberId;
+
     public TemporaryToken() {
     }
 
@@ -54,5 +57,13 @@ public class TemporaryToken extends DateConfig {
 
     public void setRegisterId(long registerId) {
         this.registerId = registerId;
+    }
+
+    public long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(long memberId) {
+        this.memberId = memberId;
     }
 }

@@ -13,4 +13,6 @@ public interface TokenRepository extends JpaRepository<TemporaryToken, Long> {
 
     Optional<TemporaryToken> findByRegisterId(long registerId);
 
+    Optional<TemporaryToken> findByMemberId(long memberId);
+
 }

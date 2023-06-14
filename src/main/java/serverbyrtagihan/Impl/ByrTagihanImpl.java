@@ -66,16 +66,6 @@ public class ByrTagihanImpl implements ByrTagihanService {
         String token = authories(login.getEmail(), login.getPassword());
         ByrTagihan byrTagihan = null;
 
-//        mengecek email
-        boolean isEmail = Pattern.compile("^(.+)@(\\S+)$")
-                .matcher(login.getEmail()).matches();
-        System.out.println("is Email " + isEmail);
-
-//        jika true, akan menjalankan sistem if
-        if(isEmail) {
-            byrTagihan = byrTagihanRepository.findByEmail(login.getEmail());
-        }
-
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("expired", "15 menit");

@@ -2,28 +2,34 @@ package serverbyrtagihan.Modal;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import serverbyrtagihan.Impl.UserDetailsImpl;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
-public class UserPrinciple implements UserDetails {
+public class MemberPrinciple implements UserDetails {
 
-    private String email;
 
-    private String password;
+    private String unique_id;
+
+    private String token;
 
     private Collection<? extends GrantedAuthority> autority;
 
-    public UserPrinciple(String email, String password) {
-        this.email = email;
-        this.password = password;
+    public MemberPrinciple(String unique_id, String token) {
+        this.unique_id = unique_id;
+        this.token = token;
         this.autority = autority;
     }
 
-    public static UserPrinciple build(ByrTagihan register) {
-        return new UserPrinciple(
-                register.getEmail(),
-                register.getPassword()
+    public static MemberPrinciple build(MemberLogin register) {
+        return new MemberPrinciple(
+                register.getUnique_id(),
+                register.getToken()
         );
     }
 
@@ -34,12 +40,12 @@ public class UserPrinciple implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return token;
     }
 
     @Override
     public String getUsername() {
-        return email;
+        return unique_id;
     }
 
 

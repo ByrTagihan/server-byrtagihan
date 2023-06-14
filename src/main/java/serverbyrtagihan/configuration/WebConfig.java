@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import serverbyrtagihan.Impl.UserDetailsImpl;
 import serverbyrtagihan.Jwt.AccesDanied;
+import serverbyrtagihan.Jwt.AuthTokenFilter;
 import serverbyrtagihan.Jwt.JwtAuthTokenFilter;
 import serverbyrtagihan.Jwt.UnautorizedError;
 
@@ -40,10 +41,16 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/authentication/**",
+            "/member/**"
     };
 
     @Bean
-    public JwtAuthTokenFilter authTokenFilter() {
+    public AuthTokenFilter authTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
+    @Bean
+    public JwtAuthTokenFilter jwtAuthTokenFilter() {
         return new JwtAuthTokenFilter();
     }
 
@@ -70,6 +77,7 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .anyRequest().permitAll();
+
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 

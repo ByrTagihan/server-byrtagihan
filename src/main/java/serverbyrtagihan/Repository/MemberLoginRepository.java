@@ -9,11 +9,9 @@ import serverbyrtagihan.Modal.MemberLogin;
 import java.util.Optional;
 
 @Repository
-public interface ByrTagihanRepository extends JpaRepository<ByrTagihan, Long> {
+public interface MemberLoginRepository extends JpaRepository<MemberLogin, Long> {
 
-    ByrTagihan findByEmail(String email);
-
-    @Query(value = "SELECT * FROM table_member_login  WHERE " +
-            "unique_id LIKE CONCAT('%',:unique_id, '%')", nativeQuery = true)
-    MemberLogin memberByUnique(String unique);
+   @Query(value = "SELECT * FROM table_member_login  WHERE " +
+           "unique_id LIKE CONCAT('%',:unique_id, '%')", nativeQuery = true)
+   MemberLogin memberByUnique(String unique);
 }
