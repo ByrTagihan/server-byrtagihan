@@ -13,5 +13,5 @@ public interface MemberLoginRepository extends JpaRepository<MemberLogin, Long> 
 
    @Query(value = "SELECT * FROM table_member_login  WHERE " +
            "unique_id LIKE CONCAT('%',:unique_id, '%')", nativeQuery = true)
-   MemberLogin memberByUnique(String unique);
+   MemberLogin memberByUnique(String unique_id);
 }

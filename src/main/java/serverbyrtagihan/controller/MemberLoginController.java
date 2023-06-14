@@ -10,6 +10,7 @@ import serverbyrtagihan.dto.*;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,12 @@ public class MemberLoginController {
     @GetMapping("/api/member/{id}")
     public CommonResponse<MemberLogin> getById(@PathVariable("id") Long id) {
         return ResponseHelper.ok(memberLoginService.getById(id));
+    }
+
+    @PutMapping(path = "/member/password")
+    public CommonResponse<MemberLogin> putPassword(@RequestBody PasswordMemberDto password, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(memberLoginService.putPass(password, jwtToken));
     }
 
     @PutMapping(path = "/api/member/update/{id}" , consumes = "multipart/form-data")

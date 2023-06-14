@@ -6,22 +6,26 @@ import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Jwt.JwtProvider;
+import serverbyrtagihan.Jwt.JwtUtils;
 import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.Modal.MemberLogin;
 import serverbyrtagihan.Modal.MemberTypeToken;
 import serverbyrtagihan.Repository.MemberLoginRepository;
 import serverbyrtagihan.Service.MemberLoginService;
 import serverbyrtagihan.dto.MemberLoginDto;
+import serverbyrtagihan.dto.PasswordMemberDto;
 import serverbyrtagihan.dto.UpdateMemberDto;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
@@ -48,6 +52,9 @@ public class MemberLoginImpl implements MemberLoginService {
 
     @Autowired
     JwtProvider jwtProvider;
+
+    @Autowired
+    JwtUtils jwtUtils;
 
     @Autowired
     UserDetailsService userDetailsService;
@@ -100,7 +107,7 @@ public class MemberLoginImpl implements MemberLoginService {
             throw new InternalErrorException("email or password not found");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(unique_id);
-        return jwtProvider.generateTokenMember(userDetails);
+        return jwtUtils.generateJwtToken((Authentication) userDetails);
     }
 
     @Override
@@ -143,5 +150,21 @@ public class MemberLoginImpl implements MemberLoginService {
         memberLogin.setAddress(memberDto.getAddress());
         memberLogin.setPicture(picture);
         return memberLoginRepository.save(memberLogin);
+    }
+
+    @Override
+    public MemberLogin putPass(PasswordMemberDto passwordMemberDto, String jwt) {
+        MemberLogin update = new MemberLogin();
+        boolean conPassword = passwordEncoder.matches(passwordMemberDto.getOld_pass() , update.getToken());
+        if (conPassword) {
+            if (passwordMemberDto.getNew_pass().equals(passwordMemberDto.getCon_pass())) {
+                update.setToken(passwordEncoder.encode(passwordMemberDto.getNew_pass()));
+                return memberLoginRepository.save(update);
+            } else {
+                throw new NotFoundException("Password tidak sesuai");
+            }
+        } else {
+            throw new NotFoundException("Password lama tidak sesuai");
+        }
     }
 }

@@ -1,6 +1,10 @@
 package serverbyrtagihan.Jwt;
 
+import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import serverbyrtagihan.Modal.ByrTagihan;
@@ -26,8 +30,6 @@ public class JwtProvider {
     @Autowired
      ByrTagihanRepository registerRepository;
 
-    @Autowired
-    MemberLoginRepository memberLoginRepository;
 
     public String generateToken(UserDetails userDetails) {
         String token = UUID.randomUUID().toString().replace("-", "");
@@ -38,19 +40,6 @@ public class JwtProvider {
         temporaryToken.setToken(token);
         temporaryToken.setExpiredDate(new Date(new Date().getTime() + expired));
         temporaryToken.setRegisterId(user.getId());
-        tokenRepository.save(temporaryToken);
-        return token;
-    }
-
-    public String generateTokenMember(UserDetails userDetails) {
-        String token = UUID.randomUUID().toString().replace("-", "");
-        MemberLogin user = memberLoginRepository.memberByUnique(userDetails.getUsername());
-        var checkingToken = tokenRepository.findByMemberId(user.getId());
-        if (checkingToken.isPresent()) tokenRepository.deleteById(checkingToken.get().getId());
-        TemporaryToken temporaryToken = new TemporaryToken();
-        temporaryToken.setToken(token);
-        temporaryToken.setExpiredDate(new Date(new Date().getTime() + expired));
-        temporaryToken.setMemberId(user.getId());
         tokenRepository.save(temporaryToken);
         return token;
     }

@@ -8,18 +8,25 @@ import org.springframework.stereotype.Service;
 import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.Modal.MemberLogin;
 import serverbyrtagihan.Modal.MemberPrinciple;
-import serverbyrtagihan.Modal.UserPrinciple;
+import serverbyrtagihan.Repository.ByrTagihanRepository;
 import serverbyrtagihan.Repository.MemberLoginRepository;
 
-@Service
-public class MemberDetailsImpl implements UserDetailsService {
+import javax.transaction.Transactional;
 
+@Service
+public class MemberDetails implements UserDetailsService {
     @Autowired
-    MemberLoginRepository memberLoginRepository;
+    MemberLoginRepository adminRepository;
+    @Autowired
+    private ByrTagihanRepository byrTagihanRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        MemberLogin users = memberLoginRepository.memberByUnique(username);
-        return MemberPrinciple.build(users);
+        ByrTagihan users = byrTagihanRepository.findByEmail(username);
+        MemberLogin admin = adminRepository.memberByUnique(username);
+        return MemberPrinciple.build(admin , users);
     }
+
+
 }

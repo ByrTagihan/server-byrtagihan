@@ -41,16 +41,10 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/authentication/**",
-            "/member/**"
     };
 
     @Bean
-    public AuthTokenFilter authTokenFilter() {
-        return new AuthTokenFilter();
-    }
-
-    @Bean
-    public JwtAuthTokenFilter jwtAuthTokenFilter() {
+    public JwtAuthTokenFilter authTokenFilter() {
         return new JwtAuthTokenFilter();
     }
 

@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.MemberLogin;
 import serverbyrtagihan.dto.Login;
 import serverbyrtagihan.dto.MemberLoginDto;
+import serverbyrtagihan.dto.PasswordMemberDto;
 import serverbyrtagihan.dto.UpdateMemberDto;
 
 import java.util.List;
@@ -20,5 +21,7 @@ public interface MemberLoginService {
     List<MemberLogin> getAll();
 
     MemberLogin put(UpdateMemberDto memberLogin, MultipartFile multipartFile, Long id);
+
+    MemberLogin putPass(PasswordMemberDto passwordMemberDto, String jwt);
 
 }
