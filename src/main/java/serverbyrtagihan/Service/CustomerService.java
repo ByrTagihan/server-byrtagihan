@@ -1,4 +1,4 @@
-package serverbyrtagihan.service;
+package serverbyrtagihan.Service;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;

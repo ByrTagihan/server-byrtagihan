@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import serverbyrtagihan.Modal.TemporaryToken;
-import serverbyrtagihan.repository.ByrTagihanRepository;
+import serverbyrtagihan.Repository.ByrTagihanRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -47,7 +47,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {} ", e);
         }
-        filterChain.doFilter(request, response);
+        filterChain. doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {

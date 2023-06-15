@@ -11,14 +11,16 @@ import org.springframework.validation.BindingResult;
 import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.ForGotPass;
+import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.repository.GetVerification;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.service.CustomerService;
+import serverbyrtagihan.Service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

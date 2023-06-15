@@ -15,10 +15,15 @@ import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.repository.CustomerRepository;
+import serverbyrtagihan.Service.CustomerService;
+import serverbyrtagihan.dto.PasswordDTO;
+import serverbyrtagihan.dto.PictureDTO;
+import serverbyrtagihan.dto.ProfileDTO;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.service.CustomerService;
+import serverbyrtagihan.Service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
