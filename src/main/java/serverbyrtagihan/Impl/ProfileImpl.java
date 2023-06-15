@@ -16,11 +16,9 @@ import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
-import serverbyrtagihan.repository.CustomerRepository;
-import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.Service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

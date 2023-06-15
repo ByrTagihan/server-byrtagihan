@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.*;
-import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
