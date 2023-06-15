@@ -7,7 +7,7 @@ import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.dto.Login;
 import serverbyrtagihan.dto.Password;
 import serverbyrtagihan.dto.Update;
-import serverbyrtagihan.service.ByrTagihanService;
+import serverbyrtagihan.Service.ByrTagihanService;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
 

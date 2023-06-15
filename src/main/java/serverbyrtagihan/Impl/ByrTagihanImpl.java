@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 import serverbyrtagihan.Jwt.JwtProvider;
 import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.dto.Login;
-import serverbyrtagihan.repository.ByrTagihanRepository;
+import serverbyrtagihan.Repository.ByrTagihanRepository;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.service.ByrTagihanService;
+import serverbyrtagihan.Service.ByrTagihanService;
 
 import java.util.HashMap;
 import java.util.List;
