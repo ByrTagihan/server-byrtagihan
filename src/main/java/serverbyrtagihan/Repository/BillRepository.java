@@ -2,10 +2,9 @@ package serverbyrtagihan.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.Modal.ByrTagihan;
+import serverbyrtagihan.Modal.Bill;
 
 @Repository
-public interface ByrTagihanRepository extends JpaRepository<ByrTagihan, Long> {
+public interface BillRepository extends JpaRepository<Bill, Long> {
 
-    ByrTagihan findByEmail(String email);
 }
