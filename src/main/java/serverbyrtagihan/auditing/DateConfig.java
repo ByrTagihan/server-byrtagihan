@@ -1,4 +1,4 @@
-package serverbyrtagihan.Auditing;
+package serverbyrtagihan.auditing;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.CreationTimestamp;

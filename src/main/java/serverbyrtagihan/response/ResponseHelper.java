@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 public class ResponseHelper {
     public static <T> CommonResponse<T> ok(T data) {
         CommonResponse<T> response = new CommonResponse<T>();
-        response.setMessage("Success");
-        response.setStatus("200");
+        response.setMessage("success");
+        response.setStatus("200 OK");
         response.setData(data);
         return response;
     }

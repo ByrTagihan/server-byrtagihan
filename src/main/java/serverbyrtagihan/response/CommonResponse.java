@@ -4,6 +4,8 @@ package serverbyrtagihan.response;
 public class CommonResponse<T> {
     private String message;
     private String status;
+
+
     private T data;
 
     public String getMessage() {
@@ -29,4 +31,5 @@ public class CommonResponse<T> {
     public void setData(T data) {
         this.data = data;
     }
+
 }

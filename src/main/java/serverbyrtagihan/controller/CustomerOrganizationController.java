@@ -1,6 +1,8 @@
 package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.Modal.CustomerOrganizationModel;
@@ -12,9 +14,10 @@ import serverbyrtagihan.response.ResponseHelper;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin(origins = " http://127.0.0.1:5173")
-public class CustomerOrganizationController {
+@RequestMapping("/api/organization")
+public class CustomerOrganizationController{
+
+    public static final Logger logger = LoggerFactory.getLogger(CustomerOrganizationController.class);
     @Autowired
     private CustomerOrganizationService customerOrganization;
     @Autowired
