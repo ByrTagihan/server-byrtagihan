@@ -107,7 +107,7 @@ public class MemberLoginImpl implements MemberLoginService {
             throw new InternalErrorException("email or password not found");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(unique_id);
-        return jwtUtils.generateJwtToken((Authentication) userDetails);
+        return jwtUtils.generateTokenMember(userDetails);
     }
 
     @Override

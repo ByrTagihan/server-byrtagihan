@@ -29,7 +29,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private ByrTagihanRepository registerRepository;
+     ByrTagihanRepository registerRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 
@@ -39,8 +39,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             String jwt = parseJwt(request);
             System.out.println(jwt);
             if (jwt != null && jwtProvider.checkingTokenJwt(jwt)) {
-                TemporaryToken token = jwtProvider.getSubject(jwt);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(registerRepository.findById(token.getRegisterId()).get().getEmail());
+                String token = String.valueOf(jwtProvider.getSubject(jwt));
+                UserDetails userDetails = userDetailsService.loadUserByUsername(token);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails((new WebAuthenticationDetailsSource().buildDetails(request)));
                 SecurityContextHolder.getContext().setAuthentication(authentication);

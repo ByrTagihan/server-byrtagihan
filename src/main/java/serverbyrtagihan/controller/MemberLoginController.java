@@ -1,10 +1,20 @@
 package serverbyrtagihan.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.Impl.MemberDetails;
+import serverbyrtagihan.Jwt.JwtUtils;
 import serverbyrtagihan.Modal.ByrTagihan;
 import serverbyrtagihan.Modal.MemberLogin;
+import serverbyrtagihan.Modal.MemberPrinciple;
+import serverbyrtagihan.Repository.MemberLoginRepository;
 import serverbyrtagihan.Service.MemberLoginService;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.response.CommonResponse;
@@ -15,24 +25,25 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class MemberLoginController {
 
     @Autowired
     MemberLoginService memberLoginService;
 
-    @PostMapping("/api/member/add")
+
+    @PostMapping("/member/add")
     public CommonResponse<MemberLogin> add (@RequestBody MemberLoginDto memberLoginDto) {
         return ResponseHelper.ok(memberLoginService.addMember(memberLoginDto));
     }
 
-    @PostMapping("/api/member/login")
+    @PostMapping("/member/login")
     public CommonResponse<Map<String, Object>> login(@RequestBody MemberLoginDto login) {
         return ResponseHelper.ok(memberLoginService.loginMember(login));
     }
 
-    @GetMapping("/api/member/{id}")
+    @GetMapping("/member/{id}")
     public CommonResponse<MemberLogin> getById(@PathVariable("id") Long id) {
         return ResponseHelper.ok(memberLoginService.getById(id));
     }
@@ -43,11 +54,11 @@ public class MemberLoginController {
         return ResponseHelper.ok(memberLoginService.putPass(password, jwtToken));
     }
 
-    @PutMapping(path = "/api/member/update/{id}" , consumes = "multipart/form-data")
+    @PutMapping(path = "/member/update/{id}" , consumes = "multipart/form-data")
     public CommonResponse<MemberLogin> update(@PathVariable("id") Long id, UpdateMemberDto update, @RequestPart("file")MultipartFile multipartFile) {
         return ResponseHelper.ok(memberLoginService.put(update, multipartFile , id));
     }
-    @GetMapping("/api/member/GetAll")
+    @GetMapping("/member/GetAll")
     public CommonResponse<List<MemberLogin>> getAll() {
         return ResponseHelper.ok(memberLoginService.getAll());
     }

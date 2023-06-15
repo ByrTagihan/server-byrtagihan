@@ -17,16 +17,11 @@ import javax.transaction.Transactional;
 public class MemberDetails implements UserDetailsService {
     @Autowired
     MemberLoginRepository adminRepository;
-    @Autowired
-    private ByrTagihanRepository byrTagihanRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ByrTagihan users = byrTagihanRepository.findByEmail(username);
         MemberLogin admin = adminRepository.memberByUnique(username);
-        return MemberPrinciple.build(admin , users);
+        return MemberPrinciple.build(admin);
     }
-
-
 }

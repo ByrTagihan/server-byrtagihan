@@ -30,7 +30,6 @@ public class JwtProvider {
     @Autowired
      ByrTagihanRepository registerRepository;
 
-
     public String generateToken(UserDetails userDetails) {
         String token = UUID.randomUUID().toString().replace("-", "");
         ByrTagihan user = registerRepository.findByEmail(userDetails.getUsername());

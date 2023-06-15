@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import serverbyrtagihan.Impl.MemberDetails;
 import serverbyrtagihan.Impl.UserDetailsImpl;
 import serverbyrtagihan.Jwt.AccesDanied;
 import serverbyrtagihan.Jwt.AuthTokenFilter;
@@ -33,6 +34,9 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsImpl userDetails;
 
+    @Autowired
+    private MemberDetails memberDetails;
+
     private static final String[] AUTH_WHITLIST = {
             "/v2/api-docs",
             "/swagger-resources",
@@ -41,11 +45,18 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             "/authentication/**",
+            "/api/member/login/**",
+            "/api/**"
     };
 
     @Bean
-    public JwtAuthTokenFilter authTokenFilter() {
+    public JwtAuthTokenFilter jwtAuthTokenFilter() {
         return new JwtAuthTokenFilter();
+    }
+
+    @Bean
+    public AuthTokenFilter authTokenFilter() {
+        return new AuthTokenFilter();
     }
 
     @Bean
@@ -66,11 +77,17 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
+                .authorizeRequests()
+                .antMatchers(AUTH_WHITLIST).permitAll()
+                .antMatchers("/").authenticated()
+                .and()
                 .exceptionHandling().authenticationEntryPoint(unautorizedError).and()
                 .exceptionHandling().accessDeniedHandler(accesDanied).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .anyRequest().permitAll();
+
+        http.addFilterBefore(jwtAuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
