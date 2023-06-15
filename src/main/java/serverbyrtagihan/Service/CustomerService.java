@@ -1,7 +1,10 @@
 package serverbyrtagihan.service;
 
+import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 
 import javax.mail.MessagingException;
@@ -10,7 +13,7 @@ import java.util.Map;
 
 public interface CustomerService {
 
-    void sendEmail(String to) throws MessagingException;
+    ForGotPass sendEmail(ForGotPass forGotPass) throws MessagingException;
 
     Customer getProfileCustomer(String jwtToken);
 
@@ -20,9 +23,9 @@ public interface CustomerService {
 
     Customer putPassword(PasswordDTO passwordDTO, String jwtToken);
 
-    Customer putPicture(Customer customer, MultipartFile multipartFile, String jwtToken);
+    Customer putPicture(Customer customer, String jwtToken);
 
-    Customer putPass(Customer customer, Long id);
+    ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 
     Map<String, Boolean> delete(Long id);
 }

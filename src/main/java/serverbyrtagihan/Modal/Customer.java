@@ -35,19 +35,16 @@ public class Customer extends DateConfig  {
     @Column(name = "active")
     private boolean active;
 
+    @Column(name = "token")
+    private String token;
+
+    @Column(name = "type_token")
+    private String typeToken;
+
 
     public Customer() {
     }
 
-
-    public Customer(String email, String password, String name, String hp, String address, boolean active) {
-        this.email = email;
-        this.password = password;
-        this.name = name;
-        this.hp = hp;
-        this.address = address;
-        this.active = active;
-    }
 
     public Long getId() {
         return id;
@@ -111,5 +108,21 @@ public class Customer extends DateConfig  {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getTypeToken() {
+        return typeToken;
+    }
+
+    public void setTypeToken(String typeToken) {
+        this.typeToken = typeToken;
     }
 }
