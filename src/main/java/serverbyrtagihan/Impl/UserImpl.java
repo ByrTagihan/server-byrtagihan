@@ -10,14 +10,21 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.Jwt.JwtProvider;
 import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.Service.CustomerService;
-import serverbyrtagihan.dto.PasswordDTO;
-import serverbyrtagihan.exception.BadRequestException;
+import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.Repository.UserRepository;
+import serverbyrtagihan.Service.UserService;
+import serverbyrtagihan.dto.Login;
+import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
@@ -35,14 +42,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 @Service
-public class ProfileImpl implements CustomerService {
+public class UserImpl implements UserService {
+
     private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/byrtagihan-ca34f.appspot.com/o/%s?alt=media";
 
-
     @Autowired
-    private CustomerRepository customerRepository;
+    private UserRepository userRepository;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -103,10 +111,10 @@ public class ProfileImpl implements CustomerService {
         String newPassword = newPassword();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        if (customerRepository.findByEmail(to).isPresent()) {
-            Customer update = customerRepository.findByEmail(to).get();
+        if (userRepository.findByEmail(to).isPresent()) {
+            User update = userRepository.findByEmail(to).get();
             update.setPassword(encoder.encode(newPassword));
-            customerRepository.save(update);
+            userRepository.save(update);
             helper.setTo(to);
             helper.setSubject("Password Baru");
             helper.setText("","<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
@@ -431,72 +439,46 @@ public class ProfileImpl implements CustomerService {
     }
 
     @Override
-    public Customer getProfileCustomer(String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
-        return customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public User register(User user) {
+        String UserPassword = user.getPassword().trim();
+        boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-8])(?=.*[a-z])(?=\\S+$).{8,20}");
+        if (PasswordIsNotValid) throw new InternalErrorException("password not valid");
+        boolean isEmail = Pattern.compile("^(.+)@(\\S+)$")
+                .matcher(user.getEmail()).matches();
+        if (!isEmail) throw new InternalErrorException("Email Not Valid");
+        user.setPassword(encoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override
-    public List<Customer> getAll() {
-        return customerRepository.findAll();
+    public User getProfileUser(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
     @Override
-    public Customer put(Customer customer, String jwtToken) {
+    public User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken) {
+        String img = imageConverter(multipartFile);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
-        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        update.setName(customer.getName());
-        update.setAddress(customer.getAddress());
-        update.setHp(customer.getHp());
-        return customerRepository.save(update);
+        User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        update.setName(profileDTO.getName());
+        update.setDomain(profileDTO.getAddress());
+        update.setOrigin(profileDTO.getHp());
+        update.setPicture(img);
+        return userRepository.save(update);
     }
 
     @Override
-    public Customer putPassword(PasswordDTO passwordDTO, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
-        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        boolean conPassword = encoder.matches(passwordDTO.getOld_password() , update.getPassword());
-        if (conPassword) {
-            if (passwordDTO.getNew_password().equals(passwordDTO.getConfirm_new_password())) {
-                update.setPassword(encoder.encode(passwordDTO.getNew_password()));
-                return customerRepository.save(update);
-            } else {
-                throw new BadRequestException("Password tidak sesuai");
-            }
-        } else {
-            throw new NotFoundException("Password lama tidak sesuai");
-        }
-    }
-
-    @Override
-    public Customer putPicture(Customer customer, MultipartFile multipartFile, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
-        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        String picture = imageConverter(multipartFile);
-        update.setPicture(picture);
-        return customerRepository.save(update);
-    }
-    @Override
-    public Customer putPass(Customer customer, Long id) {
-        Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    public User updatePassword(Long id, User user) {
+        User update = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setPassword(encoder.encode(update.getPassword()));
-        return customerRepository.save(update);
+        return userRepository.save(update);
     }
 
     @Override
-    public Map<String, Boolean> delete(Long id) {
-        try {
-            customerRepository.deleteById(id);
-            Map<String, Boolean> res = new HashMap<>();
-            res.put("Deleted", Boolean.TRUE);
-            return res;
-        } catch (Exception e) {
-            return null;
-        }
-
+    public List<User> getAllTagihan() {
+        return userRepository.findAll();
     }
 }

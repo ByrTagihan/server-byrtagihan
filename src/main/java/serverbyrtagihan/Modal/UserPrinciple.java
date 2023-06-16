@@ -7,20 +7,26 @@ import java.util.Collection;
 
 public class UserPrinciple implements UserDetails {
 
+    private static final long serialVersionUID = 1L;
+
+    private Long id;
+
     private String email;
 
     private String password;
 
     private Collection<? extends GrantedAuthority> autority;
 
-    public UserPrinciple(String email, String password) {
+    public UserPrinciple(Long id, String email, String password) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.autority = autority;
     }
 
-    public static UserPrinciple build(ByrTagihan register) {
+    public static UserPrinciple build(User register) {
         return new UserPrinciple(
+                register.getId(),
                 register.getEmail(),
                 register.getPassword()
         );
@@ -29,6 +35,10 @@ public class UserPrinciple implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return autority;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override

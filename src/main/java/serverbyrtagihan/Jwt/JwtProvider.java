@@ -3,11 +3,12 @@ package serverbyrtagihan.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import serverbyrtagihan.Modal.ByrTagihan;
+import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Modal.TemporaryToken;
-import serverbyrtagihan.repository.ByrTagihanRepository;
+import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Repository.TokenRepository;
 import serverbyrtagihan.exception.InternalErrorException;
+import serverbyrtagihan.exception.NotFoundException;
 
 import java.util.Date;
 import java.util.UUID;
@@ -22,11 +23,11 @@ public class JwtProvider {
     private TokenRepository tokenRepository;
 
     @Autowired
-    private ByrTagihanRepository registerRepository;
+    private UserRepository registerRepository;
 
     public String generateToken(UserDetails userDetails) {
         String token = UUID.randomUUID().toString().replace("-", "");
-        ByrTagihan user = registerRepository.findByEmail(userDetails.getUsername());
+        User user = registerRepository.findByEmail(userDetails.getUsername()).orElseThrow(() -> new NotFoundException("Not Found"));
         var checkingToken = tokenRepository.findByRegisterId(user.getId());
         if (checkingToken.isPresent()) tokenRepository.deleteById(checkingToken.get().getId());
         TemporaryToken temporaryToken = new TemporaryToken();

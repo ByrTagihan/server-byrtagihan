@@ -16,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
-import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
@@ -36,6 +36,7 @@ import javax.validation.Valid;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private ModelMapper modelMapper;
 
