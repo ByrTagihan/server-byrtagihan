@@ -27,5 +27,5 @@ public interface CustomerService {
 
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 
-    Map<String, Boolean> delete(Long id);
+    Map<String, Boolean> delete(Long id , String jwtToken);
 }

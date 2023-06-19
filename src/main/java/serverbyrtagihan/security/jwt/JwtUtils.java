@@ -33,6 +33,7 @@ public class JwtUtils {
                 .claim("type_token" , adminPrincipal.getType())
                 .setAudience(adminPrincipal.getType())
                 .setSubject((adminPrincipal.getUsername()))
+                .claim("organization_id" , adminPrincipal.getOrganizationIdId())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
