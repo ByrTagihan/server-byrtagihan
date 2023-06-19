@@ -1,11 +1,5 @@
 package serverbyrtagihan.Impl;
 
-import com.google.auth.Credentials;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -47,8 +41,6 @@ import java.util.regex.Pattern;
 @Service
 public class UserImpl implements UserService {
 
-    private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/byrtagihan-ca34f.appspot.com/o/%s?alt=media";
-
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -68,42 +60,6 @@ public class UserImpl implements UserService {
             result += character.charAt(random.nextInt(character.length()));
         }
         return result;
-    }
-
-
-    private String uploadFile(File file, String fileName) throws IOException {
-        BlobId blobId = BlobId.of("byrtagihan-ca34f.appspot.com", fileName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
-        Credentials credentials = GoogleCredentials.fromStream(new FileInputStream("./src/main/resources/serviceAccount.json"));
-        Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-        storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-        return String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8));
-    }
-
-    private String getExtentions(String fileName) {
-        return fileName.split("\\.")[0];
-    }
-
-    private String imageConverter(MultipartFile multipartFile) {
-        try {
-            String fileName = getExtentions(multipartFile.getOriginalFilename());
-            File file = convertToFile(multipartFile, fileName);
-            var RESPONSE_URL = uploadFile(file, fileName);
-            file.delete();
-            return RESPONSE_URL;
-        } catch (Exception e) {
-            e.getStackTrace();
-            throw new InternalErrorException("Error upload file");
-        }
-    }
-
-    private File convertToFile(MultipartFile multipartFile, String fileName) throws IOException {
-        File file = new File(fileName);
-        try (FileOutputStream fos = new FileOutputStream(file)) {
-            fos.write(multipartFile.getBytes());
-            fos.close();
-        }
-        return file;
     }
 
     @Override
@@ -459,14 +415,13 @@ public class UserImpl implements UserService {
 
     @Override
     public User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken) {
-        String img = imageConverter(multipartFile);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
         User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setName(profileDTO.getName());
         update.setDomain(profileDTO.getAddress());
         update.setOrigin(profileDTO.getHp());
-        update.setPicture(img);
+        update.setPicture(update.getPicture());
         return userRepository.save(update);
     }
 

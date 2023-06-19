@@ -12,26 +12,33 @@ import java.util.Objects;
 public class CustomerDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
+    private String type;
     private String username;
 
     @JsonIgnore
     private String password;
 
-    public CustomerDetailsImpl(Long id, String email, String password) {
+    public CustomerDetailsImpl(Long id, String email, String password ,String type) {
         this.id = id;
         this.username = email;
         this.password = password;
+        this.type = type;
     }
 
     public static CustomerDetailsImpl build(Customer admin, User users) {
         return new CustomerDetailsImpl(
                 admin.getId(),
                 admin.getEmail(),
-                admin.getPassword());
+                admin.getPassword(),
+                admin.getTypeToken());
     }
 
     public Long getId() {
         return id;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override

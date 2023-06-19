@@ -30,6 +30,8 @@ public class JwtUtils {
         CustomerDetailsImpl adminPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .claim("id" , adminPrincipal.getId())
+                .claim("type_token" , adminPrincipal.getType())
+                .setAudience(adminPrincipal.getType())
                 .setSubject((adminPrincipal.getUsername()))
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
