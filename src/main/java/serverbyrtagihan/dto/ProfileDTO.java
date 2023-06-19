@@ -10,6 +10,8 @@ public class ProfileDTO {
     public String hp;
 
     @Lob
+    public String img;
+
     public String address;
 
     public String getEmail() {
@@ -42,5 +44,13 @@ public class ProfileDTO {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
     }
 }

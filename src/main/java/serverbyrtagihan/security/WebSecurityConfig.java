@@ -53,7 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/login/**",
             "/api/register/**",
             "/api/**",
-            "/api/user/login/**"
+            "/api/user/login/**",
+            "/api/customer/verification_code/**",
+            "/api/customer/bill/**",
     };
 
 
@@ -77,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
 }

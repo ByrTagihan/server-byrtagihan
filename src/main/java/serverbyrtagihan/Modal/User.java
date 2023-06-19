@@ -32,12 +32,25 @@ public class User extends DateConfig {
     @Column(name = "domain")
     private String domain;
 
-    @Enumerated(value = EnumType.STRING)
     @Column(name = "type_token")
-    private TypeToken typeToken;
+    private String typeToken;
+
+    @Column(name = "active")
+    private boolean active;
 
     @Column(name = "origin")
     private String origin;
+
+    @Column(name = "token")
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public Long getId() {
         return id;
@@ -87,13 +100,20 @@ public class User extends DateConfig {
         this.domain = domain;
     }
 
-
-    public TypeToken getTypeToken() {
+    public String getTypeToken() {
         return typeToken;
     }
 
-    public void setTypeToken(TypeToken typeToken) {
+    public void setTypeToken(String typeToken) {
         this.typeToken = typeToken;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public String getOrigin() {
