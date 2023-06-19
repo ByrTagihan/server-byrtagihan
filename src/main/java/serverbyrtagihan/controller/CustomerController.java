@@ -19,6 +19,7 @@ import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
@@ -45,6 +46,7 @@ public class CustomerController {
     @Autowired
     CustomerRepository adminRepository;
 
+
     @Autowired
     PasswordEncoder encoder;
 
@@ -52,6 +54,8 @@ public class CustomerController {
     JwtUtils jwtUtils;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    serverbyrtagihan.Repository.CustomerOrganizationRepository organizationRepository;
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> getByID(HttpServletRequest request) {
@@ -83,8 +87,9 @@ public class CustomerController {
     }
 
     @DeleteMapping(path = "/customer/delete/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerService.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id") Long id , HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.delete(id ,jwtToken));
     }
 
 
@@ -102,7 +107,7 @@ public class CustomerController {
         ));
     }
 
-    @PostMapping("/customer/register")
+    @PostMapping("/user/customer")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -462,6 +467,7 @@ public class CustomerController {
         admin.setName(signUpRequest.getName());
         admin.setAddress(signUpRequest.getAddress());
         admin.setToken("Kosong");
+        admin.setOrganizationId(0L);
         admin.setTypeToken("Customer");
         adminRepository.save(admin);
         javaMailSender.send(message);

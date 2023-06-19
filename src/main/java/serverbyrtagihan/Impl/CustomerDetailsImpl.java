@@ -14,15 +14,17 @@ public class CustomerDetailsImpl implements UserDetails {
     private Long id;
     private String type;
     private String username;
+    private Long organizationId;
 
     @JsonIgnore
     private String password;
 
-    public CustomerDetailsImpl(Long id, String email, String password ,String type) {
+    public CustomerDetailsImpl(Long id, String email, String password, String type, Long organizationId) {
         this.id = id;
         this.username = email;
         this.password = password;
         this.type = type;
+        this.organizationId = organizationId;
     }
 
     public static CustomerDetailsImpl build(Customer admin, ByrTagihan users) {
@@ -30,11 +32,16 @@ public class CustomerDetailsImpl implements UserDetails {
                 admin.getId(),
                 admin.getEmail(),
                 admin.getPassword(),
-                admin.getTypeToken());
+                admin.getTypeToken(),
+                admin.getOrganizationId());
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getOrganizationIdId() {
+        return organizationId;
     }
 
     public String getType() {
