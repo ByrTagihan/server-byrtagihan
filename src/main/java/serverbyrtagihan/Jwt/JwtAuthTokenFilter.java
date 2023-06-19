@@ -11,7 +11,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import serverbyrtagihan.Modal.TemporaryToken;
-import serverbyrtagihan.Repository.ByrTagihanRepository;
+import serverbyrtagihan.Repository.UserRepository;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -28,7 +28,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    private ByrTagihanRepository registerRepository;
+    private UserRepository registerRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 

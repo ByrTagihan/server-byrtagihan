@@ -15,6 +15,12 @@ public class JwtResponse {
         this.typeToken = typeToken;
     }
 
+    public JwtResponse(String jwt, Long id, String username) {
+        this.token = jwt;
+        this.id = id;
+        this.username = username;
+    }
+
     public String getToken() {
         return token;
     }

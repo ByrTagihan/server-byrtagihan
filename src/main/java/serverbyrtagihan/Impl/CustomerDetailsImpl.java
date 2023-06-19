@@ -3,7 +3,7 @@ package serverbyrtagihan.Impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import serverbyrtagihan.Modal.ByrTagihan;
+import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Modal.Customer;
 
 import java.util.Collection;
@@ -27,7 +27,7 @@ public class CustomerDetailsImpl implements UserDetails {
         this.organizationId = organizationId;
     }
 
-    public static CustomerDetailsImpl build(Customer admin, ByrTagihan users) {
+    public static CustomerDetailsImpl build(Customer admin, User users) {
         return new CustomerDetailsImpl(
                 admin.getId(),
                 admin.getEmail(),

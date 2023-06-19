@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.Service.CustomerService;

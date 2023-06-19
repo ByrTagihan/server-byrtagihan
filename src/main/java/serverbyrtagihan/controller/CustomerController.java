@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.Service.CustomerService;
@@ -37,6 +38,7 @@ import java.util.Base64;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private ModelMapper modelMapper;
 
