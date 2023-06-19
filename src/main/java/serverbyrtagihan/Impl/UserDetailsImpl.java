@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.ByrTagihan;
-import serverbyrtagihan.Modal.UserPrinciple;
+import serverbyrtagihan.swagger.Modal.ByrTagihan;
+import serverbyrtagihan.swagger.Modal.UserPrinciple;
 import serverbyrtagihan.Repository.ByrTagihanRepository;
 
 import java.util.regex.Pattern;
