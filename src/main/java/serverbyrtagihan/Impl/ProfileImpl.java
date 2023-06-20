@@ -17,8 +17,8 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.swagger.Modal.Customer;
-import serverbyrtagihan.swagger.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Modal.ForGotPassword;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

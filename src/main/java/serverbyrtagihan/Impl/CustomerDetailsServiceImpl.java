@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 
 
 import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.swagger.Modal.Customer;
+import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Repository.UserRepository;
-import serverbyrtagihan.swagger.Modal.User;
+import serverbyrtagihan.Modal.User;
 
 import javax.transaction.Transactional;
 

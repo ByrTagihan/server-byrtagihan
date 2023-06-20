@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import serverbyrtagihan.Repository.BillRepository;
 import serverbyrtagihan.Service.BillService;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.swagger.Modal.Bill;
+import serverbyrtagihan.Modal.Bill;
 
 import java.util.HashMap;
 import java.util.List;

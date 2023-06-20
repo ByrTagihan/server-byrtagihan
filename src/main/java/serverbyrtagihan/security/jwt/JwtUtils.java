@@ -11,12 +11,9 @@ import serverbyrtagihan.Impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import serverbyrtagihan.Impl.UserDetailsImpl;
-import serverbyrtagihan.swagger.Modal.User;
+import serverbyrtagihan.Modal.User;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Component

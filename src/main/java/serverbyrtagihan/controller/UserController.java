@@ -19,15 +19,14 @@ import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.swagger.Modal.ForGotPassword;
-import serverbyrtagihan.swagger.Modal.User;
+import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.User;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")

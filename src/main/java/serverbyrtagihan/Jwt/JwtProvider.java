@@ -7,8 +7,8 @@ import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Repository.TokenRepository;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.swagger.Modal.TemporaryToken;
-import serverbyrtagihan.swagger.Modal.User;
+import serverbyrtagihan.Modal.TemporaryToken;
+import serverbyrtagihan.Modal.User;
 
 import java.util.Date;
 import java.util.UUID;

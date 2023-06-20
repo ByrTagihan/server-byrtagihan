@@ -8,7 +8,7 @@ import serverbyrtagihan.dto.BillDTO;
 import serverbyrtagihan.dto.BillPaidDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
-import serverbyrtagihan.swagger.Modal.Bill;
+import serverbyrtagihan.Modal.Bill;
 
 import java.util.List;
 

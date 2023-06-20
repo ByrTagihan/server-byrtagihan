@@ -20,20 +20,13 @@ import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.swagger.Modal.Customer;
-import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.response.*;
-import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.Service.CustomerService;
-import serverbyrtagihan.swagger.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Modal.ForGotPassword;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Base64;
 import java.util.List;
 
 @RestController

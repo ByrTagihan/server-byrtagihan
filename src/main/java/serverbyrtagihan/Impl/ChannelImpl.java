@@ -8,7 +8,7 @@ import serverbyrtagihan.Service.ChannelService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.swagger.Modal.Channel;
+import serverbyrtagihan.Modal.Channel;
 
 import java.util.HashMap;
 import java.util.List;

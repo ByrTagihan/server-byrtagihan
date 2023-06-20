@@ -7,7 +7,7 @@ import serverbyrtagihan.Service.MemberService;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
-import serverbyrtagihan.swagger.Modal.Member;
+import serverbyrtagihan.Modal.Member;
 
 import java.util.List;
 import java.util.UUID;

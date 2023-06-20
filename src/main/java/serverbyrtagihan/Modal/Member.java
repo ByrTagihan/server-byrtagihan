@@ -1,4 +1,4 @@
-package serverbyrtagihan.swagger.Modal;
+package serverbyrtagihan.Modal;
 
 
 import org.hibernate.type.UUIDBinaryType;

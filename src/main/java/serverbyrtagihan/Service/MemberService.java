@@ -1,7 +1,7 @@
 package serverbyrtagihan.Service;
 
 
-import serverbyrtagihan.swagger.Modal.Member;
+import serverbyrtagihan.Modal.Member;
 
 import java.util.*;
 

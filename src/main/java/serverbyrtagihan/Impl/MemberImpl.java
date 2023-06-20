@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import serverbyrtagihan.Repository.MemberRepository;
 import serverbyrtagihan.Service.MemberService;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.swagger.Modal.Member;
+import serverbyrtagihan.Modal.Member;
 
 
 import java.util.HashMap;
