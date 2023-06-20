@@ -7,30 +7,26 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
-import serverbyrtagihan.Impl.UserDetailsImpl;
-import serverbyrtagihan.Modal.ForGotPassword;
-import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.User;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")

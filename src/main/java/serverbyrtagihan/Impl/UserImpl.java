@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Modal.ForGotPassword;
-import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Repository.GetVerification;
 import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
@@ -20,6 +18,8 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.User;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

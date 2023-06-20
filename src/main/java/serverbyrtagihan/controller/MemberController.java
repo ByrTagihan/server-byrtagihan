@@ -3,11 +3,11 @@ package serverbyrtagihan.controller;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Modal.Member;
 import serverbyrtagihan.Service.MemberService;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.Modal.Member;
 
 import java.util.List;
 import java.util.UUID;

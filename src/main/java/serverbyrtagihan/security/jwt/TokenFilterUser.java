@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
-import serverbyrtagihan.Modal.TemporaryToken;
 import serverbyrtagihan.Repository.UserRepository;
 
 import javax.servlet.FilterChain;

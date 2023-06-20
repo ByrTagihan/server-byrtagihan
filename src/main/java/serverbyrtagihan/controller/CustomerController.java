@@ -11,26 +11,22 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
-import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.Service.CustomerService;
+import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Modal.ForGotPassword;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Base64;
 import java.util.List;
 
 @RestController
