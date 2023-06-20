@@ -9,19 +9,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.Impl.UserDetailsImpl;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
 import serverbyrtagihan.dto.*;
-import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
@@ -43,9 +39,6 @@ public class UserController {
     ModelMapper modelMapper;
 
     @Autowired
-    CustomerDetailsServiceImpl service;
-
-    @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
@@ -60,24 +53,19 @@ public class UserController {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Autowired
-    CustomerDetailsServiceImpl customerDetailsService;
-
 
     @PostMapping("/user/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-            );
-        } catch (UsernameNotFoundException e) {
-            throw new NotFoundException("Invalid username or password");
-        }
-
-        final UserDetails userDetails = service.loadUserByEmail(loginRequest.getEmail());
-        final String token = jwtUtils.generateToken(userDetails.getUsername());
-
-        return ResponseEntity.ok("Token:"+ token);
+    public ResponseEntity<?> authenticateUser (@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtTokenUser(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getType()
+        ));
     }
 
     @PostMapping("/user/register")

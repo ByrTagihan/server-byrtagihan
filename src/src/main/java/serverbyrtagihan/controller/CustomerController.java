@@ -9,78 +9,102 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
-import serverbyrtagihan.Impl.UserDetailsImpl;
+import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Modal.ForGotPassword;
-import serverbyrtagihan.Modal.User;
-import serverbyrtagihan.Repository.UserRepository;
-import serverbyrtagihan.Service.UserService;
 import serverbyrtagihan.dto.*;
-import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.Service.CustomerService;
+import serverbyrtagihan.dto.PasswordDTO;
+import serverbyrtagihan.dto.PictureDTO;
+import serverbyrtagihan.dto.ProfileDTO;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.Impl.CustomerDetailsImpl;
+import serverbyrtagihan.Service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Map;
+import java.util.Base64;
 
 @RestController
 @RequestMapping("/api")
-public class UserController {
+@CrossOrigin(origins = " http://127.0.0.1:5173")
+public class CustomerController {
+    @Autowired
+    private CustomerService customerService;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    ModelMapper modelMapper;
-
-    @Autowired
-    CustomerDetailsServiceImpl service;
+    private ModelMapper modelMapper;
 
     @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
-    JwtUtils jwtUtils;
+    CustomerRepository adminRepository;
 
     @Autowired
     PasswordEncoder encoder;
 
     @Autowired
-    UserRepository userRepository;
-
+    JwtUtils jwtUtils;
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Autowired
-    CustomerDetailsServiceImpl customerDetailsService;
-
-
-    @PostMapping("/user/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-            );
-        } catch (UsernameNotFoundException e) {
-            throw new NotFoundException("Invalid username or password");
-        }
-
-        final UserDetails userDetails = service.loadUserByEmail(loginRequest.getEmail());
-        final String token = jwtUtils.generateToken(userDetails.getUsername());
-
-        return ResponseEntity.ok("Token:"+ token);
+    @GetMapping(path = "/customer/profile")
+    public CommonResponse<Customer> getByID(HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.getProfileCustomer(jwtToken));
     }
 
-    @PostMapping("/user/register")
+    @PutMapping(path = "/customer/picture")
+    public CommonResponse<Customer> putPicture(HttpServletRequest request,@RequestBody PictureDTO profile) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class),  jwtToken));
+    }
+
+    @PutMapping(path = "/customer/profile")
+    public CommonResponse<Customer> put(@RequestBody ProfileDTO profile, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.put(modelMapper.map(profile, Customer.class), jwtToken));
+    }
+
+    @PutMapping(path = "/customer/password")
+    public CommonResponse<Customer> putPassword(@RequestBody PasswordDTO password, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.putPassword(password, jwtToken));
+    }
+
+    @PostMapping(path = "/customer/verification_code")
+    public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
+        return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification , ForGotPassword.class)));
+    }
+
+    @DeleteMapping(path = "/customer/delete/{id}")
+    public CommonResponse<?> delete(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(customerService.delete(id));
+    }
+
+
+    @PostMapping("/customer/login")
+    public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
+        CustomerDetailsImpl userDetails = (CustomerDetailsImpl) authentication.getPrincipal();
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                userDetails.getType()
+        ));
+    }
+
+    @PostMapping("/customer/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
@@ -416,7 +440,7 @@ public class UserController {
                 "</body>\n" +
                 "\n" +
                 "</html>");
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+        if (adminRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Kesalahan: Email telah digunakan!"));
@@ -432,50 +456,23 @@ public class UserController {
             return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Password tidak valid"));
         }
         // Create new user's account
-        User admin = new User();
+        Customer admin = new Customer();
         admin.setEmail(signUpRequest.getEmail());
         admin.setPassword( encoder.encode(signUpRequest.getPassword()));
         admin.setActive(signUpRequest.isActive());
-        admin.setOrigin(signUpRequest.getHp());
+        admin.setHp(signUpRequest.getHp());
         admin.setName(signUpRequest.getName());
-        admin.setDomain(signUpRequest.getAddress());
+        admin.setAddress(signUpRequest.getAddress());
         admin.setToken("Kosong");
-        admin.setTypeToken("user");
-        userRepository.save(admin);
+        admin.setTypeToken("Customer");
+        adminRepository.save(admin);
         javaMailSender.send(message);
         return ResponseEntity.ok(new MessageResponse(" Register telah berhasil! "));
     }
 
-    @GetMapping(path = "/user/profile")
-    public CommonResponse<User> getById(HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(userService.getProfileUser(jwtToken));
-    }
-
-    @PutMapping(path = "/user/update{id}" , consumes = "multipart/form-data")
-    public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(userService.update(id, update, multipartFile , jwtToken));
-    }
-
-    @PutMapping(path = "/user/password{id}")
-    public CommonResponse<User> updatePassword(@PathVariable("id") Long id, @RequestBody Password password) {
-        return ResponseHelper.ok(userService.updatePassword(id, modelMapper.map(password , User.class)));
-    }
-
-    @GetMapping("/user/profile/all")
-    public CommonResponse<List<User>> getAll(String jwtToken) {
-        return ResponseHelper.ok(userService.getAllTagihan(jwtToken));
-    }
-
-    @PostMapping("/user/forgot_password")
+    @PostMapping("/customer/forgot_password")
     public CommonResponse<ForGotPass> sendEmail(@RequestBody ForGotPass forGotPass) throws MessagingException {
-        return ResponseHelper.ok( userService.sendEmail(forGotPass));
+            return ResponseHelper.ok( customerService.sendEmail(forGotPass));
 
-    }
-
-    @PostMapping(path = "/user/verification_code")
-    public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
-        return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification , ForGotPassword.class)));
     }
 }
