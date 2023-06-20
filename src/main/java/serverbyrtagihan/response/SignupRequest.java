@@ -18,6 +18,9 @@ public class SignupRequest {
     @Column(name = "no_hp")
     private String hp;
 
+    @Column(name = "organization_id")
+    private Long organizationId;
+
     @Column(name = "active")
     private boolean active;
 
@@ -68,5 +71,13 @@ public class SignupRequest {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
     }
 }

@@ -1,8 +1,5 @@
 package serverbyrtagihan.controller;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.UserRecord;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.dto.*;
 import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
@@ -24,11 +21,20 @@ import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
 import serverbyrtagihan.swagger.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.response.*;
+import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.Impl.CustomerDetailsImpl;
+import serverbyrtagihan.Service.CustomerService;
+import serverbyrtagihan.swagger.Modal.ForGotPassword;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -36,6 +42,7 @@ import javax.validation.Valid;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -45,6 +52,7 @@ public class CustomerController {
     @Autowired
     CustomerRepository adminRepository;
 
+
     @Autowired
     PasswordEncoder encoder;
 
@@ -52,18 +60,19 @@ public class CustomerController {
     JwtUtils jwtUtils;
     @Autowired
     private JavaMailSender javaMailSender;
-
+    @Autowired
+    serverbyrtagihan.Repository.CustomerOrganizationRepository organizationRepository;
 
     @GetMapping(path = "/customer/profile")
-    public CommonResponse<Customer> getByID(HttpServletRequest request) {
+    public CommonResponse<Customer> get(HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(customerService.getProfileCustomer(jwtToken));
     }
 
-    @PutMapping(path = "/customer/picture", consumes = "multipart/form-data")
-    public CommonResponse<Customer> putPicture(HttpServletRequest request, PictureDTO profile, @RequestPart("file") MultipartFile multipartFile) {
+    @PutMapping(path = "/customer/picture")
+    public CommonResponse<Customer> putPicture(HttpServletRequest request, @RequestBody PictureDTO profile) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class), multipartFile, jwtToken));
+        return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class), jwtToken));
     }
 
     @PutMapping(path = "/customer/profile")
@@ -78,14 +87,15 @@ public class CustomerController {
         return ResponseHelper.ok(customerService.putPassword(password, jwtToken));
     }
 
-    @PutMapping(path = "/customer/password/{id}")
-    public CommonResponse<Customer> putPass(@RequestBody Customer password, @PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerService.putPass(password, id));
+    @PostMapping(path = "/customer/verification_code")
+    public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
+        return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
     }
 
-    @DeleteMapping(path = "/customer/delete/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerService.delete(id));
+    @DeleteMapping(path = "/user/customer/{id}")
+    public CommonResponse<?> delete(@PathVariable("id") Long id ,HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.delete(id, jwtToken));
     }
 
 
@@ -98,12 +108,13 @@ public class CustomerController {
         CustomerDetailsImpl userDetails = (CustomerDetailsImpl) authentication.getPrincipal();
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
-                userDetails.getUsername()
+                userDetails.getUsername(),
+                userDetails.getType()
         ));
     }
 
-    @PostMapping("/customer/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws FirebaseAuthException, MessagingException {
+    @PostMapping("/user/customer")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -438,12 +449,6 @@ public class CustomerController {
                 "</body>\n" +
                 "\n" +
                 "</html>");
-        UserRecord.CreateRequest createRequest = new UserRecord.CreateRequest()
-                .setEmail(signUpRequest.getEmail())
-                .setPassword(encoder.encode(signUpRequest.getPassword()))
-                .setDisplayName(signUpRequest.getName());
-
-        UserRecord userRecord = FirebaseAuth.getInstance().createUser(createRequest);
         if (adminRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
@@ -460,19 +465,34 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Password tidak valid"));
         }
         // Create new user's account
-        Customer admin = new Customer(signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()), signUpRequest.getName(), signUpRequest.getHp(), signUpRequest.getAddress(), signUpRequest.isActive());
+        Customer admin = new Customer();
+        admin.setEmail(signUpRequest.getEmail());
+        admin.setPassword(encoder.encode(signUpRequest.getPassword()));
+        admin.setActive(signUpRequest.isActive());
+        admin.setHp(signUpRequest.getHp());
+        admin.setName(signUpRequest.getName());
+        admin.setAddress(signUpRequest.getAddress());
+        admin.setToken("Kosong");
+        admin.setOrganizationId(0L);
+        admin.setTypeToken("Customer");
         adminRepository.save(admin);
         javaMailSender.send(message);
-        return ResponseEntity.ok(new MessageResponse(" Register telah berhasil!  " + " UID pengguna:  " + userRecord));
+        return ResponseEntity.ok(new MessageResponse(" Register telah berhasil! "));
     }
 
     @PostMapping("/customer/forgot_password")
-    public String sendEmail(@RequestBody EmailRequest emailRequest) {
-        try {
-            customerService.sendEmail(emailRequest.getEmail());
-            return "Email sent successfully";
-        } catch (MessagingException e) {
-            return "Failed to send email: " + e.getMessage();
-        }
+    public CommonResponse<ForGotPass> sendEmail(@RequestBody ForGotPass forGotPass) throws MessagingException {
+        return ResponseHelper.ok(customerService.sendEmail(forGotPass));
+
     }
+
+    @GetMapping("/user/customer")
+    public CommonResponse<List<Customer>> Get() {
+        return ResponseHelper.ok(customerService.getAll());
+    }
+    @GetMapping("/user/customer/{id}")
+    public CommonResponse<Customer> Preview(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(customerService.getById(id));
+    }
+
 }

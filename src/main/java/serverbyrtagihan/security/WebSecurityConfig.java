@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import serverbyrtagihan.security.jwt.AuthEntryPointJwt;
 import serverbyrtagihan.security.jwt.AuthTokenFilter;
 import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
+import serverbyrtagihan.security.jwt.TokenFilterUser;
 
 @Configuration
 @EnableWebSecurity
@@ -51,7 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/customer/login/**",
             "/api/customer/forgot_password/**",
             "/api/login/**",
+            "/api/user/**",
             "/api/register/**",
+            "/api/**",
+            "/api/user/login/**",
+            "/api/customer/verification_code/**",
+            "/api/user/channel/**"
     };
 
 
@@ -72,9 +78,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
+                .antMatchers("/api/**").hasRole("Customer")
+                .antMatchers("/api/**").hasRole("user")
                 .antMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new TokenFilterUser(), UsernamePasswordAuthenticationFilter.class);
     }
 
 }
