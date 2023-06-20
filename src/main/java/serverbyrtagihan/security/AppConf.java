@@ -1,4 +1,4 @@
-package serverbyrtagihan.configuration;
+package serverbyrtagihan.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -7,10 +7,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-public class AppConfig extends WebMvcConfigurerAdapter {
-
+public class AppConf extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**").allowedMethods("*").allowedOrigins("*").maxAge(3600);
+        registry.addMapping("/**").allowedOrigins("*").allowedMethods("*").maxAge(3600);
     }
 }

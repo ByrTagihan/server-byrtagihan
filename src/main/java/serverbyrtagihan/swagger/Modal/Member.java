@@ -1,8 +1,8 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.swagger.Modal;
 
 
 import org.hibernate.type.UUIDBinaryType;
-import serverbyrtagihan.Auditing.DateConfig;
+import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
 

@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.swagger.Modal;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,7 @@ public class UserPrinciple implements UserDetails {
         this.autority = autority;
     }
 
-    public static UserPrinciple build(ByrTagihan register) {
+    public static UserPrinciple build(serverbyrtagihan.Modal.ByrTagihan register) {
         return new UserPrinciple(
                 register.getEmail(),
                 register.getPassword()

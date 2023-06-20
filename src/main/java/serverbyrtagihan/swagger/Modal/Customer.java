@@ -1,18 +1,22 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.swagger.Modal;
 
-import serverbyrtagihan.Auditing.DateConfig;
+
+import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "profile_customer")
-public class Profile extends DateConfig {
+@Table(name = "customer")
+public class Customer extends DateConfig  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "email")
     private String email;
+
+    @Column (name = "password")
+    private String password;
 
     @Column(name = "nama")
     private String name;
@@ -28,7 +32,21 @@ public class Profile extends DateConfig {
     @Column(name = "picture")
     private String picture;
 
-    public Profile() {
+    @Column(name = "active")
+    private boolean active;
+
+
+    public Customer() {
+    }
+
+
+    public Customer(String email, String password, String name, String hp, String address, boolean active) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.hp = hp;
+        this.address = address;
+        this.active = active;
     }
 
     public Long getId() {
@@ -77,5 +95,21 @@ public class Profile extends DateConfig {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

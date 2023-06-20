@@ -2,12 +2,10 @@ package serverbyrtagihan.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Modal.Member;
-import serverbyrtagihan.Modal.Profile;
 import serverbyrtagihan.Repository.MemberRepository;
 import serverbyrtagihan.Service.MemberService;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.swagger.Modal.Member;
 
 
 import java.util.HashMap;
