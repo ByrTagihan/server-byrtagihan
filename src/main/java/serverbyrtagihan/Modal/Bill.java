@@ -34,7 +34,7 @@ public class Bill extends DateConfig {
     @Column(name = "paid_id")
     private Long paid_id;
 
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "paid_date")
     private Date paid_date;
 
