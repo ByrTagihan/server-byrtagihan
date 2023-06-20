@@ -814,6 +814,11 @@ public class ProfileImpl implements CustomerService {
     }
 
     @Override
+    public Customer getById(Long id) {
+        return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+    }
+
+    @Override
     public List<Customer> getAll() {
         return customerRepository.findAll();
     }
@@ -824,11 +829,13 @@ public class ProfileImpl implements CustomerService {
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        update.setName(customer.getName());
-        update.setAddress(customer.getAddress());
-        update.setHp(customer.getHp());
-        return customerRepository.save(update);
+            Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setName(customer.getName());
+            update.setAddress(customer.getAddress());
+            update.setHp(customer.getHp());
+            update.setPassword(encoder.encode(customer.getPassword()));
+            update.setActive(customer.isActive());
+            return customerRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -840,18 +847,18 @@ public class ProfileImpl implements CustomerService {
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        boolean conPassword = encoder.matches(passwordDTO.getOld_password(), update.getPassword());
-        if (conPassword) {
-            if (passwordDTO.getNew_password().equals(passwordDTO.getConfirm_new_password())) {
-                update.setPassword(encoder.encode(passwordDTO.getNew_password()));
-                return customerRepository.save(update);
+            Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            boolean conPassword = encoder.matches(passwordDTO.getOld_password(), update.getPassword());
+            if (conPassword) {
+                if (passwordDTO.getNew_password().equals(passwordDTO.getConfirm_new_password())) {
+                    update.setPassword(encoder.encode(passwordDTO.getNew_password()));
+                    return customerRepository.save(update);
+                } else {
+                    throw new BadRequestException("Password tidak sesuai");
+                }
             } else {
-                throw new BadRequestException("Password tidak sesuai");
+                throw new NotFoundException("Password lama tidak sesuai");
             }
-        } else {
-            throw new NotFoundException("Password lama tidak sesuai");
-        }
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -863,10 +870,10 @@ public class ProfileImpl implements CustomerService {
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-        Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        update.setPicture(customer.getPicture());
-        return customerRepository.save(update);
-        }else {
+            Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setPicture(customer.getPicture());
+            return customerRepository.save(update);
+        } else {
             throw new BadRequestException("Token not valid");
         }
     }

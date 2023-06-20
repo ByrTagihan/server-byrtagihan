@@ -17,6 +17,8 @@ public interface CustomerService {
 
     Customer getProfileCustomer(String jwtToken);
 
+    Customer getById(Long id);
+
     List<Customer> getAll();
 
     Customer put(Customer customer , String jwtToken);

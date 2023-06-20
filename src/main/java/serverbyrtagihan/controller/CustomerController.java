@@ -29,6 +29,7 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -54,15 +55,15 @@ public class CustomerController {
     private JavaMailSender javaMailSender;
 
     @GetMapping(path = "/customer/profile")
-    public CommonResponse<Customer> getByID(HttpServletRequest request) {
+    public CommonResponse<Customer> get(HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(customerService.getProfileCustomer(jwtToken));
     }
 
     @PutMapping(path = "/customer/picture")
-    public CommonResponse<Customer> putPicture(HttpServletRequest request,@RequestBody PictureDTO profile) {
+    public CommonResponse<Customer> putPicture(HttpServletRequest request, @RequestBody PictureDTO profile) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class),  jwtToken));
+        return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class), jwtToken));
     }
 
     @PutMapping(path = "/customer/profile")
@@ -79,10 +80,10 @@ public class CustomerController {
 
     @PostMapping(path = "/customer/verification_code")
     public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
-        return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification , ForGotPassword.class)));
+        return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
     }
 
-    @DeleteMapping(path = "/customer/delete/{id}")
+    @DeleteMapping(path = "/user/customer/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(customerService.delete(id));
     }
@@ -102,8 +103,8 @@ public class CustomerController {
         ));
     }
 
-    @PostMapping("/customer/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
+    @PostMapping("/user/customer")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -456,7 +457,7 @@ public class CustomerController {
         // Create new user's account
         Customer admin = new Customer();
         admin.setEmail(signUpRequest.getEmail());
-        admin.setPassword( encoder.encode(signUpRequest.getPassword()));
+        admin.setPassword(encoder.encode(signUpRequest.getPassword()));
         admin.setActive(signUpRequest.isActive());
         admin.setHp(signUpRequest.getHp());
         admin.setName(signUpRequest.getName());
@@ -470,7 +471,17 @@ public class CustomerController {
 
     @PostMapping("/customer/forgot_password")
     public CommonResponse<ForGotPass> sendEmail(@RequestBody ForGotPass forGotPass) throws MessagingException {
-            return ResponseHelper.ok( customerService.sendEmail(forGotPass));
+        return ResponseHelper.ok(customerService.sendEmail(forGotPass));
 
     }
+
+    @GetMapping("/user/customer")
+    public CommonResponse<List<Customer>> Get() {
+        return ResponseHelper.ok(customerService.getAll());
+    }
+    @GetMapping("/user/customer/{id}")
+    public CommonResponse<Customer> Preview(@PathVariable("id") Long id) {
+        return ResponseHelper.ok(customerService.getById(id));
+    }
+
 }
