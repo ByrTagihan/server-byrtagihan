@@ -10,6 +10,7 @@ import serverbyrtagihan.Impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+import serverbyrtagihan.Modal.UserPrinciple;
 
 import java.util.Date;
 
@@ -32,10 +33,23 @@ public class JwtUtils {
                 .claim("type_token" , adminPrincipal.getType())
                 .setAudience(adminPrincipal.getType())
                 .setSubject((adminPrincipal.getUsername()))
+                .claim("organization_id" , adminPrincipal.getOrganizationIdId())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
+    public String generateJwtTokenMember(Authentication authentication) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 3600000 * 3); // Set token expiration to 1 hour
+        UserPrinciple adminPrincipal = (UserPrinciple) authentication.getPrincipal();
+        return Jwts.builder()
+                .claim("id" , adminPrincipal.getId())
+                .setSubject((adminPrincipal.getUsername()))
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
     public static Claims decodeJwt(String jwtToken) {
         Jws<Claims> jwsClaims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)

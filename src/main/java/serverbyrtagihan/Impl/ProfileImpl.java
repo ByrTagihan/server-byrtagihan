@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.Service.CustomerService;
@@ -880,14 +881,20 @@ public class ProfileImpl implements CustomerService {
 
 
     @Override
-    public Map<String, Boolean> delete(Long id) {
-        try {
-            customerRepository.deleteById(id);
-            Map<String, Boolean> res = new HashMap<>();
-            res.put("Deleted", Boolean.TRUE);
-            return res;
-        } catch (Exception e) {
-            return null;
+    public Map<String, Boolean> delete(Long id ,String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            try {
+                customerRepository.deleteById(id);
+                Map<String, Boolean> res = new HashMap<>();
+                res.put("Deleted", Boolean.TRUE);
+                return res;
+            } catch (Exception e) {
+                return null;
+            }
+        } else {
+            throw new BadRequestException("Token not valid");
         }
 
     }

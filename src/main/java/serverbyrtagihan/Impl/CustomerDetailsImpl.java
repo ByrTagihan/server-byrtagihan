@@ -3,7 +3,7 @@ package serverbyrtagihan.Impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import serverbyrtagihan.Modal.ByrTagihan;
+import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Modal.Customer;
 
 import java.util.Collection;
@@ -14,27 +14,34 @@ public class CustomerDetailsImpl implements UserDetails {
     private Long id;
     private String type;
     private String username;
+    private Long organizationId;
 
     @JsonIgnore
     private String password;
 
-    public CustomerDetailsImpl(Long id, String email, String password ,String type) {
+    public CustomerDetailsImpl(Long id, String email, String password, String type, Long organizationId) {
         this.id = id;
         this.username = email;
         this.password = password;
         this.type = type;
+        this.organizationId = organizationId;
     }
 
-    public static CustomerDetailsImpl build(Customer admin, ByrTagihan users) {
+    public static CustomerDetailsImpl build(Customer admin, User users) {
         return new CustomerDetailsImpl(
                 admin.getId(),
                 admin.getEmail(),
                 admin.getPassword(),
-                admin.getTypeToken());
+                admin.getTypeToken(),
+                admin.getOrganizationId());
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getOrganizationIdId() {
+        return organizationId;
     }
 
     public String getType() {

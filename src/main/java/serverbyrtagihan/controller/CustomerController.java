@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.Service.CustomerService;
@@ -19,6 +20,7 @@ import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
@@ -37,6 +39,7 @@ import java.util.List;
 public class CustomerController {
     @Autowired
     private CustomerService customerService;
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -46,6 +49,7 @@ public class CustomerController {
     @Autowired
     CustomerRepository adminRepository;
 
+
     @Autowired
     PasswordEncoder encoder;
 
@@ -53,6 +57,8 @@ public class CustomerController {
     JwtUtils jwtUtils;
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    serverbyrtagihan.Repository.CustomerOrganizationRepository organizationRepository;
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> get(HttpServletRequest request) {
@@ -84,8 +90,9 @@ public class CustomerController {
     }
 
     @DeleteMapping(path = "/user/customer/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerService.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id") Long id ,HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.delete(id, jwtToken));
     }
 
 
@@ -104,7 +111,7 @@ public class CustomerController {
     }
 
     @PostMapping("/user/customer")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -463,6 +470,7 @@ public class CustomerController {
         admin.setName(signUpRequest.getName());
         admin.setAddress(signUpRequest.getAddress());
         admin.setToken("Kosong");
+        admin.setOrganizationId(0L);
         admin.setTypeToken("Customer");
         adminRepository.save(admin);
         javaMailSender.send(message);
