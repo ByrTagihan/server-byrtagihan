@@ -27,7 +27,7 @@ public class CustomerDetailsImpl implements UserDetails {
         this.organizationId = organizationId;
     }
 
-    public static CustomerDetailsImpl build(Customer admin, User users) {
+    public static CustomerDetailsImpl build(Customer admin) {
         return new CustomerDetailsImpl(
                 admin.getId(),
                 admin.getEmail(),
