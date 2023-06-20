@@ -60,6 +60,9 @@ public class UserController {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @Autowired
+    CustomerDetailsServiceImpl customerDetailsService;
+
 
     @PostMapping("/user/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
