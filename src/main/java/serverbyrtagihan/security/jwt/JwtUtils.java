@@ -3,6 +3,7 @@ package serverbyrtagihan.security.jwt;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -11,8 +12,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import serverbyrtagihan.Impl.UserDetailsImpl;
+import serverbyrtagihan.Modal.User;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Component
@@ -23,6 +27,9 @@ public class JwtUtils {
     @Value("${bezkoder.app.jwtExpirationMs}")
     private int jwtExpirationMs;
     private static final String SECRET_KEY = "codingshooltelogosari";
+
+    @Autowired
+    serverbyrtagihan.Repository.UserRepository userRepository;
 
     public String generateJwtToken(Authentication authentication) {
         Date now = new Date();
@@ -38,19 +45,25 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String generateJwtTokenUser(Authentication authentication) {
+    public String generateToken(String username) {
+        return createToken( username);
+    }
+
+    private String createToken(String user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + 3600000 * 3);
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        User user1 = userRepository.findByEmail(user).get();
         return Jwts.builder()
-                .claim("id" , userDetails.getId())
-                .claim("type_token" , userDetails.getType())
-                .setAudience(userDetails.getType())
-                .setSubject((userDetails.getUsername()))
+                .setSubject(user)
+                .claim("id" , user1.getId())
+                .claim("type_token" , user1.getTypeToken())
+                .setAudience(user1.getTypeToken())
+                .setIssuedAt(now)
                 .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
+
 
     public static Claims decodeJwt(String jwtToken) {
         Jws<Claims> jwsClaims = Jwts.parser()
