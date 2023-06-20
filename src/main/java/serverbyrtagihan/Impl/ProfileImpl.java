@@ -11,14 +11,13 @@ import org.springframework.validation.BindingResult;
 import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.Repository.GetVerification;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
-import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
 import javax.mail.MessagingException;
@@ -32,7 +31,7 @@ public class ProfileImpl implements CustomerService {
 
 
     @Autowired
-    private CustomerRepository customerRepository;
+     CustomerRepository customerRepository;
 
     @Autowired
     private GetVerification getVerification;

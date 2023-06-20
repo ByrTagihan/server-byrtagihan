@@ -17,8 +17,9 @@ import javax.transaction.Transactional;
 public class CustomerDetailsServiceImpl implements UserDetailsService {
     @Autowired
     CustomerRepository adminRepository;
+
     @Autowired
-    private UserRepository userRepository;
+     UserRepository userRepository;
 
     @Override
     @Transactional
@@ -29,5 +30,13 @@ public class CustomerDetailsServiceImpl implements UserDetailsService {
         return CustomerDetailsImpl.build(admin , users);
     }
 
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        // Implement the logic to load user details from the database based on the provided email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+
+        // Create an instance of UserDetails using the retrieved user details
+        return UserDetailsImpl.buildUser(user);
+    }
 
 }
