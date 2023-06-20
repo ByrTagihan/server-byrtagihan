@@ -12,14 +12,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.Impl.UserDetailsImpl;
-import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.Modal.User;
-import serverbyrtagihan.Modal.UserPrinciple;
-import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
 import serverbyrtagihan.dto.*;
@@ -60,7 +55,7 @@ public class UserController {
 
 
     @PostMapping("/user/login")
-    public ResponseEntity<?> authenticateAdmins (@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser (@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -457,8 +452,8 @@ public class UserController {
     }
 
     @GetMapping("/user/profile/all")
-    public CommonResponse<List<User>> getAll() {
-        return ResponseHelper.ok(userService.getAllTagihan());
+    public CommonResponse<List<User>> getAll(String jwtToken) {
+        return ResponseHelper.ok(userService.getAllTagihan(jwtToken));
     }
 
     @PostMapping("/user/forgot_password")

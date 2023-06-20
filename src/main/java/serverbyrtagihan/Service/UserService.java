@@ -24,5 +24,5 @@ public interface UserService {
 
     User updatePassword(Long id, User user);
 
-    List<User> getAllTagihan();
+    List<User> getAllTagihan(String jwtToken);
 }

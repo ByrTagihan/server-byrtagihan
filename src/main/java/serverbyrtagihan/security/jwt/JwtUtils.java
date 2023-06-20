@@ -11,7 +11,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import serverbyrtagihan.Impl.UserDetailsImpl;
-import serverbyrtagihan.Modal.UserPrinciple;
 
 import java.util.Date;
 

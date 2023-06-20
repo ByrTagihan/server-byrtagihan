@@ -4,46 +4,27 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Jwt.JwtProvider;
-import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Repository.GetVerification;
 import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
 import serverbyrtagihan.dto.ForGotPass;
-import serverbyrtagihan.dto.Login;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.exception.BadRequestException;
-import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
-import java.util.regex.Pattern;
 
 @Service
 public class UserImpl implements UserService {
@@ -826,12 +807,17 @@ public class UserImpl implements UserService {
     public User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
-        User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        update.setName(profileDTO.getName());
-        update.setDomain(profileDTO.getAddress());
-        update.setOrigin(profileDTO.getHp());
-        update.setPicture(profileDTO.getImg());
-        return userRepository.save(update);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("user")) {
+            User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setName(profileDTO.getName());
+            update.setDomain(profileDTO.getAddress());
+            update.setOrigin(profileDTO.getHp());
+            update.setPicture(profileDTO.getImg());
+            return userRepository.save(update);
+        } else {
+            throw new BadRequestException("Token Tidak Cocok");
+        }
     }
 
     @Override
@@ -842,7 +828,14 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllTagihan() {
+    public List<User> getAllTagihan(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("user")) {
         return userRepository.findAll();
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
     }
 }

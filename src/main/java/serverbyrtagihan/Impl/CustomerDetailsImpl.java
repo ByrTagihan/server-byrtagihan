@@ -33,6 +33,7 @@ public class CustomerDetailsImpl implements UserDetails {
                 admin.getTypeToken());
     }
 
+
     public Long getId() {
         return id;
     }
