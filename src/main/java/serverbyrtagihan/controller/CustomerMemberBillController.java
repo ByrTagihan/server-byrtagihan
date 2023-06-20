@@ -2,6 +2,7 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.Modal.Bill;
 import serverbyrtagihan.Service.BillService;
@@ -23,10 +24,15 @@ public class CustomerMemberBillController {
     @Autowired
     private ModelMapper modelMapper;
 
+    public static final String DEFAULT_PAGE_NUMBER = "1";
+    public  static final String DEFAULT_PAGE_SIZE = "10";
+    public static final String DEFAULT_SORT_BY = "id";
+    public static final String DEFAULT_SORT_DIRECTION = "asc";
+
     @GetMapping(path = "/customer/member/{memberid}/bill")
-    public CommonResponse<List<Bill>> getAll(HttpServletRequest request, @PathVariable("memberid") Long memberId) {
+    public CommonResponse<Page<Bill>> getAll(HttpServletRequest request, @PathVariable("memberid") Long memberId, @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER, required = false) Long page, @RequestParam(value = "limit", defaultValue = DEFAULT_PAGE_SIZE, required = false) Long pageSize) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(billService.getByMemberId(memberId, jwtToken));
+        return ResponseHelper.ok(billService.getByMemberId(memberId, jwtToken, page, pageSize));
     }
 
     @GetMapping(path = "/customer/member/{memberid}/bill/{id}")

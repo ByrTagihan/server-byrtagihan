@@ -2,6 +2,9 @@ package serverbyrtagihan.Impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.Modal.Bill;
 import serverbyrtagihan.Repository.BillRepository;
@@ -13,7 +16,6 @@ import serverbyrtagihan.security.jwt.JwtUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class BillServiceImpl implements BillService {
@@ -24,11 +26,12 @@ public class BillServiceImpl implements BillService {
 
     //Customer
     @Override
-    public List<Bill> getAll(String jwtToken) {
+    public Page<Bill> getAll(String jwtToken, Long page, Long pageSize) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(pageSize));
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return billRepository.findAll();
+            return billRepository.findAll(pageable);
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -124,11 +127,12 @@ public class BillServiceImpl implements BillService {
 
     //Member
     @Override
-    public List<Bill> getByMemberId(Long memberId, String jwtToken) {
+    public Page<Bill> getByMemberId(Long memberId, String jwtToken, Long page, Long pageSize) {
+        Pageable pageable = PageRequest.of(Math.toIntExact(page) - 1, Math.toIntExact(pageSize));
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return billRepository.findByMemberId(memberId);
+            return billRepository.findByMemberId(memberId, pageable);
         } else {
             throw new BadRequestException("Token not valid");
         }

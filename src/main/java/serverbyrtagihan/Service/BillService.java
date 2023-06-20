@@ -1,5 +1,6 @@
 package serverbyrtagihan.Service;
 
+import org.springframework.data.domain.Page;
 import serverbyrtagihan.Modal.Bill;
 
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.Optional;
 public interface BillService {
 
     //Customer
-    List<Bill> getAll(String jwtToken);
+    Page<Bill> getAll(String jwtToken, Long page, Long pageSize);
 
     Bill add(Bill bill, String jwtToken);
 
@@ -24,7 +25,7 @@ public interface BillService {
     Map<String, Boolean> delete(Long id, String jwtToken);
 
     //Member
-    List<Bill> getByMemberId(Long memberId, String jwtToken);
+    Page<Bill> getByMemberId(Long memberId, String jwtToken, Long page, Long pageSize);
 
     Bill addByMemberId(Bill bill, Long memberId, String jwtToken);
 
