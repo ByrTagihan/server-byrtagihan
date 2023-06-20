@@ -1,6 +1,7 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.swagger.Modal;
 
 
+import org.hibernate.type.UUIDBinaryType;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -14,6 +15,10 @@ public class Member extends DateConfig {
     @Id
 
     private Long id;
+
+    @Column(name = "unique_id")
+    private String unique_id;
+
     @Column(name = "name")
     private String name;
 

@@ -12,7 +12,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import serverbyrtagihan.Impl.UserDetailsImpl;
-import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.swagger.Modal.User;
 
 import java.util.Date;
 import java.util.HashMap;

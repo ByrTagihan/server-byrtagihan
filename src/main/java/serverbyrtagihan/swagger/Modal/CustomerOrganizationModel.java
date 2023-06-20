@@ -12,6 +12,8 @@ public class CustomerOrganizationModel extends DateConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private long customer_id;
+
     @Column(name = "name")
     private String name;
 
@@ -51,6 +53,14 @@ public class CustomerOrganizationModel extends DateConfig {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
     }
 
     public String getName() {

@@ -3,12 +3,12 @@ package serverbyrtagihan.Impl;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.Channel;
+import serverbyrtagihan.Repository.ChannelRepository;
+import serverbyrtagihan.Service.ChannelService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.repository.ChannelRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.service.ChannelService;
+import serverbyrtagihan.swagger.Modal.Channel;
 
 import java.util.HashMap;
 import java.util.List;

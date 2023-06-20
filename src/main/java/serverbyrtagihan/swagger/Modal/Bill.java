@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.swagger.Modal;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

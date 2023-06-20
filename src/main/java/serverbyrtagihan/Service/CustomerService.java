@@ -1,11 +1,10 @@
 package serverbyrtagihan.Service;
 
 import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
+import serverbyrtagihan.swagger.Modal.Customer;
+import serverbyrtagihan.swagger.Modal.ForGotPassword;
 
 import javax.mail.MessagingException;
 import java.util.List;

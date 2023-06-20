@@ -1,6 +1,6 @@
-package serverbyrtagihan.service;
+package serverbyrtagihan.Service;
 
-import serverbyrtagihan.Modal.Channel;
+import serverbyrtagihan.swagger.Modal.Channel;
 
 import java.util.List;
 import java.util.Map;

@@ -1,9 +1,9 @@
-package serverbyrtagihan.repository;
+package serverbyrtagihan.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.Modal.Channel;
+import serverbyrtagihan.swagger.Modal.Channel;
 
 @Repository
-public interface ChannelRepository extends JpaRepository<Channel , Long> {
+public interface ChannelRepository extends JpaRepository<Channel, Long> {
 }

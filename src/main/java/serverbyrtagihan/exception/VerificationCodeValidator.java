@@ -3,7 +3,7 @@ package serverbyrtagihan.exception;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
-import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.swagger.Modal.ForGotPassword;
 
 @Component
 public class VerificationCodeValidator implements Validator {

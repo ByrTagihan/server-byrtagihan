@@ -3,8 +3,8 @@ package serverbyrtagihan.Impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.swagger.Modal.User;
+
 
 import java.util.Collection;
 import java.util.Objects;

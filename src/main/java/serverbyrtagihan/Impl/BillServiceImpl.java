@@ -2,10 +2,10 @@ package serverbyrtagihan.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.Bill;
 import serverbyrtagihan.Repository.BillRepository;
 import serverbyrtagihan.Service.BillService;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.swagger.Modal.Bill;
 
 import java.util.HashMap;
 import java.util.List;
