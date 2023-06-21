@@ -7,5 +7,5 @@ import serverbyrtagihan.swagger.Modal.Member;
 import java.util.UUID;
 
 @Repository
-public interface MemberRepository  extends JpaRepository<Member, UUID> {
+public interface MemberRepository  extends JpaRepository<Member, Long> {
 }

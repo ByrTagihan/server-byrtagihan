@@ -2,10 +2,10 @@ package serverbyrtagihan.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.CustomerOrganizationModel;
 import serverbyrtagihan.Repository.CustomerOrganizationRepository;
 import serverbyrtagihan.Service.CustomerOrganizationService;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.swagger.Modal.CustomerOrganizationModel;
 
 
 import java.util.HashMap;

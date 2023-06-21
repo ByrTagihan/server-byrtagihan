@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.swagger.Modal;
 
 
 import serverbyrtagihan.auditing.DateConfig;
@@ -36,7 +36,7 @@ public class CustomerOrganizationModel extends DateConfig {
     private String balance;
 
     @Column(name = "bank_account_number")
-    private int bank_account_number;
+    private String bank_account_number;
 
     @Column(name = "bank_account_name")
     private String bank_account_name;
@@ -119,11 +119,11 @@ public class CustomerOrganizationModel extends DateConfig {
         this.balance = balance;
     }
 
-    public int getBank_account_number() {
+    public String getBank_account_number() {
         return bank_account_number;
     }
 
-    public void setBank_account_number(int bank_account_number) {
+    public void setBank_account_number(String bank_account_number) {
         this.bank_account_number = bank_account_number;
     }
 

@@ -27,7 +27,7 @@ public class MemberController {
     }
 
     @GetMapping(path = "/customer/member/{id}")
-    public CommonResponse<Member> getByID(@PathVariable("id") UUID id) {
+    public CommonResponse<Member> getByID(@PathVariable("id") Long id) {
         return ResponseHelper.ok(member.getById(id));
     }
 
@@ -37,11 +37,11 @@ public class MemberController {
     }
 
     @PutMapping(path = "/customer/member/{id}")
-    public CommonResponse<Member> put(  @PathVariable("id") UUID id ,@RequestBody MemberDTO memberDTO){
+    public CommonResponse<Member> put(  @PathVariable("id") Long id ,@RequestBody MemberDTO memberDTO){
         return ResponseHelper.ok(member.put(modelMapper.map(memberDTO, Member.class), id));
     }
     @DeleteMapping(path = "/customer/member/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") UUID id) {
+    public CommonResponse<?> delete(@PathVariable("id") Long id) {
         return ResponseHelper.ok(member.delete(id));
     }
 

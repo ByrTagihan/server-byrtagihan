@@ -21,7 +21,6 @@ public class MemberImpl implements MemberService {
 
     @Override
     public Member add(Member member ) {
-//        member.setId(UUID.randomUUID());
 
         Member member1 = new Member();
         member1.setName(member.getName());
@@ -31,19 +30,10 @@ public class MemberImpl implements MemberService {
         return memberRepository.save(member1);
     }
 
-//    public Profile add(Profile profile, MultipartFile multipartFile) {
-//        String picture = imageConverter(multipartFile);
-//        Profile profile1 = new Profile();
-//        profile1.setPicture(picture);
-//        profile1.setEmail(profile.getEmail());
-//        profile1.setName(profile.getName());
-//        profile1.setAddress(profile.getAddress());
-//        profile1.setHp(profile.getHp());
-//        return profileRepository.save(profile1);
-//    }
+
 
     @Override
-    public Member getById(UUID id) {
+    public Member getById(Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
     }
 
@@ -53,7 +43,7 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public Member put(Member member, UUID id) {
+    public Member put(Member member, Long id) {
         Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         update.setName(member.getName());
         update.setAddres(member.getAddres());
@@ -65,7 +55,7 @@ public class MemberImpl implements MemberService {
 
 
     @Override
-    public Map<String, Boolean> delete(UUID id) {
+    public Map<String, Boolean> delete(Long id) {
         try {
             memberRepository.deleteById(id);
             Map<String, Boolean> res = new HashMap<>();

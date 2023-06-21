@@ -1,6 +1,6 @@
 package serverbyrtagihan.Service;
 
-import serverbyrtagihan.Modal.CustomerOrganizationModel;
+import serverbyrtagihan.swagger.Modal.CustomerOrganizationModel;
 
 import java.util.*;
 

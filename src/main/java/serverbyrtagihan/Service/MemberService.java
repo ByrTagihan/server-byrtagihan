@@ -8,11 +8,11 @@ import java.util.*;
 public interface MemberService {
     Member add(Member member);
 
-    Member getById(UUID id);
+    Member getById(Long id);
 
     List<Member> getAll();
 
-    Member put(Member member, UUID id);
+    Member put(Member member, Long id);
 
-    Map<String, Boolean> delete(UUID id);
+    Map<String, Boolean> delete(Long id);
 }
