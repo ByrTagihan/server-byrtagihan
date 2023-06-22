@@ -1,23 +1,21 @@
 package serverbyrtagihan.Modal;
 
 
-import org.hibernate.type.UUIDBinaryType;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "member")
-
-public class Member extends DateConfig {
+public class
+Member extends DateConfig {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-
     private Long id;
 
     @Column(name = "unique_id")
-    private String unique_id;
+    private String uniqueId;
 
     @Column(name = "name")
     private String name;
@@ -31,6 +29,19 @@ public class Member extends DateConfig {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "type_token")
+    private String typeToken;
+
+    public Member() {
+    }
+
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
+    }
 
     public Long getId() {
         return id;
@@ -70,5 +81,13 @@ public class Member extends DateConfig {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getTypeToken() {
+        return typeToken;
+    }
+
+    public void setTypeToken(String typeToken) {
+        this.typeToken = typeToken;
     }
 }

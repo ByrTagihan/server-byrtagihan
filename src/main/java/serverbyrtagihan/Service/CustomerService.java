@@ -1,4 +1,4 @@
-package serverbyrtagihan.Service;
+package serverbyrtagihan.service;
 
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;

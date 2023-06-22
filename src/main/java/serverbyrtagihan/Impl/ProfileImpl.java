@@ -6,19 +6,19 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Repository.CustomerRepository;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import serverbyrtagihan.Repository.GetVerification;
 import serverbyrtagihan.dto.ForGotPass;
-import serverbyrtagihan.Service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
+import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Modal.Customer;
 import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -31,7 +31,7 @@ public class ProfileImpl implements CustomerService {
 
 
     @Autowired
-     CustomerRepository customerRepository;
+    CustomerRepository customerRepository;
 
     @Autowired
     private GetVerification getVerification;

@@ -1,4 +1,4 @@
-package serverbyrtagihan.Service;
+package serverbyrtagihan.service;
 
 
 import serverbyrtagihan.Modal.Member;
@@ -6,13 +6,13 @@ import serverbyrtagihan.Modal.Member;
 import java.util.*;
 
 public interface MemberService {
-    Member add(Member member);
+    Member add(Member member , String jwtToken);
 
-    Member getById(UUID id);
+    Member getById(Long id , String jwtToken);
 
-    List<Member> getAll();
+    List<Member> getAll(String jwtToken);
 
-    Member put(Member member, UUID id);
+    Member put(Member member, Long id, String jwtToken);
 
-    Map<String, Boolean> delete(UUID id);
+    Map<String, Boolean> delete(Long id , String jwtToken);
 }

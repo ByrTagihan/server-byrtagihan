@@ -6,17 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
-import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.Modal.ForGotPassword;
@@ -26,7 +23,9 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -56,28 +55,25 @@ public class UserController {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    @Autowired
-    CustomerDetailsServiceImpl customerDetailsService;
-
 
     @PostMapping("/user/login")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
-            );
-        } catch (UsernameNotFoundException e) {
-            throw new NotFoundException("Invalid username or password");
+    public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Email not found"));
+        boolean conPassword = encoder.matches(loginRequest.getPassword() , user.getPassword());
+        if (conPassword) {
+            String token = jwtUtils.generateToken(user.getEmail());
+            Map<Object, Object> response = new HashMap<>();
+            response.put("data", user);
+            response.put("token-jwt", token);
+            response.put("type-token", "User");
+            return ResponseEntity.ok(response);
+        } else {
+            throw new NotFoundException("Password not valid");
         }
-
-        final UserDetails userDetails = service.loadUserByEmail(loginRequest.getEmail());
-        final String token = jwtUtils.generateToken(userDetails.getUsername());
-
-        return ResponseEntity.ok("Token:"+ token);
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
+    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -430,13 +426,13 @@ public class UserController {
         // Create new user's account
         User admin = new User();
         admin.setEmail(signUpRequest.getEmail());
-        admin.setPassword( encoder.encode(signUpRequest.getPassword()));
+        admin.setPassword(encoder.encode(signUpRequest.getPassword()));
         admin.setActive(signUpRequest.isActive());
         admin.setOrigin(signUpRequest.getHp());
         admin.setName(signUpRequest.getName());
         admin.setDomain(signUpRequest.getAddress());
         admin.setToken("Kosong");
-        admin.setTypeToken("user");
+        admin.setTypeToken("User");
         userRepository.save(admin);
         javaMailSender.send(message);
         return ResponseEntity.ok(new MessageResponse(" Register telah berhasil! "));
@@ -448,15 +444,15 @@ public class UserController {
         return ResponseHelper.ok(userService.getProfileUser(jwtToken));
     }
 
-    @PutMapping(path = "/user/update{id}" , consumes = "multipart/form-data")
+    @PutMapping(path = "/user/update{id}", consumes = "multipart/form-data")
     public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(userService.update(id, update, multipartFile , jwtToken));
+        return ResponseHelper.ok(userService.update(id, update, multipartFile, jwtToken));
     }
 
     @PutMapping(path = "/user/password{id}")
     public CommonResponse<User> updatePassword(@PathVariable("id") Long id, @RequestBody Password password) {
-        return ResponseHelper.ok(userService.updatePassword(id, modelMapper.map(password , User.class)));
+        return ResponseHelper.ok(userService.updatePassword(id, modelMapper.map(password, User.class)));
     }
 
     @GetMapping("/user/profile/all")
@@ -466,12 +462,12 @@ public class UserController {
 
     @PostMapping("/user/forgot_password")
     public CommonResponse<ForGotPass> sendEmail(@RequestBody ForGotPass forGotPass) throws MessagingException {
-        return ResponseHelper.ok( userService.sendEmail(forGotPass));
+        return ResponseHelper.ok(userService.sendEmail(forGotPass));
 
     }
 
     @PostMapping(path = "/user/verification_code")
     public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
-        return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification , ForGotPassword.class)));
+        return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
     }
 }

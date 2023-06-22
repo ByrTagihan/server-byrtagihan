@@ -3,12 +3,12 @@ package serverbyrtagihan.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Repository.TokenRepository;
 import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.Modal.TemporaryToken;
 import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.repository.UserRepository;
 
 import java.util.Date;
 import java.util.UUID;
