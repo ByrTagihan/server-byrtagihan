@@ -19,6 +19,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     @Query(value = "SELECT * FROM bill WHERE member_id = :memberId AND id = :id", nativeQuery = true)
     Bill findByIdInMember(Long memberId, Long id);
 
+
     @Query(value = "DELETE FROM bill WHERE member_id = :memberId AND id = :id", nativeQuery = true)
     void deleteByIdInMember(Long memberId, Long id);
 }
