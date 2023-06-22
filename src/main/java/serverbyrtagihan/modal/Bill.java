@@ -19,7 +19,7 @@ public class Bill extends DateConfig {
     private String description;
 
     @Column(name = "member_id")
-    private Long memberId;
+    private Long memberId = 0L;
 
     @Column(name = "organization_id")
     private Long organizationId = 0L;
@@ -35,7 +35,7 @@ public class Bill extends DateConfig {
     private Double amount;
 
     @Column(name = "member_name")
-    private String memberName;
+    private String memberName = "";
 
     @Column(name = "paid_id")
     private Long paidId = 0L;
