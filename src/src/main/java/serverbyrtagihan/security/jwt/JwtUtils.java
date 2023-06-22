@@ -6,11 +6,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
+import serverbyrtagihan.impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import serverbyrtagihan.Impl.UserDetailsImpl;
+import serverbyrtagihan.impl.UserDetailsImpl;
 
 import java.util.Date;
 

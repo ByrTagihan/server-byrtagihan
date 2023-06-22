@@ -18,9 +18,9 @@ import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.impl.CustomerDetailsImpl;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
@@ -54,7 +54,7 @@ public class CustomerController {
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
-    serverbyrtagihan.Repository.CustomerOrganizationRepository organizationRepository;
+    serverbyrtagihan.repository.CustomerOrganizationRepository organizationRepository;
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> get(HttpServletRequest request) {

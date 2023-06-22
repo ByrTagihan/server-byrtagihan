@@ -1,10 +1,10 @@
-package serverbyrtagihan.Impl;
+package serverbyrtagihan.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.Bill;
-import serverbyrtagihan.Repository.BillRepository;
-import serverbyrtagihan.Service.BillService;
+import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.repository.BillRepository;
+import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.NotFoundException;
 
 import java.util.HashMap;

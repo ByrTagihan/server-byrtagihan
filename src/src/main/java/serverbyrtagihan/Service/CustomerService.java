@@ -1,9 +1,9 @@
-package serverbyrtagihan.Service;
+package serverbyrtagihan.service;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 

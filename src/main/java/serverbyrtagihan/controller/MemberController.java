@@ -4,27 +4,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
-import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.response.*;
-import serverbyrtagihan.Modal.Member;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 
 @RestController

@@ -4,15 +4,19 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Modal.Bill;
-import serverbyrtagihan.Service.BillService;
+import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.response.PaginationResponse;
+import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.dto.BillDTO;
 import serverbyrtagihan.dto.BillPaidDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.util.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -25,15 +29,40 @@ public class CustomerBillController {
     private ModelMapper modelMapper;
 
     public static final String DEFAULT_PAGE_NUMBER = "1";
-    public  static final String DEFAULT_PAGE_SIZE = "10";
+    public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_SORT_BY = "id";
     public static final String DEFAULT_SORT_DIRECTION = "asc";
 
 
     @GetMapping(path = "/customer/bill")
-    public CommonResponse<Page<Bill>> getAll(HttpServletRequest request, @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER, required = false) Long page, @RequestParam(value = "limit", defaultValue = DEFAULT_PAGE_SIZE, required = false) Long pageSize) {
+    public PaginationResponse<List<Bill>> getAll(
+            HttpServletRequest request,
+            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
+            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
+            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(required = false) String search
+     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(billService.getAll(jwtToken, page, pageSize));
+
+        Page<Bill> billPage;
+
+        if (search != null && !search.isEmpty()) {
+            billPage = billService.searchBillsWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+        } else {
+            billPage = billService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+        }
+
+        List<Bill> bills = billPage.getContent();
+        long totalItems = billPage.getTotalElements();
+        int totalPages = billPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(bills, pagination);
     }
 
     @GetMapping(path = "/customer/bill/{id}")

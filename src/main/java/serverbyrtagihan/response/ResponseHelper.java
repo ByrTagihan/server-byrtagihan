@@ -9,7 +9,18 @@ public class ResponseHelper {
         CommonResponse<T> response = new CommonResponse<T>();
         response.setMessage("success");
         response.setStatus("200 OK");
+        response.setCode(200);
         response.setData(data);
+        return response;
+    }
+
+    public static <T> PaginationResponse<T> okWithPagination(T data, Object pagination) {
+        PaginationResponse<T> response = new PaginationResponse<T>();
+        response.setStatus("200 OK");
+        response.setCode(200);
+        response.setData(data);
+        response.setMessage("success");
+        response.setPagination(pagination);
         return response;
     }
 
