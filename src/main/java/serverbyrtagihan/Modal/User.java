@@ -30,9 +30,6 @@ import java.util.ArrayList;
         @Column(name = "domain")
         private String domain;
 
-        @Column(name = "type_token")
-        private String typeToken;
-
         @Column(name = "active")
         private boolean active;
 
@@ -97,14 +94,6 @@ import java.util.ArrayList;
 
         public void setDomain(String domain) {
             this.domain = domain;
-        }
-
-        public String getTypeToken() {
-            return typeToken;
-        }
-
-        public void setTypeToken(String typeToken) {
-            this.typeToken = typeToken;
         }
 
         public boolean isActive() {

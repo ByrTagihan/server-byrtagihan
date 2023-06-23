@@ -10,7 +10,6 @@ import serverbyrtagihan.Impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import serverbyrtagihan.Impl.UserDetailsImpl;
 
 import java.util.Date;
 

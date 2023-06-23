@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.Modal.Member;
@@ -48,7 +49,6 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddres(member.getAddres());
-            admin.setTypeToken("Member");
             memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -63,6 +63,29 @@ public class MemberImpl implements MemberService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
             return memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public Member putPass(PasswordDTO member, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String uniqueId = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            Member update = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            boolean conPassword = encoder.matches(member.getOld_password(), update.getPassword());
+            if (conPassword) {
+                if (member.getNew_password().equals(member.getConfirm_new_password())) {
+                    update.setPassword(encoder.encode(member.getNew_password()));
+                    return memberRepository.save(update);
+                } else {
+                    throw new BadRequestException("Password tidak sesuai");
+                }
+            } else {
+                throw new NotFoundException("Password lama tidak sesuai");
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
