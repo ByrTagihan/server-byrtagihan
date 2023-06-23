@@ -12,10 +12,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+<<<<<<< HEAD
 import serverbyrtagihan.Modal.ForGotPassword;
 import serverbyrtagihan.Modal.User;
 import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.Service.UserService;
+=======
+import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.User;
+import serverbyrtagihan.repository.UserRepository;
+import serverbyrtagihan.service.UserService;
+>>>>>>> 923104fea0c7a9b5f6ecde98df1774c1d9adf389
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;

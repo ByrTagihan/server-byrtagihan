@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.modal;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.CreationTimestamp;

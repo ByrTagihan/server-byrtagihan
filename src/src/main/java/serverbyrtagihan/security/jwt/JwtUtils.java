@@ -6,10 +6,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
+import serverbyrtagihan.impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
+<<<<<<< HEAD
+=======
+>>>>>>> 923104fea0c7a9b5f6ecde98df1774c1d9adf389
 
 import java.util.Date;
 

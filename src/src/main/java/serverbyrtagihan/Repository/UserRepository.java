@@ -1,9 +1,9 @@
-package serverbyrtagihan.Repository;
+package serverbyrtagihan.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.User;
 
 import java.util.Optional;
 

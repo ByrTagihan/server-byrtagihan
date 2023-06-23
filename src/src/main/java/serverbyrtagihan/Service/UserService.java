@@ -1,9 +1,9 @@
-package serverbyrtagihan.Service;
+package serverbyrtagihan.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.ForGotPassword;
-import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.User;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.Login;
 import serverbyrtagihan.dto.ProfileDTO;
