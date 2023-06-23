@@ -6,13 +6,12 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-
-import serverbyrtagihan.modal.Member;
+import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.Repository.MemberRepository;
+import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.modal.User;
-import serverbyrtagihan.repository.CustomerRepository;
-import serverbyrtagihan.repository.MemberRepository;
-import serverbyrtagihan.repository.UserRepository;
 
 import javax.transaction.Transactional;
 

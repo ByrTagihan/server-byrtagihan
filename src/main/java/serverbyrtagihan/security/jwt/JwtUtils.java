@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import serverbyrtagihan.Repository.MemberRepository;
+import serverbyrtagihan.Repository.UserRepository;
 import serverbyrtagihan.impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.modal.User;
-import serverbyrtagihan.repository.MemberRepository;
-import serverbyrtagihan.repository.UserRepository;
 
 import java.util.Date;
 

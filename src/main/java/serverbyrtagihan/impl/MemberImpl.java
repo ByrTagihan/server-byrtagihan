@@ -4,10 +4,10 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.Repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.modal.Member;
-import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 

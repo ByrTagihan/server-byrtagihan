@@ -3,7 +3,7 @@ package serverbyrtagihan.impl;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.repository.ChannelRepository;
+import serverbyrtagihan.Repository.ChannelRepository;
 import serverbyrtagihan.service.ChannelService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;

@@ -11,11 +11,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.Repository.CustomerOrganizationRepository;
+import serverbyrtagihan.Repository.CustomerRepository;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
-import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.impl.CustomerDetailsImpl;
@@ -54,7 +55,7 @@ public class CustomerController {
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
-    serverbyrtagihan.repository.CustomerOrganizationRepository organizationRepository;
+    CustomerOrganizationRepository organizationRepository;
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> get(HttpServletRequest request) {

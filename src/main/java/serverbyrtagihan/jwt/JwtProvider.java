@@ -8,7 +8,7 @@ import serverbyrtagihan.exception.InternalErrorException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.modal.TemporaryToken;
 import serverbyrtagihan.modal.User;
-import serverbyrtagihan.repository.UserRepository;
+import serverbyrtagihan.Repository.UserRepository;
 
 import java.util.Date;
 import java.util.UUID;

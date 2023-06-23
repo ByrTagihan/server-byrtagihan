@@ -1,8 +1,5 @@
 package serverbyrtagihan.service;
 
-import serverbyrtagihan.modal.Bill;
-import serverbyrtagihan.modal.Channel;
-import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Organization;
 import serverbyrtagihan.dto.OrganizationDto;
 
