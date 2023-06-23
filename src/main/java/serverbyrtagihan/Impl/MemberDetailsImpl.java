@@ -3,44 +3,41 @@ package serverbyrtagihan.Impl;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.Modal.Member;
+
 import java.util.Collection;
 import java.util.Objects;
 
-public class CustomerDetailsImpl implements UserDetails {
+public class MemberDetailsImpl implements UserDetails {
+
     private static final long serialVersionUID = 1L;
+
     private Long id;
+
     private String type;
+
     private String username;
-    private Long organizationId;
 
     @JsonIgnore
     private String password;
 
-    public CustomerDetailsImpl(Long id, String email, String password, String type, Long organizationId) {
+    public MemberDetailsImpl(Long id, String uniqueId, String password ,String type) {
         this.id = id;
-        this.username = email;
+        this.username = uniqueId;
         this.password = password;
         this.type = type;
-        this.organizationId = organizationId;
     }
 
-    public static CustomerDetailsImpl build(Customer admin) {
-        return new CustomerDetailsImpl(
+    public static MemberDetailsImpl buildMember(Member admin) {
+        return new MemberDetailsImpl(
                 admin.getId(),
-                admin.getEmail(),
+                admin.getUniqueId(),
                 admin.getPassword(),
-                admin.getTypeToken(),
-                admin.getOrganizationId());
+                admin.getTypeToken());
     }
-
 
     public Long getId() {
         return id;
-    }
-
-    public Long getOrganizationIdId() {
-        return organizationId;
     }
 
     public String getType() {
@@ -88,8 +85,7 @@ public class CustomerDetailsImpl implements UserDetails {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        CustomerDetailsImpl admin = (CustomerDetailsImpl) o;
+        MemberDetailsImpl admin = (MemberDetailsImpl) o;
         return Objects.equals(id, admin.id);
     }
-
 }

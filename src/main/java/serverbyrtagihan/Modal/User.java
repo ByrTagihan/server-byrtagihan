@@ -1,14 +1,12 @@
-package serverbyrtagihan.swagger.Modal;
+package serverbyrtagihan.Modal;
 
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 
-
-
-
-    @Entity
+@Entity
     @Table(name = "table_user")
     public class User extends DateConfig {
 
@@ -43,6 +41,7 @@ import javax.persistence.*;
 
         @Column(name = "token")
         private String token;
+
 
         public String getToken() {
             return token;

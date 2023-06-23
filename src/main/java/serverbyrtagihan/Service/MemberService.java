@@ -1,18 +1,18 @@
 package serverbyrtagihan.Service;
 
 
-import serverbyrtagihan.swagger.Modal.Member;
+import serverbyrtagihan.Modal.Member;
 
 import java.util.*;
 
 public interface MemberService {
-    Member add(Member member);
+    Member add(Member member , String jwtToken);
 
-    Member getById(Long id);
+    Member getById(Long id , String jwtToken);
 
-    List<Member> getAll();
+    List<Member> getAll(String jwtToken);
 
-    Member put(Member member, Long id);
+    Member put(Member member, Long id, String jwtToken);
 
-    Map<String, Boolean> delete(Long id);
+    Map<String, Boolean> delete(Long id , String jwtToken);
 }

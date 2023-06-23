@@ -18,8 +18,8 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.swagger.Modal.ForGotPassword;
-import serverbyrtagihan.swagger.Modal.User;
+import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.User;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -764,7 +764,7 @@ public class UserImpl implements UserService {
                     "</body>\n" +
                     "\n" +
                     "</html>");
-            serverbyrtagihan.swagger.Modal.User user = userRepository.findByEmail(forGotPass.getEmail()).get();
+            User user = userRepository.findByEmail(forGotPass.getEmail()).get();
             user.setToken(code);
             var checkingCode = getVerification.findByEmail(user.getEmail());
             if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {

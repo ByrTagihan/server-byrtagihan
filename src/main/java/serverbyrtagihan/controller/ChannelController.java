@@ -7,7 +7,7 @@ import serverbyrtagihan.Service.ChannelService;
 import serverbyrtagihan.dto.ChannelDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
-import serverbyrtagihan.swagger.Modal.Channel;
+import serverbyrtagihan.Modal.Channel;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

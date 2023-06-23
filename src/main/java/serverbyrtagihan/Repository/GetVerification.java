@@ -3,9 +3,8 @@ package serverbyrtagihan.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.swagger.Modal.ForGotPassword;
+import serverbyrtagihan.Modal.ForGotPassword;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

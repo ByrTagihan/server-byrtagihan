@@ -5,46 +5,49 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.Modal.CustomerOrganizationModel;
 import serverbyrtagihan.Service.CustomerOrganizationService;
+import serverbyrtagihan.dto.ChannelDTO;
 import serverbyrtagihan.dto.CustomerOrganizationDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
-import serverbyrtagihan.swagger.Modal.CustomerOrganizationModel;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/organization")
 public class CustomerOrganizationController{
 
-    public static final Logger logger = LoggerFactory.getLogger(CustomerOrganizationController.class);
     @Autowired
-    private CustomerOrganizationService customerOrganization;
+    private CustomerOrganizationService customerOrganizationService;
     @Autowired
     private ModelMapper modelMapper;
 
     @PostMapping(path = "/customer/organization")
-    public CommonResponse<CustomerOrganizationModel> add(@RequestBody CustomerOrganizationDTO customerOrganizationDTO) {
-        return ResponseHelper.ok(customerOrganization.add(modelMapper.map(customerOrganizationDTO, CustomerOrganizationModel.class)));
+    public CommonResponse<CustomerOrganizationModel> post(@RequestBody CustomerOrganizationDTO organizationDTO, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerOrganizationService.add(modelMapper.map(organizationDTO , CustomerOrganizationModel.class), jwtToken));
     }
-
-    @GetMapping(path = "/customer/organization/{id}")
-    public CommonResponse<CustomerOrganizationModel> getByID(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerOrganization.getById(id));
-    }
-
-    @GetMapping(path ="/customer/organization")
-    public CommonResponse<List<CustomerOrganizationModel>> getAll() {
-        return ResponseHelper.ok(customerOrganization.getAll());
-    }
-
     @PutMapping(path = "/customer/organization/{id}")
-    public CommonResponse<CustomerOrganizationModel> put(  @PathVariable("id") Long id ,@RequestBody CustomerOrganizationDTO customerOrganizationDTO){
-        return ResponseHelper.ok(customerOrganization.put(modelMapper.map(customerOrganizationDTO, CustomerOrganizationModel.class), id));
+    public CommonResponse<CustomerOrganizationModel> Put(@RequestBody CustomerOrganizationDTO organizationDTO,@PathVariable("id") Long id, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerOrganizationService.put(id,modelMapper.map(organizationDTO , CustomerOrganizationModel.class), jwtToken));
+    }
+    @GetMapping(path = "/customer/organization{id}")
+    public CommonResponse<CustomerOrganizationModel> Preview(@PathVariable("id") Long id, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerOrganizationService.preview(id, jwtToken));
+    }
+    @GetMapping(path = "/customer/organization")
+    public CommonResponse<List<CustomerOrganizationModel>> Get(HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerOrganizationService.getAll(jwtToken));
     }
     @DeleteMapping(path = "/customer/organization/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerOrganization.delete(id));
+    public CommonResponse<?> delete(@PathVariable("id") Long id , HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerOrganizationService.delete(id ,jwtToken));
     }
 
 

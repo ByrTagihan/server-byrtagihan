@@ -6,13 +6,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import serverbyrtagihan.Impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import serverbyrtagihan.Impl.UserDetailsImpl;
-import serverbyrtagihan.swagger.Modal.User;
+import serverbyrtagihan.Modal.Member;
+import serverbyrtagihan.Modal.User;
+import serverbyrtagihan.Repository.MemberRepository;
+import serverbyrtagihan.Repository.UserRepository;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -29,11 +32,13 @@ public class JwtUtils {
     private static final String SECRET_KEY = "codingshooltelogosari";
 
     @Autowired
-    serverbyrtagihan.Repository.UserRepository userRepository;
+    UserRepository userRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     public String generateJwtToken(Authentication authentication) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000 * 3); // Set token expiration to 1 hour
+        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
         CustomerDetailsImpl adminPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .claim("id" , adminPrincipal.getId())
@@ -52,13 +57,33 @@ public class JwtUtils {
 
     private String createToken(String user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000 * 3);
+        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
         User user1 = userRepository.findByEmail(user).get();
         return Jwts.builder()
                 .setSubject(user)
                 .claim("id" , user1.getId())
                 .claim("type_token" , user1.getTypeToken())
                 .setAudience(user1.getTypeToken())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+    public String generateTokenmember(String uniqueId) {
+        return createTokenMember( uniqueId);
+    }
+
+    private String createTokenMember(String uniqueId) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
+        Member member = memberRepository.findByUniqueId(uniqueId).get();
+        return Jwts.builder()
+                .setSubject(member.getUniqueId())
+                .claim("id" , member.getId())
+                .setId(String.valueOf(member.getId()))
+                .claim("type_token" , member.getTypeToken())
+                .setAudience(member.getTypeToken())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)

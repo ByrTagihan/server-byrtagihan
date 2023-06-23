@@ -1,22 +1,23 @@
 package serverbyrtagihan.dto;
 
 
-import java.util.UUID;
-
 public class MemberDTO {
-    public UUID id;
+    public String uniqueId;
+
     public String name;
     public String addres;
+
     public String hp;
+
     public String password;
 
 
-    public UUID getId() {
-        return id;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public String getName() {
