@@ -3,11 +3,11 @@ package serverbyrtagihan.controller;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.service.ChannelService;
 import serverbyrtagihan.dto.ChannelDTO;
+import serverbyrtagihan.modal.Channel;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
-import serverbyrtagihan.modal.Channel;
+import serverbyrtagihan.service.ChannelService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

@@ -6,8 +6,8 @@ import serverbyrtagihan.auditing.DateConfig;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "customerOrganization")
-public class CustomerOrganizationModel extends DateConfig {
+@Table(name = "userOrganization")
+public class UserOrganizationModel extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -44,7 +44,7 @@ public class CustomerOrganizationModel extends DateConfig {
     @Column(name = "bank_name")
     private String bank_name;
 
-    public CustomerOrganizationModel() {
+    public UserOrganizationModel() {
     }
 
     public long getId() {

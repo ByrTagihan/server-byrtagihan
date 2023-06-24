@@ -1,6 +1,6 @@
 package serverbyrtagihan.dto;
 
-public class CustomerOrganizationDTO {
+public class UserOrganizationDTO {
 
     public long id;
 
