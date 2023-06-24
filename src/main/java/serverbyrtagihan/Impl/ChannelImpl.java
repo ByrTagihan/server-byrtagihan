@@ -26,7 +26,7 @@ public class ChannelImpl implements ChannelService {
     public Channel add(Channel channel, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             return channelRepository.save(channel);
         } else {
             throw new BadRequestException("Token not valid");
@@ -37,7 +37,7 @@ public class ChannelImpl implements ChannelService {
     public List<Channel> getAll(String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             return channelRepository.findAll();
         } else {
             throw new BadRequestException("Token not valid");
@@ -48,7 +48,7 @@ public class ChannelImpl implements ChannelService {
     public Channel preview(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             return channelRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
         } else {
             throw new BadRequestException("Token not valid");
@@ -59,7 +59,7 @@ public class ChannelImpl implements ChannelService {
     public Channel put(Long id, Channel channel, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             Channel update = channelRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
             update.setName(channel.getName());
             update.setActive(channel.getActive());
@@ -73,7 +73,7 @@ public class ChannelImpl implements ChannelService {
     public Map<String, Boolean> delete(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             try {
                 channelRepository.deleteById(id);
                 Map<String, Boolean> res = new HashMap<>();

@@ -31,7 +31,7 @@ public class UserOrganizationImpl implements UserOrganizationService {
     public UserOrganizationModel add(UserOrganizationModel userOrganizationModel, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             return userRepository.save(userOrganizationModel);
         } else {
             throw new BadRequestException("Token not valid");
@@ -42,7 +42,7 @@ public class UserOrganizationImpl implements UserOrganizationService {
     public List<UserOrganizationModel> getAll(String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             return userRepository.findAll();
         } else {
             throw new BadRequestException("Token not valid");
@@ -53,7 +53,7 @@ public class UserOrganizationImpl implements UserOrganizationService {
     public UserOrganizationModel preview(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
         } else {
             throw new BadRequestException("Token not valid");
@@ -64,7 +64,7 @@ public class UserOrganizationImpl implements UserOrganizationService {
     public UserOrganizationModel put(Long id, UserOrganizationModel customer, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             UserOrganizationModel update = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
             update.setName(customer.getName());
             update.setAddres(customer.getAddres());
@@ -86,7 +86,7 @@ public class UserOrganizationImpl implements UserOrganizationService {
     public Map<String, Boolean> delete(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             try {
                 userRepository.deleteById(id);
                 Map<String, Boolean> res = new HashMap<>();
