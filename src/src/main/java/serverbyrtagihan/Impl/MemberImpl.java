@@ -1,10 +1,10 @@
-package serverbyrtagihan.Impl;
+package serverbyrtagihan.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.Member;
-import serverbyrtagihan.Repository.MemberRepository;
-import serverbyrtagihan.Service.MemberService;
+import serverbyrtagihan.modal.Member;
+import serverbyrtagihan.repository.MemberRepository;
+import serverbyrtagihan.service.MemberService;
 import serverbyrtagihan.exception.NotFoundException;
 
 

@@ -2,7 +2,6 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,23 +10,27 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Repository.CustomerRepository;
+import serverbyrtagihan.repository.CustomerOrganizationRepository;
+import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
+import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Modal.ForGotPassword;
+import serverbyrtagihan.impl.CustomerDetailsImpl;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -54,7 +57,7 @@ public class CustomerController {
     @Autowired
     private JavaMailSender javaMailSender;
     @Autowired
-    serverbyrtagihan.Repository.CustomerOrganizationRepository organizationRepository;
+    CustomerOrganizationRepository organizationRepository;
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> get(HttpServletRequest request) {
@@ -93,21 +96,21 @@ public class CustomerController {
 
 
     @PostMapping("/customer/login")
-    public ResponseEntity<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
+    public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         CustomerDetailsImpl userDetails = (CustomerDetailsImpl) authentication.getPrincipal();
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getType()
-        ));
+        Map<Object, Object> response = new HashMap<>();
+        response.put("data", "true");
+        response.put("token", jwt);
+        response.put("type-token", "Member");
+        return ResponseHelper.ok(response);
     }
 
     @PostMapping("/user/customer")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
+    public CommonResponse<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -443,19 +446,17 @@ public class CustomerController {
                 "\n" +
                 "</html>");
         if (adminRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Kesalahan: Email telah digunakan!"));
+         throw new BadRequestException("Email is already");
         }
         String UserEmail = signUpRequest.getEmail().trim();
         boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
         if (EmailIsNotValid) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Email tidak valid"));
+          throw new BadRequestException("Email nto valid");
         }
         String UserPassword = signUpRequest.getPassword().trim();
         boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Password tidak valid"));
+           throw new BadRequestException("Password not valid");
         }
         // Create new user's account
         Customer admin = new Customer();
@@ -467,10 +468,9 @@ public class CustomerController {
         admin.setAddress(signUpRequest.getAddress());
         admin.setToken("Kosong");
         admin.setOrganizationId(0L);
-        admin.setTypeToken("Customer");
         adminRepository.save(admin);
         javaMailSender.send(message);
-        return ResponseEntity.ok(new MessageResponse(" Register telah berhasil! "));
+        return ResponseHelper.ok(new MessageResponse(" Register telah berhasil! "));
     }
 
     @PostMapping("/customer/forgot_password")

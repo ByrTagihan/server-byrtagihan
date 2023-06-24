@@ -1,10 +1,10 @@
-package serverbyrtagihan.Impl;
+package serverbyrtagihan.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.CustomerOrganizationModel;
-import serverbyrtagihan.Repository.CustomerOrganizationRepository;
-import serverbyrtagihan.Service.CustomerOrganizationService;
+import serverbyrtagihan.modal.CustomerOrganizationModel;
+import serverbyrtagihan.repository.CustomerOrganizationRepository;
+import serverbyrtagihan.service.CustomerOrganizationService;
 import serverbyrtagihan.exception.NotFoundException;
 
 

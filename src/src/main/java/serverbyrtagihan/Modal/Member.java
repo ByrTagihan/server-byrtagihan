@@ -1,4 +1,4 @@
-package serverbyrtagihan.Modal;
+package serverbyrtagihan.modal;
 
 
 import serverbyrtagihan.auditing.DateConfig;

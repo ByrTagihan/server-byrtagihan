@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
+import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -33,7 +34,7 @@ public class TokenFilterUser extends OncePerRequestFilter {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String email = jwtUtils.getUserNameFromJwtToken(jwt);
-                UserDetails userDetails = customerDetailsService.loadUserByEmail(email);
+                UserDetails userDetails = customerDetailsService.loadUserByUsername(email);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -1,10 +1,10 @@
-package serverbyrtagihan.Impl;
+package serverbyrtagihan.impl;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import serverbyrtagihan.Modal.User;
-import serverbyrtagihan.Modal.Customer;
+import serverbyrtagihan.modal.User;
+import serverbyrtagihan.modal.Customer;
 
 import java.util.Collection;
 import java.util.Objects;

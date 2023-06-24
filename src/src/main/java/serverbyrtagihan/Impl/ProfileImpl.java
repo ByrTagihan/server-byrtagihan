@@ -1,4 +1,4 @@
-package serverbyrtagihan.Impl;
+package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +8,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.Modal.ForGotPassword;
-import serverbyrtagihan.Repository.GetVerification;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.repository.CustomerRepository;
+import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.dto.ForGotPass;
-import serverbyrtagihan.Service.CustomerService;
+import serverbyrtagihan.service.CustomerService;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;

@@ -2,29 +2,21 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Impl.CustomerDetailsServiceImpl;
-import serverbyrtagihan.Modal.User;
-import serverbyrtagihan.Repository.MemberRepository;
-import serverbyrtagihan.Service.MemberService;
+import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
+import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
+import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
-import serverbyrtagihan.Modal.Member;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.*;
 
 @RestController
@@ -49,16 +41,16 @@ public class MemberController {
     CustomerDetailsServiceImpl detailsService;
 
     @PostMapping("/member/login")
-    public ResponseEntity<?> authenticate( @RequestBody LoginMember loginRequest) {
+    public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
         Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Email not found"));
         boolean conPassword = encoder.matches(loginRequest.getPassword() , member.getPassword());
         if (conPassword) {
             String token = jwtUtils.generateTokenmember(member.getUniqueId());
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", member);
-            response.put("token-jwt", token);
+            response.put("data", "true");
+            response.put("token", token);
             response.put("type-token", "Member");
-            return ResponseEntity.ok(response);
+            return ResponseHelper.ok(response);
         } else {
             throw new NotFoundException("Password not valid");
         }
@@ -93,6 +85,11 @@ public class MemberController {
     public CommonResponse<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(service.delete(id, jwtToken));
+    }
+    @PutMapping(path = "/member/password")
+    public CommonResponse<Member> putPassword(@RequestBody PasswordDTO password, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(service.putPass(password, jwtToken));
     }
 
 

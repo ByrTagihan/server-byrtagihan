@@ -6,20 +6,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import serverbyrtagihan.Impl.CustomerDetailsImpl;
+import serverbyrtagihan.repository.MemberRepository;
+import serverbyrtagihan.repository.UserRepository;
+import serverbyrtagihan.impl.CustomerDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import serverbyrtagihan.Modal.Member;
-import serverbyrtagihan.Modal.User;
-import serverbyrtagihan.Repository.MemberRepository;
-import serverbyrtagihan.Repository.UserRepository;
+import serverbyrtagihan.modal.Member;
+import serverbyrtagihan.modal.User;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @Component
@@ -42,8 +39,7 @@ public class JwtUtils {
         CustomerDetailsImpl adminPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .claim("id" , adminPrincipal.getId())
-                .claim("type_token" , adminPrincipal.getType())
-                .setAudience(adminPrincipal.getType())
+                .setAudience("Customer")
                 .setSubject((adminPrincipal.getUsername()))
                 .claim("organization_id" , adminPrincipal.getOrganizationIdId())
                 .setExpiration(expiryDate)
@@ -62,8 +58,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(user)
                 .claim("id" , user1.getId())
-                .claim("type_token" , user1.getTypeToken())
-                .setAudience(user1.getTypeToken())
+                .setAudience("User")
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
@@ -82,8 +77,7 @@ public class JwtUtils {
                 .setSubject(member.getUniqueId())
                 .claim("id" , member.getId())
                 .setId(String.valueOf(member.getId()))
-                .claim("type_token" , member.getTypeToken())
-                .setAudience(member.getTypeToken())
+                .setAudience("Member")
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)

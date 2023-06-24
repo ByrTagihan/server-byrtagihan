@@ -3,14 +3,11 @@ package serverbyrtagihan.controller;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Modal.CustomerOrganizationModel;
-import serverbyrtagihan.Modal.UserOrganizationModel;
-import serverbyrtagihan.Service.CustomerOrganizationService;
-import serverbyrtagihan.Service.UserOrganizationService;
-import serverbyrtagihan.dto.CustomerOrganizationDTO;
 import serverbyrtagihan.dto.UserOrganizationDTO;
+import serverbyrtagihan.modal.UserOrganizationModel;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.service.UserOrganizationService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

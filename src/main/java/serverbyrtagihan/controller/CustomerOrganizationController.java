@@ -1,13 +1,10 @@
 package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.Modal.CustomerOrganizationModel;
-import serverbyrtagihan.Service.CustomerOrganizationService;
-import serverbyrtagihan.dto.ChannelDTO;
+import serverbyrtagihan.modal.CustomerOrganizationModel;
+import serverbyrtagihan.service.CustomerOrganizationService;
 import serverbyrtagihan.dto.CustomerOrganizationDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;

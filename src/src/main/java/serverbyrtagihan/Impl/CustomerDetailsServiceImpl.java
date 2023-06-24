@@ -1,14 +1,14 @@
-package serverbyrtagihan.Impl;
+package serverbyrtagihan.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Modal.User;
-import serverbyrtagihan.Modal.Customer;
-import serverbyrtagihan.Repository.CustomerRepository;
-import serverbyrtagihan.Repository.UserRepository;
+import serverbyrtagihan.modal.User;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.repository.CustomerRepository;
+import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.exception.NotFoundException;
 
 import javax.transaction.Transactional;
