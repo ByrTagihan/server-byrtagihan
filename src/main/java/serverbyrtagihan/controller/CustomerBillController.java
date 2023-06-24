@@ -90,7 +90,7 @@ public class CustomerBillController {
     }
 
     @PutMapping(path = "/customer/bill/{id}/unpaid")
-    public CommonResponse<Bill> unpaid(HttpServletRequest request, BillPaidDTO bill, @PathVariable("id") Long id) {
+    public CommonResponse<Bill> unpaid(HttpServletRequest request, @RequestBody BillPaidDTO bill, @PathVariable("id") Long id) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(billService.unpaid(modelMapper.map(bill, Bill.class), id, jwtToken));
     }
