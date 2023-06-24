@@ -27,16 +27,9 @@ public class CustomerDetailsServiceImpl implements UserDetailsService {
         User users = userRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("User Not Found with username"));
         Customer admin = adminRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
-        return CustomerDetailsImpl.build(admin , users);
+        return CustomerDetailsImpl.build(admin );
     }
 
-    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
-        // Implement the logic to load user details from the database based on the provided email
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
 
-        // Create an instance of UserDetails using the retrieved user details
-        return UserDetailsImpl.buildUser(user);
-    }
 
 }
