@@ -10,7 +10,7 @@ public class ProfileDTO {
     public String hp;
 
     @Lob
-    public String img;
+    public String picture;
 
     public String address;
 
@@ -46,11 +46,11 @@ public class ProfileDTO {
         this.address = address;
     }
 
-    public String getImg() {
-        return img;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

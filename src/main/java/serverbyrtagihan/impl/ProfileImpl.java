@@ -833,8 +833,7 @@ public class ProfileImpl implements CustomerService {
             update.setName(customer.getName());
             update.setAddress(customer.getAddress());
             update.setHp(customer.getHp());
-            update.setPassword(encoder.encode(customer.getPassword()));
-            update.setActive(customer.isActive());
+            update.setPicture(customer.getPicture());
             return customerRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");

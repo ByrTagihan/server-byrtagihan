@@ -811,7 +811,7 @@ public class UserImpl implements UserService {
             update.setName(profileDTO.getName());
             update.setDomain(profileDTO.getAddress());
             update.setOrigin(profileDTO.getHp());
-            update.setPicture(profileDTO.getImg());
+            update.setPicture(profileDTO.getPicture());
             return userRepository.save(update);
         } else {
             throw new BadRequestException("Token Tidak Cocok");
