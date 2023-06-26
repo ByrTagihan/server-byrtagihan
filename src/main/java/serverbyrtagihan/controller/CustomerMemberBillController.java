@@ -31,10 +31,9 @@ public class CustomerMemberBillController {
     @GetMapping(path = "/customer/member/{memberid}/bill")
     public PaginationResponse<List<Bill>> getAll(
             HttpServletRequest request, @PathVariable("memberid") Long memberId,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
@@ -42,9 +41,9 @@ public class CustomerMemberBillController {
         Page<Bill> billPage;
 
         if (search != null && !search.isEmpty()) {
-            billPage = billService.searchBillsWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+            billPage = billService.getByMemberId(memberId, jwtToken, page, limit, sort, search);
         } else {
-            billPage = billService.getByMemberId(memberId, jwtToken, page, pageSize, sortBy, sortDirection);
+            billPage = billService.getByMemberId(memberId, jwtToken, page, limit, sort, null);
         }
 
         List<Bill> bills = billPage.getContent();
