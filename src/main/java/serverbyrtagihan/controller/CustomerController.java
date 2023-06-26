@@ -133,10 +133,9 @@ public class CustomerController {
     @GetMapping(path = "/user/customer")
     public PaginationResponse<List<Customer>> getAll(
             HttpServletRequest request,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.limit, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sort, required = false) String sortBy,
-            @RequestParam(defaultValue = "") String sortDirection,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
@@ -144,9 +143,9 @@ public class CustomerController {
         Page<Customer> customerPage;
 
         if (search != null && !search.isEmpty()) {
-            customerPage = customerService.searchCustomersWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+            customerPage = customerService.getAll(jwtToken, page, limit, sort, search);
         } else {
-            customerPage = customerService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+            customerPage = customerService.getAll(jwtToken, page, limit, sort, null);
         }
 
         List<Customer> customers = customerPage.getContent();

@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import serverbyrtagihan.modal.Channel;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.dto.ForGotPass;
@@ -100,38 +101,28 @@ public class ProfileImpl implements CustomerService {
         return bindingResult;
     }
     @Override
-    public Page<Customer> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Customer> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+
         Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            return customerRepository.findAll(pageable);
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-    @Override
-    public Page<Customer> searchCustomersWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection) {
-
-        Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
-            direction = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return customerRepository.findAllByKeyword(search, pageable);
+            if (search != null && !search.isEmpty()) {
+                return customerRepository.findAllByKeyword(search, pageable);
+            } else {
+                return customerRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
+
 
     @Override
     public ForGotPassword verificationPass(ForGotPassword verification) throws MessagingException {

@@ -32,8 +32,6 @@ public interface CustomerService {
 
     Page<Customer> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
 
-    Page<Customer> searchCustomersWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection);
-
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 
     Map<String, Boolean> delete(Long id , String jwtToken);
