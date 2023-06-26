@@ -44,10 +44,9 @@ public class ChannelController {
     @GetMapping(path = "/user/channel")
     public PaginationResponse<List<Channel>> getAll(
             HttpServletRequest request,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
@@ -55,9 +54,9 @@ public class ChannelController {
         Page<Channel> channelPage;
 
         if (search != null && !search.isEmpty()) {
-            channelPage = channelService.searchChannelWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+            channelPage = channelService.getAll(jwtToken, page, limit, sort, search);
         } else {
-            channelPage = channelService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+            channelPage = channelService.getAll(jwtToken, page, limit, sort, null);
         }
 
         List<Channel> channels = channelPage.getContent();
@@ -72,12 +71,11 @@ public class ChannelController {
         return ResponseHelper.okWithPagination(channels, pagination);
     }
     @GetMapping(path = "/member/channel")
-    public PaginationResponse<List<Channel>> getAll(
+    public PaginationResponse<List<Channel>> getAllMember(
             HttpServletRequest request,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
@@ -85,9 +83,9 @@ public class ChannelController {
         Page<Channel> channelPage;
 
         if (search != null && !search.isEmpty()) {
-            channelPage = channelService.searchChannelWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+            channelPage = channelService.getAllMember(jwtToken, page, limit, sort, search);
         } else {
-            channelPage = channelService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+            channelPage = channelService.getAllMember(jwtToken, page, limit, sort, null);
         }
 
         List<Channel> channels = channelPage.getContent();

@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.repository.ChannelRepository;
 import serverbyrtagihan.service.ChannelService;
 import serverbyrtagihan.exception.BadRequestException;
@@ -38,77 +39,51 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
-    public Page<Channel> getAll(String jwtToken, Long page, Long pageSize, String sort, String sortDirection) {
+    public Page<Channel> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            return channelRepository.findAll(pageable);
+        if (typeToken.equals("Customer")) {
+            if (search != null && !search.isEmpty()) {
+                return channelRepository.findAllByKeyword(search, pageable);
+            } else {
+                return channelRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
+
 
     @Override
-    public Page<Channel> searchChannelWithPagination(String jwtToken, String search, Long page, Long pageSize, String sort, String sortDirection) {
+    public Page<Channel> getAllMember(String jwtToken, Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            return channelRepository.findAllByKeyword(search, pageable);
+        if (typeToken.equals("Customer")) {
+            if (search != null && !search.isEmpty()) {
+                return channelRepository.findAllByKeyword(search, pageable);
+            } else {
+                return channelRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
-
-    @Override
-    public Page<Channel> getAllMember(String jwtToken, Long page, Long pageSize, String sort, String sortDirection) {
-
-        Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
-            direction = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Member")) {
-            return channelRepository.findAll(pageable);
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-
-    @Override
-    public Page<Channel> searchChannelMemberWithPagination(String jwtToken, String search, Long page, Long pageSize, String sort, String sortDirection) {
-
-        Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
-            direction = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Member")) {
-            return channelRepository.findAllByKeyword(search, pageable);
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-
 
 
     @Override
