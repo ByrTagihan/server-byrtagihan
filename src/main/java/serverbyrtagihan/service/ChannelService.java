@@ -10,6 +10,8 @@ public interface ChannelService {
 
     List<Channel> getAll(String jwtToken);
 
+    List<Channel> getAllMember(String jwtToken);
+
     Channel preview(Long id, String jwtToken);
 
     Channel put(Long id, Channel channel, String jwtToken);

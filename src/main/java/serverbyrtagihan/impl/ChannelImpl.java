@@ -45,6 +45,19 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
+    public List<Channel> getAllMember(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            return channelRepository.findAll();
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+
+
+    @Override
     public Channel preview(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();

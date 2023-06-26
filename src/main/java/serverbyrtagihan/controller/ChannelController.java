@@ -40,6 +40,11 @@ public class ChannelController {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(channelService.getAll(jwtToken));
     }
+    @GetMapping(path = "/member/channel")
+    public CommonResponse<List<Channel>> GetMember(HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(channelService.getAll(jwtToken));
+    }
     @DeleteMapping(path = "/user/channel/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id , HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
