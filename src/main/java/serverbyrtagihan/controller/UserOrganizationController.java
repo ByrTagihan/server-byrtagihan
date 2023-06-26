@@ -32,7 +32,8 @@ public class UserOrganizationController{
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(userOrganizationService.put(id,organizationDTO, jwtToken));
     }
-    @GetMapping(path = "/user/organization{id}")
+
+    @GetMapping(path = "/user/organization/{id}")
     public CommonResponse<Organization> Preview(@PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(userOrganizationService.preview(id, jwtToken));
