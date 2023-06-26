@@ -18,16 +18,12 @@ public class CustomerDetailsServiceImpl implements UserDetailsService {
     @Autowired
     CustomerRepository adminRepository;
 
-    @Autowired
-    UserRepository userRepository;
-
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         Customer admin = adminRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+                .orElseThrow(() -> new NotFoundException("User Not Found with username: " + username));
         return CustomerDetailsImpl.build(admin);
     }
-
 
 }

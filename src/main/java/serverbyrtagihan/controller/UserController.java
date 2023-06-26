@@ -8,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.service.UserService;
 import serverbyrtagihan.dto.*;
@@ -36,9 +35,6 @@ public class UserController {
 
     @Autowired
     ModelMapper modelMapper;
-
-    @Autowired
-    CustomerDetailsServiceImpl service;
 
     @Autowired
     AuthenticationManager authenticationManager;

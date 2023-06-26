@@ -5,6 +5,7 @@ import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.response.SignupRequest;
 
 import javax.mail.MessagingException;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface CustomerService {
 
     Customer getById(Long id);
 
-    Customer post(Customer customer, String jwtToken) throws MessagingException;
+    Customer post(SignupRequest signupRequest, String jwtToken) throws MessagingException;
 
 
     Customer put(Customer customer , String jwtToken);

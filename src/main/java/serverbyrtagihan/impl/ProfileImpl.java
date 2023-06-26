@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,8 @@ import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
+import serverbyrtagihan.response.MessageResponse;
+import serverbyrtagihan.response.SignupRequest;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.ForGotPassword;
@@ -856,11 +859,11 @@ public class ProfileImpl implements CustomerService {
     }
 
     @Override
-    public Customer post(Customer customer, String jwtToken) throws MessagingException {
+    public Customer post(SignupRequest signupRequest, String jwtToken) throws MessagingException {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            String email = customer.getEmail();
+            String email = signupRequest.getEmail();
             MimeMessage message = javaMailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo(email);
@@ -1073,7 +1076,7 @@ public class ProfileImpl implements CustomerService {
                     "                            <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:32px 46px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
                     "\n" +
                     "                              <div class=\"v-color v-text-align v-line-height\" style=\"color: #34495e; line-height: 140%; text-align: left; word-wrap: break-word;\">\n" +
-                    "                                <p style=\"font-size: 14px; line-height: 140%;\"><span style=\"font-size: 20px; line-height: 28px;\"><strong><span style=\"font-family: Montserrat, sans-serif; line-height: 28px; font-size: 20px;\">" + customer.getName() + ",</span></strong>\n" +
+                    "                                <p style=\"font-size: 14px; line-height: 140%;\"><span style=\"font-size: 20px; line-height: 28px;\"><strong><span style=\"font-family: Montserrat, sans-serif; line-height: 28px; font-size: 20px;\">" + signupRequest.getName() + ",</span></strong>\n" +
                     "                                  </span><span style=\"font-size: 20px; line-height: 28px;\"><strong><span style=\"font-family: Montserrat, sans-serif; line-height: 28px; font-size: 20px;\">&nbsp;akun</span></strong>\n" +
                     "                                  </span><strong style=\"font-size: 20px;\"><span style=\"font-family: Montserrat, sans-serif; line-height: 28px; font-size: 20px;\"> byrtagihan.com Anda telah berhasil dibuat.</span></strong></p>\n" +
                     "                              </div>\n" +
@@ -1089,8 +1092,8 @@ public class ProfileImpl implements CustomerService {
                     "                            <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:32px 46px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
                     "\n" +
                     "                              <div class=\"v-color v-text-align v-line-height\" style=\"color: #34495e; line-height: 140%; text-align: left; word-wrap: break-word;\">\n" +
-                    "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Username:</span>" + customer.getEmail() + "</p>\n" +
-                    "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Password:</span>" + customer.getPassword() + "</p>\n" +
+                    "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Username:</span>" + signupRequest.getEmail() + "</p>\n" +
+                    "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Password:</span>" + signupRequest.getPassword() + "</p>\n" +
                     "                                <p style=\"line-height: 140%; font-size: 14px;\">&nbsp;</p>\n" +
                     "                                <p style=\"line-height: 140%; font-size: 14px;\">Selamat menggunakan aplikasi byrtagihan.com!</p>\n" +
                     "                                <p style=\"line-height: 140%; font-size: 14px;\">Semoga kita semua dapat #BerkreasiUntukSesama.</p>\n" +
@@ -1194,29 +1197,29 @@ public class ProfileImpl implements CustomerService {
                     "</body>\n" +
                     "\n" +
                     "</html>");
-            if (customerRepository.existsByEmail(customer.getEmail())) {
-                throw new BadRequestException("Email is already");
+            if (customerRepository.existsByEmail(signupRequest.getEmail())) {
+              throw new NotFoundException("Kesalahan: Email telah digunakan!");
             }
-            String UserEmail = customer.getEmail().trim();
+            String UserEmail = signupRequest.getEmail().trim();
             boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
             if (EmailIsNotValid) {
-                throw new BadRequestException("Email nto valid");
+              throw new BadRequestException("Kesalahan: Email tidak valid");
             }
-            String UserPassword = customer.getPassword().trim();
+            String UserPassword = signupRequest.getPassword().trim();
             boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
             if (PasswordIsNotValid) {
-                throw new BadRequestException("Password not valid");
+             throw new BadRequestException("Kesalahan: Password tidak valid");
             }
             // Create new user's account
             Customer admin = new Customer();
-            admin.setEmail(customer.getEmail());
-            admin.setPassword(encoder.encode(customer.getPassword()));
-            admin.setActive(customer.isActive());
-            admin.setHp(customer.getHp());
-            admin.setName(customer.getName());
-            admin.setAddress(customer.getAddress());
+            admin.setEmail(signupRequest.getEmail());
+            admin.setPassword( encoder.encode(signupRequest.getPassword()));
+            admin.setActive(signupRequest.isActive());
+            admin.setHp(signupRequest.getHp());
+            admin.setName(signupRequest.getName());
+            admin.setAddress(signupRequest.getAddress());
             admin.setToken("Kosong");
-            admin.setOrganizationId(0L);
+            customerRepository.save(admin);
             javaMailSender.send(message);
             return customerRepository.save(admin);
         } else {

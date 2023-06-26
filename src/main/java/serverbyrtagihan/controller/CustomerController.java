@@ -119,9 +119,9 @@ public class CustomerController {
     }
 
     @PostMapping("/user/customer")
-    public CommonResponse<Customer> registerUser( @RequestBody SignupRequest signUpRequest , HttpServletRequest request) throws MessagingException {
+    public CommonResponse<Customer> registerUser(@RequestBody SignupRequest customer , HttpServletRequest request) throws MessagingException {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(customerService.post(modelMapper.map(signUpRequest , Customer.class) , jwtToken));
+        return ResponseHelper.ok(customerService.post(customer , jwtToken));
     }
 
     @PostMapping("/customer/forgot_password")
