@@ -28,12 +28,6 @@ public class CustomerBillController {
     @Autowired
     private ModelMapper modelMapper;
 
-    public static final String DEFAULT_PAGE_NUMBER = "1";
-    public static final String DEFAULT_PAGE_SIZE = "10";
-    public static final String DEFAULT_SORT_BY = "id";
-    public static final String DEFAULT_SORT_DIRECTION = "asc";
-
-
     @GetMapping(path = "/customer/bill")
     public PaginationResponse<List<Bill>> getAll(
             HttpServletRequest request,
@@ -84,13 +78,13 @@ public class CustomerBillController {
     }
 
     @PutMapping(path = "/customer/bill/{id}/paid")
-    public CommonResponse<Bill> paid(HttpServletRequest request, @RequestBody BillPaidDTO bill, @PathVariable("id") Long id) {
+    public CommonResponse<Bill> paid(HttpServletRequest request, BillPaidDTO bill, @PathVariable("id") Long id) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(billService.paid(modelMapper.map(bill, Bill.class), id, jwtToken));
     }
 
     @PutMapping(path = "/customer/bill/{id}/unpaid")
-    public CommonResponse<Bill> unpaid(HttpServletRequest request, @RequestBody BillPaidDTO bill, @PathVariable("id") Long id) {
+    public CommonResponse<Bill> unpaid(HttpServletRequest request, BillPaidDTO bill, @PathVariable("id") Long id) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(billService.unpaid(modelMapper.map(bill, Bill.class), id, jwtToken));
     }
