@@ -2,6 +2,7 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.repository.CustomerOrganizationRepository;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.dto.*;
@@ -23,6 +25,7 @@ import serverbyrtagihan.impl.CustomerDetailsImpl;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.service.CustomerService;
+import serverbyrtagihan.util.Pagination;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -58,6 +61,11 @@ public class CustomerController {
     private JavaMailSender javaMailSender;
     @Autowired
     CustomerOrganizationRepository organizationRepository;
+
+    public static final String DEFAULT_PAGE_NUMBER = "1";
+    public static final String DEFAULT_PAGE_SIZE = "10";
+    public static final String DEFAULT_SORT_BY = "id";
+    public static final String DEFAULT_SORT_DIRECTION = "asc";
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> get(HttpServletRequest request) {
@@ -122,9 +130,35 @@ public class CustomerController {
 
     }
 
-    @GetMapping("/user/customer")
-    public CommonResponse<List<Customer>> Get() {
-        return ResponseHelper.ok(customerService.getAll());
+    @GetMapping(path = "/user/customer")
+    public PaginationResponse<List<Customer>> getAll(
+            HttpServletRequest request,
+            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
+            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
+            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(required = false) String search
+    ) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+
+        Page<Customer> customerPage;
+
+        if (search != null && !search.isEmpty()) {
+            customerPage = customerService.searchCustomersWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+        } else {
+            customerPage = customerService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+        }
+
+        List<Customer> customers = customerPage.getContent();
+        long totalItems = customerPage.getTotalElements();
+        int totalPages = customerPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(customers, pagination);
     }
 
     @GetMapping("/user/customer/{id}")

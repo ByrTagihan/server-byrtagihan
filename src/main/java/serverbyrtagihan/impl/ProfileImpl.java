@@ -2,6 +2,10 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -91,6 +95,39 @@ public class ProfileImpl implements CustomerService {
         verificationCodeValidator.validate(verificationCode, bindingResult);
 
         return bindingResult;
+    }
+    @Override
+    public Page<Customer> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sortDirection.equalsIgnoreCase("desc")) {
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            return customerRepository.findAll(pageable);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public Page<Customer> searchCustomersWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sortDirection.equalsIgnoreCase("desc")) {
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            return customerRepository.findAllByKeyword(search, pageable);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
     }
 
     @Override
@@ -1187,10 +1224,6 @@ public class ProfileImpl implements CustomerService {
         }
     }
 
-    @Override
-    public List<Customer> getAll() {
-        return customerRepository.findAll();
-    }
 
     @Override
     public Customer put(Customer customer, String jwtToken) {

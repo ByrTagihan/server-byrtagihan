@@ -1,5 +1,6 @@
 package serverbyrtagihan.service;
 
+import org.springframework.data.domain.Page;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Customer;
@@ -19,7 +20,6 @@ public interface CustomerService {
 
     Customer post(Customer customer, String jwtToken) throws MessagingException;
 
-    List<Customer> getAll();
 
     Customer put(Customer customer , String jwtToken);
 
@@ -28,6 +28,10 @@ public interface CustomerService {
     Customer putPassword(PasswordDTO passwordDTO, String jwtToken);
 
     Customer putPicture(Customer customer, String jwtToken);
+
+    Page<Customer> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
+
+    Page<Customer> searchCustomersWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection);
 
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 
