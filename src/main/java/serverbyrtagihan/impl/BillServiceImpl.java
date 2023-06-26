@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.repository.BillRepository;
+import serverbyrtagihan.Repository.BillRepository;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.BadRequestException;
