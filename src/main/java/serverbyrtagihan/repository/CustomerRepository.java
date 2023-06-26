@@ -16,6 +16,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Optional<Customer> findByEmail(String email);
     Optional<Customer> findByToken(String token);
     Boolean existsByEmail(String email);
-    @Query("SELECT b FROM customer b WHERE LOWER(b.nama) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.email) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.no_hp) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.active) LIKE LOWER(concat('%', :keyword, '%'))")
+    @Query(value = "SELECT * FROM customer  WHERE nama  LIKE CONCAT('%',:keyword, '%') OR active LIKE CONCAT('%',:keyword, '%') OR email LIKE CONCAT('%',:keyword, '%') OR no_hp LIKE CONCAT('%',:keyword, '%')", nativeQuery = true)
     Page<Customer> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

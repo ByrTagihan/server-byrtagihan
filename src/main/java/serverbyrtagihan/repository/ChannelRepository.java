@@ -11,6 +11,6 @@ import serverbyrtagihan.modal.Channel;
 
 @Repository
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
-    @Query("SELECT b FROM channel b WHERE LOWER(b.name) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.active) LIKE LOWER(concat('%', :keyword, '%'))")
+    @Query(value = "SELECT * FROM channel  WHERE name  LIKE CONCAT('%',:keyword, '%') OR active LIKE CONCAT('%',:keyword, '%')", nativeQuery = true)
     Page<Channel> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }
