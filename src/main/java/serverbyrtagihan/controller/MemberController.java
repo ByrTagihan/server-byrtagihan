@@ -43,10 +43,10 @@ public class MemberController {
 
     @PostMapping("/member/login")
     public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
-        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Email not found"));
+        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("UniqueId not found"));
         boolean conPassword = encoder.matches(loginRequest.getPassword() , member.getPassword());
         if (conPassword) {
-            String token = jwtUtils.generateTokenmember(member.getUniqueId());
+            String token = jwtUtils.generateTokenMember(member.getUniqueId());
             Map<Object, Object> response = new HashMap<>();
             response.put("data", "true");
             response.put("token", token);

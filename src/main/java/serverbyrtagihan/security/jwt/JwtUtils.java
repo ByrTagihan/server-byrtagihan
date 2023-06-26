@@ -65,8 +65,8 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String generateTokenmember(String uniqueId) {
-        return createTokenMember( uniqueId);
+    public String generateTokenMember(String username) {
+        return createTokenMember( username);
     }
 
     private String createTokenMember(String uniqueId) {
@@ -74,7 +74,7 @@ public class JwtUtils {
         Date expiryDate = new Date(now.getTime() + 3600000 * 168);
         Member member = memberRepository.findByUniqueId(uniqueId).get();
         return Jwts.builder()
-                .setSubject(member.getUniqueId())
+                .setSubject(uniqueId)
                 .claim("id" , member.getId())
                 .setId(String.valueOf(member.getId()))
                 .setAudience("Member")
