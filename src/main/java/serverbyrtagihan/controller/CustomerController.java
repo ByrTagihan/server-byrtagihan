@@ -114,7 +114,7 @@ public class CustomerController {
         Map<Object, Object> response = new HashMap<>();
         response.put("data", "true");
         response.put("token", jwt);
-        response.put("type-token", "Member");
+        response.put("type-token", "Customer");
         return ResponseHelper.ok(response);
     }
 
