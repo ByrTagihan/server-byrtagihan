@@ -50,7 +50,7 @@ public class ChannelImpl implements ChannelService {
         Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             if (search != null && !search.isEmpty()) {
                 return channelRepository.findAllByKeyword(search, pageable);
             } else {
@@ -74,7 +74,7 @@ public class ChannelImpl implements ChannelService {
         Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("Member")) {
             if (search != null && !search.isEmpty()) {
                 return channelRepository.findAllByKeyword(search, pageable);
             } else {
