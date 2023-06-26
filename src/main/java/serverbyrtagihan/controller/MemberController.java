@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.dto.Password;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.dto.LoginMember;
@@ -79,6 +80,11 @@ public class MemberController {
     public CommonResponse<Member> put(@PathVariable("id") Long id, @RequestBody MemberDTO memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(service.put(modelMapper.map(memberDTO, Member.class), id, jwtToken));
+    }
+    @PutMapping(path = "/customer/member/{id}/password")
+    public CommonResponse<Member> putPass(@PathVariable("id") Long id, @RequestBody Password memberDTO, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(service.putPassword(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }
 
     @DeleteMapping(path = "/customer/member/{id}")

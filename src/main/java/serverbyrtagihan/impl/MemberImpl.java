@@ -49,11 +49,10 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddres(member.getAddres());
-            memberRepository.save(admin);
+            return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
         }
-        return memberRepository.save(member);
     }
 
     @Override
@@ -106,21 +105,29 @@ public class MemberImpl implements MemberService {
     @Override
     public Member put(Member member, Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
             update.setAddres(member.getAddres());
             update.setHp(member.getHp());
-            update.setPassword(member.getPassword());
-
             return memberRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
-
+    @Override
+    public Member putPassword(Member member, Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setPassword(encoder.encode(member.getPassword()));
+            return memberRepository.save(update);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
 
     @Override
     public Map<String, Boolean> delete(Long id, String jwtToken) {

@@ -17,5 +17,7 @@ public interface MemberService {
 
     Member put(Member member, Long id, String jwtToken);
 
+    Member putPassword(Member member, Long id, String jwtToken);
+
     Map<String, Boolean> delete(Long id , String jwtToken);
 }
