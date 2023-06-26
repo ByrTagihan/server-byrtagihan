@@ -21,6 +21,8 @@ public interface ChannelService {
 
     Channel preview(Long id, String jwtToken);
 
+    List<Channel> preview(String jwtToken);
+
     Channel put(Long id, Channel channel, String jwtToken);
 
     Map<String, Boolean> delete(Long id, String jwtToken);

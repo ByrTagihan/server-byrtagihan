@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/member/login",
             "/api/user/login/**",
             "/api/customer/member",
-            "/api/user/customer"
+            "/api/**"
     };
 
 

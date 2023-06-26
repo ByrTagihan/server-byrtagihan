@@ -71,39 +71,45 @@ public class ChannelController {
 
         return ResponseHelper.okWithPagination(channels, pagination);
     }
-    @GetMapping(path = "/member/channel")
-    public PaginationResponse<List<Channel>> getAllMember(
-            HttpServletRequest request,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
-            @RequestParam(required = false) String search
-    ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+//    @GetMapping(path = "/member/channel")
+//    public PaginationResponse<List<Channel>> getAllMember(
+//            HttpServletRequest request,
+//            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
+//            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
+//            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
+//            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+//            @RequestParam(required = false) String search
+//    ) {
+//        String jwtToken = request.getHeader("Authorization").substring(7);
+//
+//        Page<Channel> channelPage;
+//
+//        if (search != null && !search.isEmpty()) {
+//            channelPage = channelService.searchChannelMemberWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+//        } else {
+//            channelPage = channelService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+//        }
+//
+//        List<Channel> channels = channelPage.getContent();
+//        long totalItems = channelPage.getTotalElements();
+//        int totalPages = channelPage.getTotalPages();
+//
+//        Map<String, Integer> pagination = new HashMap<>();
+//        pagination.put("total", (int) totalItems);
+//        pagination.put("page", Math.toIntExact(page));
+//        pagination.put("total_page", totalPages);
+//
+//        return ResponseHelper.okWithPagination(channels, pagination);
+//    }
 
-        Page<Channel> channelPage;
-
-        if (search != null && !search.isEmpty()) {
-            channelPage = channelService.searchChannelMemberWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
-        } else {
-            channelPage = channelService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
-        }
-
-        List<Channel> channels = channelPage.getContent();
-        long totalItems = channelPage.getTotalElements();
-        int totalPages = channelPage.getTotalPages();
-
-        Map<String, Integer> pagination = new HashMap<>();
-        pagination.put("total", (int) totalItems);
-        pagination.put("page", Math.toIntExact(page));
-        pagination.put("total_page", totalPages);
-
-        return ResponseHelper.okWithPagination(channels, pagination);
-    }
     @DeleteMapping(path = "/user/channel/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id , HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(channelService.delete(id ,jwtToken));
+    }
+    @GetMapping(path = "/member/channel")
+    public CommonResponse<List<Channel>> getAll( HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(channelService.preview(jwtToken));
     }
 }

@@ -15,6 +15,7 @@ import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.modal.Channel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -116,6 +117,16 @@ public class ChannelImpl implements ChannelService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             return channelRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<Channel> preview( String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            return channelRepository.findAll();
         } else {
             throw new BadRequestException("Token not valid");
         }
