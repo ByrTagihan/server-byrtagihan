@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Repository.BillRepository;
+import serverbyrtagihan.repository.BillRepository;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.BadRequestException;
@@ -26,36 +26,23 @@ public class BillServiceImpl implements BillService {
 
     //Customer
     @Override
-    public Page<Bill> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Bill> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return billRepository.findAll(pageable);
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-
-    @Override
-    public Page<Bill> searchBillsWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection) {
-
-        Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
-            direction = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
-            return billRepository.findAllByKeyword(search, pageable);
+            if (search != null && !search.isEmpty()) {
+                return billRepository.findAllByKeyword(search, pageable);
+            } else {
+                return billRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -105,9 +92,9 @@ public class BillServiceImpl implements BillService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
             Bill bills = billRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
-            bills.setPaidId(1L);
-            bills.setPaidDate(bill.getPaidDate());
-            bills.setPaidAmount(bill.getPaidAmount());
+            bills.setPaid_id(1L);
+            bills.setPaid_date(bill.getPaid_date());
+            bills.setPaid_amount(bill.getPaid_amount());
 
             return billRepository.save(bills);
         } else {
@@ -121,9 +108,9 @@ public class BillServiceImpl implements BillService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
             Bill bills = billRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
-            bills.setPaidId(0L);
-            bills.setPaidDate(null);
-            bills.setPaidAmount(0.0);
+            bills.setPaid_id(0L);
+            bills.setPaid_date(null);
+            bills.setPaid_amount(0.0);
 
             return billRepository.save(bills);
         } else {
@@ -151,37 +138,47 @@ public class BillServiceImpl implements BillService {
 
     //Member
     @Override
-    public Page<Bill> getByMemberId(Long memberId, String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Bill> getByMemberId(Long memberId, String jwtToken, Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return billRepository.findByMemberId(memberId, pageable);
+            if (search != null && !search.isEmpty()) {
+                return billRepository.findAllByKeywordMember(memberId, search, pageable);
+            } else {
+                return billRepository.findByMemberId(memberId, pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
     @Override
-    public Page<Bill> getBillsByMemberId(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Bill> getBillsByMemberId(String jwtToken, Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;
-        if (sortDirection.equalsIgnoreCase("desc")) {
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         String memberId = claims.getId();
         if (typeToken.equals("Member")) {
-            return billRepository.findBillsByMember(memberId, pageable);
+            if (search != null && !search.isEmpty()) {
+                return billRepository.findAllByKeywordMember(memberId, search, pageable);
+            } else {
+                return billRepository.findByMemberId(memberId, pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -207,7 +204,7 @@ public class BillServiceImpl implements BillService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            bill.setMemberId(memberId);
+            bill.setMember_id(memberId);
             return billRepository.save(bill);
         } else {
             throw new BadRequestException("Token not valid");
@@ -241,9 +238,9 @@ public class BillServiceImpl implements BillService {
             if (bills == null) {
                 throw new NotFoundException("Member Not Found");
             }
-            bills.setPaidId(1L);
-            bills.setPaidDate(bill.getPaidDate());
-            bills.setPaidAmount(bill.getPaidAmount());
+            bills.setPaid_id(1L);
+            bills.setPaid_date(bill.getPaid_date());
+            bills.setPaid_amount(bill.getPaid_amount());
             return billRepository.save(bills);
         } else {
             throw new BadRequestException("Token not valid");
@@ -259,9 +256,9 @@ public class BillServiceImpl implements BillService {
             if (bills == null) {
                 throw new NotFoundException("Member Not Found");
             }
-            bills.setPaidId(0L);
-            bills.setPaidDate(null);
-            bills.setPaidAmount(0.0);
+            bills.setPaid_id(0L);
+            bills.setPaid_date(null);
+            bills.setPaid_amount(0.0);
 
             return billRepository.save(bills);
         } else {

@@ -38,14 +38,14 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
-    public Page<Channel> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Channel> getAll(String jwtToken, Long page, Long pageSize, String sort, String sortDirection) {
 
         Sort.Direction direction = Sort.Direction.ASC;
         if (sortDirection.equalsIgnoreCase("desc")) {
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
@@ -56,14 +56,14 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
-    public Page<Channel> searchChannelWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Channel> searchChannelWithPagination(String jwtToken, String search, Long page, Long pageSize, String sort, String sortDirection) {
 
         Sort.Direction direction = Sort.Direction.ASC;
         if (sortDirection.equalsIgnoreCase("desc")) {
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
@@ -74,14 +74,14 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
-    public Page<Channel> getAllMember(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Channel> getAllMember(String jwtToken, Long page, Long pageSize, String sort, String sortDirection) {
 
         Sort.Direction direction = Sort.Direction.ASC;
         if (sortDirection.equalsIgnoreCase("desc")) {
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Member")) {
@@ -92,14 +92,14 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
-    public Page<Channel> searchChannelMemberWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection) {
+    public Page<Channel> searchChannelMemberWithPagination(String jwtToken, String search, Long page, Long pageSize, String sort, String sortDirection) {
 
         Sort.Direction direction = Sort.Direction.ASC;
         if (sortDirection.equalsIgnoreCase("desc")) {
             direction = Sort.Direction.DESC;
         }
 
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sortBy);
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(pageSize), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Member")) {

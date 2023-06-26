@@ -3,7 +3,7 @@ package serverbyrtagihan.impl;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.Repository.OrganizationRepository;
+import serverbyrtagihan.repository.OrganizationRepository;
 import serverbyrtagihan.dto.OrganizationDto;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;

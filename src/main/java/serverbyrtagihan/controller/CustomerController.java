@@ -134,9 +134,9 @@ public class CustomerController {
     public PaginationResponse<List<Customer>> getAll(
             HttpServletRequest request,
             @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(value = "limit", defaultValue = Pagination.limit, required = false) Long pageSize,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sortBy,
+            @RequestParam(defaultValue = "") String sortDirection,
             @RequestParam(required = false) String search
     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
