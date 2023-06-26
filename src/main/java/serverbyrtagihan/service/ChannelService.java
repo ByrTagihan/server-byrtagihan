@@ -1,5 +1,6 @@
 package serverbyrtagihan.service;
 
+import org.springframework.data.domain.Page;
 import serverbyrtagihan.modal.Channel;
 
 import java.util.List;
@@ -8,9 +9,15 @@ import java.util.Map;
 public interface ChannelService {
     Channel add(Channel channel, String jwtToken);
 
-    List<Channel> getAll(String jwtToken);
 
-    List<Channel> getAllMember(String jwtToken);
+    Page<Channel> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
+
+    Page<Channel> getAllMember(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
+
+    Page<Channel> searchChannelWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection);
+
+
+    Page<Channel> searchChannelMemberWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection);
 
     Channel preview(Long id, String jwtToken);
 
