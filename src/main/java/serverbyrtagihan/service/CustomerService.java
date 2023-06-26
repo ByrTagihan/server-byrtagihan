@@ -21,6 +21,8 @@ public interface CustomerService {
 
     Customer put(Customer customer , String jwtToken);
 
+    Customer put2(Customer customer, String jwtToken, Long id);
+
     Customer putPassword(PasswordDTO passwordDTO, String jwtToken);
 
     Customer putPicture(Customer customer, String jwtToken);

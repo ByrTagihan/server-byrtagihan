@@ -83,13 +83,14 @@ public class CustomerController {
         return ResponseHelper.ok(customerService.putPassword(password, jwtToken));
     }
 
+
     @PostMapping(path = "/customer/verification_code")
     public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
         return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
     }
 
     @DeleteMapping(path = "/user/customer/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id ,HttpServletRequest request) {
+    public CommonResponse<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(customerService.delete(id, jwtToken));
     }
@@ -110,7 +111,7 @@ public class CustomerController {
     }
 
     @PostMapping("/user/customer")
-    public CommonResponse<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws  MessagingException {
+    public CommonResponse<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -446,17 +447,17 @@ public class CustomerController {
                 "\n" +
                 "</html>");
         if (adminRepository.existsByEmail(signUpRequest.getEmail())) {
-         throw new BadRequestException("Email is already");
+            throw new BadRequestException("Email is already");
         }
         String UserEmail = signUpRequest.getEmail().trim();
         boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
         if (EmailIsNotValid) {
-          throw new BadRequestException("Email nto valid");
+            throw new BadRequestException("Email nto valid");
         }
         String UserPassword = signUpRequest.getPassword().trim();
         boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) {
-           throw new BadRequestException("Password not valid");
+            throw new BadRequestException("Password not valid");
         }
         // Create new user's account
         Customer admin = new Customer();
@@ -483,9 +484,16 @@ public class CustomerController {
     public CommonResponse<List<Customer>> Get() {
         return ResponseHelper.ok(customerService.getAll());
     }
+
     @GetMapping("/user/customer/{id}")
     public CommonResponse<Customer> Preview(@PathVariable("id") Long id) {
         return ResponseHelper.ok(customerService.getById(id));
+    }
+
+    @PutMapping(path = "/user/customer/{id}")
+    public CommonResponse<Customer> put(@RequestBody PutCustomer putCustomer, @PathVariable("id") Long id, HttpServletRequest request) {
+        String jwtToken = request.getHeader("Authorization").substring(7);
+        return ResponseHelper.ok(customerService.put2(modelMapper.map(putCustomer, Customer.class), jwtToken, id));
     }
 
 }

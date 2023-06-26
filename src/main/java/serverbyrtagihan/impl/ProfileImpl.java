@@ -839,6 +839,24 @@ public class ProfileImpl implements CustomerService {
             throw new BadRequestException("Token not valid");
         }
     }
+    @Override
+    public Customer put2(Customer customer, String jwtToken , Long id) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setName(customer.getName());
+            update.setAddress(customer.getAddress());
+            update.setHp(customer.getHp());
+            update.setPassword(encoder.encode(customer.getPicture()));
+            update.setActive(customer.isActive());
+            update.setOrganizationId(customer.getOrganizationId());
+            return customerRepository.save(update);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
 
     @Override
     public Customer putPassword(PasswordDTO passwordDTO, String jwtToken) {
