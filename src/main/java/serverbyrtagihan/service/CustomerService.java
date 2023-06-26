@@ -17,6 +17,8 @@ public interface CustomerService {
 
     Customer getById(Long id);
 
+    Customer post(Customer customer, String jwtToken) throws MessagingException;
+
     List<Customer> getAll();
 
     Customer put(Customer customer , String jwtToken);
