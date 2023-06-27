@@ -38,8 +38,6 @@ public class MemberController {
     PasswordEncoder encoder;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    CustomerDetailsServiceImpl detailsService;
 
     @PostMapping("/member/login")
     public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
