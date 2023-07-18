@@ -12,9 +12,6 @@ public interface CustomerOrganizationService {
     Page<CustomerOrganizationModel> getAll(String jwtToken, Long page, Long limit, String sort, String search);
 
     CustomerOrganizationModel preview(Long id, String JwtToken);
-
-
     CustomerOrganizationModel put(Long id,CustomerOrganizationModel customer, String JwtToken);
 
-    Map<String, Boolean> delete(Long id,String JwtToken);
 }

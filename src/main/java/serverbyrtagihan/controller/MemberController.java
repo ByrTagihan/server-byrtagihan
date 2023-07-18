@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.dto.Password;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.modal.Channel;

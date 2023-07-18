@@ -27,15 +27,10 @@ public class CustomerOrganizationImpl implements CustomerOrganizationService {
     @Autowired
     private JwtUtils jwtUtils;
 
+
     @Override
-    public CustomerOrganizationModel add(CustomerOrganizationModel customerOrganizationModel, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
-            return customerRepository.save(customerOrganizationModel);
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
+    public CustomerOrganizationModel add(CustomerOrganizationModel customer, String JwtToken) {
+        return null;
     }
 
     @Override
@@ -61,17 +56,11 @@ public class CustomerOrganizationImpl implements CustomerOrganizationService {
         }
     }
 
-
     @Override
-    public CustomerOrganizationModel preview(Long id, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
-            return customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
+    public CustomerOrganizationModel preview(Long id, String JwtToken) {
+        return null;
     }
+
 
     @Override
     public CustomerOrganizationModel put(Long id, CustomerOrganizationModel customer, String jwtToken) {
@@ -95,21 +84,4 @@ public class CustomerOrganizationImpl implements CustomerOrganizationService {
         }
     }
 
-    @Override
-    public Map<String, Boolean> delete(Long id, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
-            try {
-                customerRepository.deleteById(id);
-                Map<String, Boolean> res = new HashMap<>();
-                res.put("Deleted", Boolean.TRUE);
-                return res;
-            } catch (Exception e) {
-                return null;
-            }
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
 }
