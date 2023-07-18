@@ -1,6 +1,7 @@
 package serverbyrtagihan.service;
 
 
+import org.springframework.data.domain.Page;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
 
@@ -13,7 +14,8 @@ public interface MemberService {
 
     Member putPass(PasswordDTO member, String jwtToken);
 
-    List<Member> getAll(String jwtToken);
+
+    Page<Member> getAll(String jwtToken, Long page, Long limit, String sort, String search);
 
     Member put(Member member, Long id, String jwtToken);
 

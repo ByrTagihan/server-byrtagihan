@@ -2,12 +2,15 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.dto.Password;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
+import serverbyrtagihan.modal.Channel;
+import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.dto.PasswordDTO;
@@ -16,6 +19,7 @@ import serverbyrtagihan.response.*;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
+import serverbyrtagihan.util.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -38,8 +42,6 @@ public class MemberController {
     PasswordEncoder encoder;
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    CustomerDetailsServiceImpl detailsService;
 
     @PostMapping("/member/login")
     public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
@@ -71,9 +73,33 @@ public class MemberController {
     }
 
     @GetMapping(path = "/customer/member")
-    public CommonResponse<List<Member>> getAll(HttpServletRequest request) {
+    public PaginationResponse<List<Member>> getAll(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
+            @RequestParam(required = false) String search
+    ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(service.getAll(jwtToken));
+
+        Page<Member> channelPage;
+
+        if (search != null && !search.isEmpty()) {
+            channelPage = service.getAll(jwtToken, page, limit, sort, search);
+        } else {
+            channelPage = service.getAll(jwtToken, page, limit, sort, null);
+        }
+
+        List<Member> channels = channelPage.getContent();
+        long totalItems = channelPage.getTotalElements();
+        int totalPages = channelPage.getTotalPages();
+
+        Map<String, Integer> pagination = new HashMap<>();
+        pagination.put("total", (int) totalItems);
+        pagination.put("page", Math.toIntExact(page));
+        pagination.put("total_page", totalPages);
+
+        return ResponseHelper.okWithPagination(channels, pagination);
     }
 
     @PutMapping(path = "/customer/member/{id}")

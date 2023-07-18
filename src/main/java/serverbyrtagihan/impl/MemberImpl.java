@@ -2,6 +2,10 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.repository.MemberRepository;
@@ -14,7 +18,6 @@ import serverbyrtagihan.service.MemberService;
 
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -91,16 +94,27 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public List<Member> getAll(String jwtToken) {
+    public Page<Member> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return memberRepository.findAll();
+            if (search != null && !search.isEmpty()) {
+                return memberRepository.findAllByKeyword(search, pageable);
+            } else {
+                return memberRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
+
 
     @Override
     public Member put(Member member, Long id, String jwtToken) {
@@ -116,6 +130,7 @@ public class MemberImpl implements MemberService {
             throw new BadRequestException("Token not valid");
         }
     }
+
     @Override
     public Member putPassword(Member member, Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
