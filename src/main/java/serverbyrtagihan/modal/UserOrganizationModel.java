@@ -6,11 +6,13 @@ import serverbyrtagihan.auditing.DateConfig;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "customerOrganization")
-public class CustomerOrganizationModel extends DateConfig {
+@Table(name = "userOrganization")
+public class UserOrganizationModel extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private long customer_id;
 
     @Column(name = "name")
     private String name;
@@ -34,7 +36,7 @@ public class CustomerOrganizationModel extends DateConfig {
     private String balance;
 
     @Column(name = "bank_account_number")
-    private int bank_account_number;
+    private String bank_account_number;
 
     @Column(name = "bank_account_name")
     private String bank_account_name;
@@ -42,7 +44,7 @@ public class CustomerOrganizationModel extends DateConfig {
     @Column(name = "bank_name")
     private String bank_name;
 
-    public CustomerOrganizationModel() {
+    public UserOrganizationModel() {
     }
 
     public long getId() {
@@ -51,6 +53,14 @@ public class CustomerOrganizationModel extends DateConfig {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getCustomer_id() {
+        return customer_id;
+    }
+
+    public void setCustomer_id(long customer_id) {
+        this.customer_id = customer_id;
     }
 
     public String getName() {
@@ -109,11 +119,11 @@ public class CustomerOrganizationModel extends DateConfig {
         this.balance = balance;
     }
 
-    public int getBank_account_number() {
+    public String getBank_account_number() {
         return bank_account_number;
     }
 
-    public void setBank_account_number(int bank_account_number) {
+    public void setBank_account_number(String bank_account_number) {
         this.bank_account_number = bank_account_number;
     }
 

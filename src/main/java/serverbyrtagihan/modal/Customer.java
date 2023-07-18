@@ -38,8 +38,6 @@ public class Customer extends DateConfig  {
     @Column(name = "token")
     private String token;
 
-    @Column(name = "type_token")
-    private String typeToken;
 
     @Column(name = "organizaion_id")
     private Long organizationId;
@@ -120,14 +118,7 @@ public class Customer extends DateConfig  {
     public void setToken(String token) {
         this.token = token;
     }
-
-    public String getTypeToken() {
-        return typeToken;
-    }
-
-    public void setTypeToken(String typeToken) {
-        this.typeToken = typeToken;
-    }
+    
 
     public Long getOrganizationId() {
         return organizationId;

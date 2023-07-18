@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Repository.GetVerification;
-import serverbyrtagihan.Repository.UserRepository;
-import serverbyrtagihan.service.UserService;
+import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.User;
+import serverbyrtagihan.repository.GetVerification;
+import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.modal.ForGotPassword;
-import serverbyrtagihan.modal.User;
+import serverbyrtagihan.service.UserService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -806,12 +806,12 @@ public class UserImpl implements UserService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
-        if (typeToken.equals("user")) {
+        if (typeToken.equals("User")) {
             User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(profileDTO.getName());
             update.setDomain(profileDTO.getAddress());
             update.setOrigin(profileDTO.getHp());
-            update.setPicture(profileDTO.getImg());
+            update.setPicture(profileDTO.getPicture());
             return userRepository.save(update);
         } else {
             throw new BadRequestException("Token Tidak Cocok");
@@ -830,7 +830,7 @@ public class UserImpl implements UserService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
-        if (typeToken.equals("user")) {
+        if (typeToken.equals("User")) {
         return userRepository.findAll();
         } else {
             throw new BadRequestException("Token not valid");

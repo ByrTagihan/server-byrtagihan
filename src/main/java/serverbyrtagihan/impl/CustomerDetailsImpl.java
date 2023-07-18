@@ -10,18 +10,16 @@ import java.util.Objects;
 public class CustomerDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
-    private String type;
     private String username;
     private Long organizationId;
 
     @JsonIgnore
     private String password;
 
-    public CustomerDetailsImpl(Long id, String email, String password, String type, Long organizationId) {
+    public CustomerDetailsImpl(Long id, String email, String password, Long organizationId) {
         this.id = id;
         this.username = email;
         this.password = password;
-        this.type = type;
         this.organizationId = organizationId;
     }
 
@@ -30,7 +28,6 @@ public class CustomerDetailsImpl implements UserDetails {
                 admin.getId(),
                 admin.getEmail(),
                 admin.getPassword(),
-                admin.getTypeToken(),
                 admin.getOrganizationId());
     }
 
@@ -43,9 +40,6 @@ public class CustomerDetailsImpl implements UserDetails {
         return organizationId;
     }
 
-    public String getType() {
-        return type;
-    }
 
     @Override
     public String getUsername() {

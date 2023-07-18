@@ -19,13 +19,13 @@ public class Bill extends DateConfig {
     private String description;
 
     @Column(name = "member_id")
-    private Long memberId = 0L;
+    private Long member_id = 0L;
 
     @Column(name = "organization_id")
-    private Long organizationId = 0L;
+    private Long organization_id = 0L;
 
     @Column(name = "organization_name")
-    private String organizationName = "";
+    private String organization_name = "";
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Column(name = "periode")
@@ -35,37 +35,36 @@ public class Bill extends DateConfig {
     private Double amount;
 
     @Column(name = "member_name")
-    private String memberName = "";
+    private String member_name = "";
 
     @Column(name = "paid_id")
-    private Long paidId = 0L;
+    private Long paid_id = 0L;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "paid_date")
-    private Date paidDate;
+    private Date paid_date;
 
     @Column(name = "payment_id")
-    private Long paymentId = 0L;
+    private Long payment_id = 0L;
 
     @Column(name = "paid_amount")
-    private Double paidAmount = 0.0;
+    private Double paid_amount = 0.0;
 
     public Bill() {
     }
-
-    public Bill(Long id, String description, Long memberId, Long organizationId, String organizationName, Date periode, Double amount, String memberName, Long paidId, Date paidDate, Long paymentId, Double paidAmount) {
+    public Bill(Long id, String description, Long member_id, Long organization_id, String organization_name, Date periode, Double amount, String member_name, Long paid_id, Date paid_date, Long payment_id, Double paid_amount) {
         this.id = id;
         this.description = description;
-        this.memberId = memberId;
-        this.organizationId = organizationId;
-        this.organizationName = organizationName;
+        this.member_id = member_id;
+        this.organization_id = organization_id;
+        this.organization_name = organization_name;
         this.periode = periode;
         this.amount = amount;
-        this.memberName = memberName;
-        this.paidId = paidId;
-        this.paidDate = paidDate;
-        this.paymentId = paymentId;
-        this.paidAmount = paidAmount;
+        this.member_name = member_name;
+        this.paid_id = paid_id;
+        this.paid_date = paid_date;
+        this.payment_id = payment_id;
+        this.paid_amount = paid_amount;
     }
 
     public Long getId() {
@@ -84,28 +83,28 @@ public class Bill extends DateConfig {
         this.description = description;
     }
 
-    public Long getMemberId() {
-        return memberId;
+    public Long getMember_id() {
+        return member_id;
     }
 
-    public void setMemberId(Long memberId) {
-        this.memberId = memberId;
+    public void setMember_id(Long member_id) {
+        this.member_id = member_id;
     }
 
-    public Long getOrganizationId() {
-        return organizationId;
+    public Long getOrganization_id() {
+        return organization_id;
     }
 
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
+    public void setOrganization_id(Long organization_id) {
+        this.organization_id = organization_id;
     }
 
-    public String getOrganizationName() {
-        return organizationName;
+    public String getOrganization_name() {
+        return organization_name;
     }
 
-    public void setOrganizationName(String organizationName) {
-        this.organizationName = organizationName;
+    public void setOrganization_name(String organization_name) {
+        this.organization_name = organization_name;
     }
 
     public Date getPeriode() {
@@ -124,43 +123,43 @@ public class Bill extends DateConfig {
         this.amount = amount;
     }
 
-    public String getMemberName() {
-        return memberName;
+    public String getMember_name() {
+        return member_name;
     }
 
-    public void setMemberName(String memberName) {
-        this.memberName = memberName;
+    public void setMember_name(String member_name) {
+        this.member_name = member_name;
     }
 
-    public Long getPaidId() {
-        return paidId;
+    public Long getPaid_id() {
+        return paid_id;
     }
 
-    public void setPaidId(Long paidId) {
-        this.paidId = paidId;
+    public void setPaid_id(Long paid_id) {
+        this.paid_id = paid_id;
     }
 
-    public Date getPaidDate() {
-        return paidDate;
+    public Date getPaid_date() {
+        return paid_date;
     }
 
-    public void setPaidDate(Date paidDate) {
-        this.paidDate = paidDate;
+    public void setPaid_date(Date paid_date) {
+        this.paid_date = paid_date;
     }
 
-    public Long getPaymentId() {
-        return paymentId;
+    public Long getPayment_id() {
+        return payment_id;
     }
 
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
+    public void setPayment_id(Long payment_id) {
+        this.payment_id = payment_id;
     }
 
-    public Double getPaidAmount() {
-        return paidAmount;
+    public Double getPaid_amount() {
+        return paid_amount;
     }
 
-    public void setPaidAmount(Double paidAmount) {
-        this.paidAmount = paidAmount;
+    public void setPaid_amount(Double paid_amount) {
+        this.paid_amount = paid_amount;
     }
 }

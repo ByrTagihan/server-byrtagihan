@@ -29,9 +29,6 @@ import javax.persistence.*;
         @Column(name = "domain")
         private String domain;
 
-        @Column(name = "type_token")
-        private String typeToken;
-
         @Column(name = "active")
         private boolean active;
 
@@ -96,14 +93,6 @@ import javax.persistence.*;
 
         public void setDomain(String domain) {
             this.domain = domain;
-        }
-
-        public String getTypeToken() {
-            return typeToken;
-        }
-
-        public void setTypeToken(String typeToken) {
-            this.typeToken = typeToken;
         }
 
         public boolean isActive() {

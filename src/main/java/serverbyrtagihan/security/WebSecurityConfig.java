@@ -14,9 +14,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.security.jwt.AuthEntryPointJwt;
 import serverbyrtagihan.security.jwt.AuthTokenFilter;
-import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
@@ -47,14 +47,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/v3/api-docs/**",
             "/swagger-ui/**",
             // API controller
-            "/api/customer/register/**",
             "/api/customer/login/**",
-            "/api/customer/member",
             "/api/user/register",
-            "/api/member/login/**",
+            "/api/member/login",
             "/api/user/login/**",
-            "/api/customer/forgot_password/**",
-            "/api/customer/verification_code/**",
+            "/api/customer/member",
+            "/api/**"
     };
 
 

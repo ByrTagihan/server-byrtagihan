@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.response.PaginationResponse;
-import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.dto.BillDTO;
 import serverbyrtagihan.dto.BillPaidDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.util.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,10 +31,9 @@ public class CustomerMemberBillController {
     @GetMapping(path = "/customer/member/{memberid}/bill")
     public PaginationResponse<List<Bill>> getAll(
             HttpServletRequest request, @PathVariable("memberid") Long memberId,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
@@ -42,9 +41,9 @@ public class CustomerMemberBillController {
         Page<Bill> billPage;
 
         if (search != null && !search.isEmpty()) {
-            billPage = billService.searchBillsWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+            billPage = billService.getByMemberId(memberId, jwtToken, page, limit, sort, search);
         } else {
-            billPage = billService.getByMemberId(memberId, jwtToken, page, pageSize, sortBy, sortDirection);
+            billPage = billService.getByMemberId(memberId, jwtToken, page, limit, sort, null);
         }
 
         List<Bill> bills = billPage.getContent();
@@ -78,7 +77,7 @@ public class CustomerMemberBillController {
     }
 
     @PutMapping(path = "/customer/member/{memberid}/bill/{id}/paid")
-    public CommonResponse<Bill> paid(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id, @RequestBody BillPaidDTO bill) {
+    public CommonResponse<Bill> paid(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id, BillPaidDTO bill) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(billService.paidByIdInMember(modelMapper.map(bill, Bill.class), memberId, id, jwtToken));
     }

@@ -2,17 +2,16 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.Repository.UserRepository;
-import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
+import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.service.UserService;
 import serverbyrtagihan.dto.*;
+import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
@@ -38,9 +37,6 @@ public class UserController {
     ModelMapper modelMapper;
 
     @Autowired
-    CustomerDetailsServiceImpl service;
-
-    @Autowired
     AuthenticationManager authenticationManager;
 
     @Autowired
@@ -57,23 +53,23 @@ public class UserController {
 
 
     @PostMapping("/user/login")
-    public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
+    public CommonResponse<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Email not found"));
         boolean conPassword = encoder.matches(loginRequest.getPassword() , user.getPassword());
         if (conPassword) {
             String token = jwtUtils.generateToken(user.getEmail());
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", user);
-            response.put("token-jwt", token);
+            response.put("data", "true");
+            response.put("token", token);
             response.put("type-token", "User");
-            return ResponseEntity.ok(response);
+            return ResponseHelper.ok(response);
         } else {
             throw new NotFoundException("Password not valid");
         }
     }
 
     @PostMapping("/user/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
+    public CommonResponse<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) throws MessagingException {
         String email = signUpRequest.getEmail();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
@@ -409,19 +405,17 @@ public class UserController {
                 "\n" +
                 "</html>");
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Kesalahan: Email telah digunakan!"));
+           throw new BadRequestException("Email al ready");
         }
         String UserEmail = signUpRequest.getEmail().trim();
         boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
         if (EmailIsNotValid) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Email tidak valid"));
+            throw new BadRequestException("Email nto valid");
         }
         String UserPassword = signUpRequest.getPassword().trim();
         boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) {
-            return ResponseEntity.badRequest().body(new MessageResponse("Kesalahan: Password tidak valid"));
+           throw new BadRequestException("Password not valid");
         }
         // Create new user's account
         User admin = new User();
@@ -432,10 +426,9 @@ public class UserController {
         admin.setName(signUpRequest.getName());
         admin.setDomain(signUpRequest.getAddress());
         admin.setToken("Kosong");
-        admin.setTypeToken("User");
         userRepository.save(admin);
         javaMailSender.send(message);
-        return ResponseEntity.ok(new MessageResponse(" Register telah berhasil! "));
+        return ResponseHelper.ok(new MessageResponse("Register telah berhasil!"));
     }
 
     @GetMapping(path = "/user/profile")

@@ -11,7 +11,7 @@ public class CustomerOrganizationDTO {
     public String city;
     public String provinsi;
     public String balance;
-    public int bank_acount_number;
+    public String bank_acount_number;
     public String bank_account_name;
     public String bank_name;
 
@@ -81,11 +81,7 @@ public class CustomerOrganizationDTO {
         this.balance = balance;
     }
 
-    public int getBank_acount_number() {
-        return bank_acount_number;
-    }
-
-    public void setBank_acount_number(int bank_acount_number) {
+    public void setBank_acount_number(String bank_acount_number) {
         this.bank_acount_number = bank_acount_number;
     }
 

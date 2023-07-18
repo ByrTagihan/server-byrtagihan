@@ -7,39 +7,56 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.modal.Bill;
-import serverbyrtagihan.repository.ChannelRepository;
-import serverbyrtagihan.service.ChannelService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.modal.Member;
+import serverbyrtagihan.modal.Organization;
+import serverbyrtagihan.modal.Transaction;
+import serverbyrtagihan.repository.MemberRepository;
+import serverbyrtagihan.repository.OrganizationRepository;
+import serverbyrtagihan.repository.TransactionRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.modal.Channel;
+import serverbyrtagihan.service.TransactionService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class ChannelImpl implements ChannelService {
+public class TransactionImpl implements TransactionService {
     @Autowired
-    private ChannelRepository channelRepository;
+    TransactionRepository transactionRepository;
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    OrganizationRepository organizationRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
 
     @Override
-    public Channel add(Channel channel, String jwtToken) {
+    public Transaction add(Transaction transaction, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return channelRepository.save(channel);
+            Transaction add = new Transaction();
+            Member memberId = memberRepository.findById(transaction.getMember_id()).orElseThrow(() -> new NotFoundException("Id Member not found"));
+            Organization organization = organizationRepository.findById(transaction.getOrganization_Id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
+            add.setAmount(transaction.getAmount());
+            add.setPriode(transaction.getPriode());
+            add.setDescription(transaction.getDescription());
+            add.setMember_id(memberId.getId());
+            add.setOrganization_Id(organization.getId());
+            add.setOrganization_name(organization.getName());
+            return transactionRepository.save(add);
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
     @Override
-    public Page<Channel> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+    public Page<Transaction> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
 
         Sort.Direction direction = Sort.Direction.ASC;
         if (sort.startsWith("-")) {
@@ -52,82 +69,47 @@ public class ChannelImpl implements ChannelService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             if (search != null && !search.isEmpty()) {
-                return channelRepository.findAllByKeyword(search, pageable);
+                return transactionRepository.findAllByKeyword(search, pageable);
             } else {
-                return channelRepository.findAll(pageable);
+                return transactionRepository.findAll(pageable);
             }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
-
     @Override
-    public Page<Channel> getAllMember(String jwtToken, Long page, Long limit, String sort, String search) {
-
-        Sort.Direction direction = Sort.Direction.ASC;
-        if (sort.startsWith("-")) {
-            sort = sort.substring(1);
-            direction = Sort.Direction.DESC;
-        }
-
-        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Member")) {
-            if (search != null && !search.isEmpty()) {
-                return channelRepository.findAllByKeyword(search, pageable);
-            } else {
-                return channelRepository.findAll(pageable);
-            }
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-
-
-    @Override
-    public Channel preview(Long id, String jwtToken) {
+    public Transaction preview(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return channelRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-    @Override
-    public List<Channel> preview( String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("Member")) {
-            return channelRepository.findAll();
+            return transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
     @Override
-    public Channel put(Long id, Channel channel, String jwtToken) {
+    public Transaction put(Long id, Transaction transaction, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            Channel update = channelRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-            update.setName(channel.getName());
-            update.setActive(channel.getActive());
-            return channelRepository.save(update);
+            Transaction update = transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
+            update.setDescription(transaction.getDescription());
+            update.setPriode(transaction.getPriode());
+            update.setAmount(transaction.getAmount());
+            return transactionRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
-
     @Override
     public Map<String, Boolean> delete(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             try {
-                channelRepository.deleteById(id);
+                transactionRepository.deleteById(id);
                 Map<String, Boolean> res = new HashMap<>();
                 res.put("Deleted", Boolean.TRUE);
                 return res;

@@ -28,9 +28,9 @@ Member extends DateConfig {
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "type_token")
-    private String typeToken;
+    @Lob
+    @Column(name = "picture")
+    private String picture;
 
     public Member() {
     }
@@ -83,11 +83,11 @@ Member extends DateConfig {
         this.password = password;
     }
 
-    public String getTypeToken() {
-        return typeToken;
+    public String getPicture() {
+        return picture;
     }
 
-    public void setTypeToken(String typeToken) {
-        this.typeToken = typeToken;
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

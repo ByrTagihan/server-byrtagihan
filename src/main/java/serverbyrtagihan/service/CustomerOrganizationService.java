@@ -1,17 +1,20 @@
 package serverbyrtagihan.service;
 
+
+import org.springframework.data.domain.Page;
 import serverbyrtagihan.modal.CustomerOrganizationModel;
 
 import java.util.*;
 
 public interface CustomerOrganizationService {
-    CustomerOrganizationModel add(CustomerOrganizationModel customer);
+    CustomerOrganizationModel add(CustomerOrganizationModel customer, String JwtToken);
 
-    CustomerOrganizationModel getById(Long id);
+    Page<CustomerOrganizationModel> getAll(String jwtToken, Long page, Long limit, String sort, String search);
 
-    List<CustomerOrganizationModel> getAll();
+    CustomerOrganizationModel preview(Long id, String JwtToken);
 
-    CustomerOrganizationModel put(CustomerOrganizationModel customer, Long id);
 
-    Map<String, Boolean> delete(Long id);
+    CustomerOrganizationModel put(Long id,CustomerOrganizationModel customer, String JwtToken);
+
+    Map<String, Boolean> delete(Long id,String JwtToken);
 }

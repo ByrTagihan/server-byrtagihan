@@ -4,13 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.modal.Bill;
-import serverbyrtagihan.response.PaginationResponse;
-import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.dto.BillDTO;
 import serverbyrtagihan.dto.BillPaidDTO;
+import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.response.CommonResponse;
+import serverbyrtagihan.response.PaginationResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.util.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,19 +28,12 @@ public class CustomerBillController {
     @Autowired
     private ModelMapper modelMapper;
 
-    public static final String DEFAULT_PAGE_NUMBER = "1";
-    public static final String DEFAULT_PAGE_SIZE = "10";
-    public static final String DEFAULT_SORT_BY = "id";
-    public static final String DEFAULT_SORT_DIRECTION = "asc";
-
-
     @GetMapping(path = "/customer/bill")
     public PaginationResponse<List<Bill>> getAll(
             HttpServletRequest request,
-            @RequestParam(value = "page", defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(value = "limit", defaultValue = Pagination.size, required = false) Long pageSize,
-            @RequestParam(defaultValue = Pagination.sortBy, required = false) String sortBy,
-            @RequestParam(defaultValue = Pagination.sortDir) String sortDirection,
+            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
+            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
+            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
      ) {
         String jwtToken = request.getHeader("Authorization").substring(7);
@@ -48,9 +41,9 @@ public class CustomerBillController {
         Page<Bill> billPage;
 
         if (search != null && !search.isEmpty()) {
-            billPage = billService.searchBillsWithPagination(jwtToken, search, page, pageSize, sortBy, sortDirection);
+            billPage = billService.getAll(jwtToken, page, limit, sort, search);
         } else {
-            billPage = billService.getAll(jwtToken, page, pageSize, sortBy, sortDirection);
+            billPage = billService.getAll(jwtToken, page, limit, sort, null);
         }
 
         List<Bill> bills = billPage.getContent();
@@ -84,7 +77,7 @@ public class CustomerBillController {
     }
 
     @PutMapping(path = "/customer/bill/{id}/paid")
-    public CommonResponse<Bill> paid(HttpServletRequest request, @RequestBody BillPaidDTO bill, @PathVariable("id") Long id) {
+    public CommonResponse<Bill> paid(HttpServletRequest request, BillPaidDTO bill, @PathVariable("id") Long id) {
         String jwtToken = request.getHeader("Authorization").substring(7);
         return ResponseHelper.ok(billService.paid(modelMapper.map(bill, Bill.class), id, jwtToken));
     }

@@ -2,16 +2,20 @@ package serverbyrtagihan.dto;
 
 import java.util.Date;
 
-public class BillDTO {
-
+public class TransactionDTO {
+    private Long organization_id;
     private Long member_id;
-
     private String description;
+    private Date priode;
+    private Float amount;
 
-    private Date periode;
+    public Long getOrganization_id() {
+        return organization_id;
+    }
 
-    private Double amount;
-
+    public void setOrganization_id(Long organization_id) {
+        this.organization_id = organization_id;
+    }
 
     public Long getMember_id() {
         return member_id;
@@ -29,19 +33,19 @@ public class BillDTO {
         this.description = description;
     }
 
-    public Date getPeriode() {
-        return periode;
+    public Date getPriode() {
+        return priode;
     }
 
-    public void setPeriode(Date periode) {
-        this.periode = periode;
+    public void setPriode(Date priode) {
+        this.priode = priode;
     }
 
-    public Double getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 }
