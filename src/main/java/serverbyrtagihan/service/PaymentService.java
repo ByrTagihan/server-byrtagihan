@@ -1,5 +1,6 @@
 package serverbyrtagihan.service;
 
+import org.springframework.data.domain.Page;
 import serverbyrtagihan.dto.OrganizationDto;
 import serverbyrtagihan.dto.PaymentDto;
 import serverbyrtagihan.modal.Organization;
@@ -10,7 +11,8 @@ import java.util.Map;
 
 public interface PaymentService {
 
-    List<Payment> Get(String jwtToken);
+
+    Page<Payment> getAll(String jwtToken, Long page, Long limit, String sort, String search);
 
     Payment Preview(Long id, String jwtToken);
 
