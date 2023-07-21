@@ -27,9 +27,10 @@ public class CustomerOrganizationController {
     @Autowired
     private ModelMapper modelMapper;
 
+    private static final String JWT_PREFIX = "jwt ";
     @PutMapping(path = "/customer/organization/{id}")
     public CommonResponse<CustomerOrganizationModel> Put(@RequestBody CustomerOrganizationDTO organizationDTO, @PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerOrganizationService.put(id, modelMapper.map(organizationDTO, CustomerOrganizationModel.class), jwtToken));
     }
 

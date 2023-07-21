@@ -21,8 +21,7 @@ public class CustomerDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        Customer admin = adminRepository.findByEmail(username)
-                .orElseThrow(() -> new NotFoundException("User Not Found with username: " + username));
+       Customer admin = adminRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Email not found"));
         return CustomerDetailsImpl.build(admin);
     }
 

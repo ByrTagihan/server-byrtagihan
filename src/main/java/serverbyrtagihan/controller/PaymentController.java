@@ -25,20 +25,22 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
+    private static final String JWT_PREFIX = "jwt ";
+
     @PostMapping(path = "/user/payment")
     public CommonResponse<Payment> post(@RequestBody PaymentDto paymentDto, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(paymentService.Add(paymentDto, jwtToken));
     }
     @PutMapping(path = "/user/payment/{id}")
     public CommonResponse<Payment> Put(@RequestBody PaymentDto paymentDto, @PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(paymentService.Put(id,paymentDto, jwtToken));
     }
 
     @GetMapping(path = "/user/payment/{id}")
     public CommonResponse<Payment> Preview(@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(paymentService.Preview(id, jwtToken));
     }
     @GetMapping(path = "/user/payment")
@@ -49,7 +51,7 @@ public class PaymentController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Payment> paymentPage;
 
@@ -72,7 +74,7 @@ public class PaymentController {
     }
     @DeleteMapping(path = "/user/payment/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id , HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(paymentService.Delete(id ,jwtToken));
     }
 }

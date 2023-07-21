@@ -33,12 +33,7 @@ public class TokenFilterUser extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                String email = jwtUtils.getUserNameFromJwtToken(jwt);
-                UserDetails userDetails = customerDetailsService.loadUserByUsername(email);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+
             }
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
@@ -47,8 +42,8 @@ public class TokenFilterUser extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+        String headerAuth = request.getHeader("auth-tgh");
+        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("jwt ")) {
             return headerAuth.substring(7, headerAuth.length());
         }
         return null;

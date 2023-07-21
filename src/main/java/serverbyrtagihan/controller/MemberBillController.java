@@ -26,6 +26,9 @@ public class MemberBillController {
     @Autowired
     private ModelMapper modelMapper;
 
+
+    private static final String JWT_PREFIX = "jwt ";
+
     @GetMapping(path = "/member/bill")
     public PaginationResponse<List<Bill>> getAll(
             HttpServletRequest request,
@@ -34,7 +37,7 @@ public class MemberBillController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         Page<Bill> billPage;
 
         if (search != null && !search.isEmpty()) {

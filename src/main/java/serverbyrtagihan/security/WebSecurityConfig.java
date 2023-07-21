@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
+import serverbyrtagihan.security.jwt.AccessDenied;
 import serverbyrtagihan.security.jwt.AuthEntryPointJwt;
 import serverbyrtagihan.security.jwt.AuthTokenFilter;
 
@@ -24,6 +25,10 @@ import serverbyrtagihan.security.jwt.AuthTokenFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomerDetailsServiceImpl adminDetailsService;
+
+    @Autowired
+    private AccessDenied accessDeniedHandler;
+
 
     @Autowired
     AuthEntryPointJwt unauthorizedHandler;
@@ -48,10 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             // API controller
             "/api/customer/login/**",
-            "/api/user/register",
             "/api/member/login",
             "/api/user/login/**",
-            "/api/customer/member",
             "/api/**"
     };
 

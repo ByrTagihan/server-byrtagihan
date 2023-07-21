@@ -26,19 +26,21 @@ public class ChannelController {
     @Autowired
     ModelMapper modelMapper;
 
+    private static final String JWT_PREFIX = "jwt ";
+
     @PostMapping(path = "/user/channel")
     public CommonResponse<Channel> Post(@RequestBody ChannelDTO channelDTO, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(channelService.add(modelMapper.map(channelDTO , Channel.class), jwtToken));
     }
     @PutMapping(path = "/user/channel/{id}")
     public CommonResponse<Channel> Put(@RequestBody ChannelDTO channelDTO,@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(channelService.put(id,modelMapper.map(channelDTO , Channel.class), jwtToken));
     }
     @GetMapping(path = "/user/channel/{id}")
     public CommonResponse<Channel> Preview(@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(channelService.preview(id, jwtToken));
     }
     @GetMapping(path = "/user/channel")
@@ -49,7 +51,7 @@ public class ChannelController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Channel> channelPage;
 
@@ -78,7 +80,7 @@ public class ChannelController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Channel> channelPage;
 
@@ -101,7 +103,7 @@ public class ChannelController {
     }
     @DeleteMapping(path = "/user/channel/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id , HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(channelService.delete(id ,jwtToken));
     }
 }

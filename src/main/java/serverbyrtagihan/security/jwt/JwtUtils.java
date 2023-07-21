@@ -26,7 +26,7 @@ public class JwtUtils {
     private String jwtSecret;
     @Value("${bezkoder.app.jwtExpirationMs}")
     private int jwtExpirationMs;
-    private static final String SECRET_KEY = "codingshooltelogosari";
+    private static final String SECRET_KEY = "bayartagihan";
 
     @Autowired
     UserRepository userRepository;
