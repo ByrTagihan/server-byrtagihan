@@ -53,7 +53,7 @@ public class MemberController {
         if (conPassword) {
             String token = jwtUtils.generateTokenMember(member.getUniqueId());
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", "true");
+            response.put("data", member);
             response.put("token", token);
             response.put("type-token", "Member");
             return ResponseHelper.ok(response);

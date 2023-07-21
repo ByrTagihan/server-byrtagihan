@@ -56,6 +56,7 @@ public class JwtUtils {
         Date expiryDate = new Date(now.getTime() + 3600000 * 168);
         User user1 = userRepository.findByEmail(user).get();
         return Jwts.builder()
+                .claim("data", user1)
                 .setSubject(user)
                 .claim("id" , user1.getId())
                 .setAudience("User")

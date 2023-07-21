@@ -61,6 +61,8 @@ public class CustomerController {
     private JavaMailSender javaMailSender;
     @Autowired
     CustomerOrganizationRepository organizationRepository;
+    @Autowired
+    CustomerRepository customerRepository;
 
     public static final String DEFAULT_PAGE_NUMBER = "1";
     public static final String DEFAULT_PAGE_SIZE = "10";
@@ -112,8 +114,9 @@ public class CustomerController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         CustomerDetailsImpl userDetails = (CustomerDetailsImpl) authentication.getPrincipal();
+        Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).get();
         Map<Object, Object> response = new HashMap<>();
-        response.put("data", "true");
+        response.put("data", customer);
         response.put("token", jwt);
         response.put("type-token", "Customer");
         return ResponseHelper.ok(response);
