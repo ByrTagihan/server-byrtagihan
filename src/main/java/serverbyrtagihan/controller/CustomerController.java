@@ -66,28 +66,29 @@ public class CustomerController {
     public static final String DEFAULT_PAGE_SIZE = "10";
     public static final String DEFAULT_SORT_BY = "id";
     public static final String DEFAULT_SORT_DIRECTION = "asc";
+    private static final String JWT_PREFIX = "jwt ";
 
     @GetMapping(path = "/customer/profile")
     public CommonResponse<Customer> get(HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.getProfileCustomer(jwtToken));
     }
 
     @PutMapping(path = "/customer/picture")
     public CommonResponse<Customer> putPicture(HttpServletRequest request, @RequestBody PictureDTO profile) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.putPicture(modelMapper.map(profile, Customer.class), jwtToken));
     }
 
     @PutMapping(path = "/customer/profile")
     public CommonResponse<Customer> put(@RequestBody ProfileDTO profile, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.put(modelMapper.map(profile, Customer.class), jwtToken));
     }
 
     @PutMapping(path = "/customer/password")
     public CommonResponse<Customer> putPassword(@RequestBody PasswordDTO password, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.putPassword(password, jwtToken));
     }
 
@@ -99,7 +100,7 @@ public class CustomerController {
 
     @DeleteMapping(path = "/user/customer/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.delete(id, jwtToken));
     }
 
@@ -120,7 +121,7 @@ public class CustomerController {
 
     @PostMapping("/user/customer")
     public CommonResponse<Customer> registerUser(@RequestBody SignupRequest customer , HttpServletRequest request) throws MessagingException {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.post(customer , jwtToken));
     }
 
@@ -138,7 +139,7 @@ public class CustomerController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Customer> customerPage;
 
@@ -167,7 +168,7 @@ public class CustomerController {
 
     @PutMapping(path = "/user/customer/{id}")
     public CommonResponse<Customer> put(@RequestBody PutCustomer putCustomer, @PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(customerService.put2(modelMapper.map(putCustomer, Customer.class), jwtToken, id));
     }
 

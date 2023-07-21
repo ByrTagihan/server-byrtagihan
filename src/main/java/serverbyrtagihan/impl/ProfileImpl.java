@@ -112,7 +112,7 @@ public class ProfileImpl implements CustomerService {
         Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             if (search != null && !search.isEmpty()) {
                 return customerRepository.findAllByKeyword(search, pageable);
             } else {
