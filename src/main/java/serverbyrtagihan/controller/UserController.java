@@ -61,7 +61,7 @@ public class UserController {
         if (conPassword) {
             String token = jwtUtils.generateToken(user.getEmail());
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", "true");
+            response.put("data", user);
             response.put("token", token);
             response.put("type-token", "User");
             return ResponseHelper.ok(response);
