@@ -7,11 +7,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.modal.Customer;
-import serverbyrtagihan.modal.ForGotPasswordMember;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
@@ -432,11 +430,7 @@ public class MemberController {
     }
 
 
-//    @PostMapping("/member/forgot_password")
-//    public CommonResponse<ForGotPasswordMember> sendUniqueId(@RequestBody ForGotPasswordMember forGotPass) throws MessagingException {
-//        return ResponseHelper.ok(service.sendUniqueId(forGotPass));
-//
-//    }
+
 
 
     @GetMapping(path = "/customer/member/{id}")
