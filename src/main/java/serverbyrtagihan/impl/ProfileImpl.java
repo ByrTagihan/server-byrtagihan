@@ -54,10 +54,6 @@ public class ProfileImpl implements CustomerService {
 
     private VerificationCodeValidator verificationCodeValidator;
 
-    @Autowired
-    public ProfileImpl(VerificationCodeValidator verificationCodeValidator) {
-        this.verificationCodeValidator = verificationCodeValidator;
-    }
 
     private String newPassword() {
         Random random = new Random();
@@ -79,17 +75,6 @@ public class ProfileImpl implements CustomerService {
         return result;
     }
 
-    public String encodeEmail(String email) {
-        Encoder encoder = Base64.getUrlEncoder().withoutPadding();
-        String encodedEmail = encoder.encodeToString(email.getBytes());
-        return encodedEmail;
-    }
-
-    public String decodeEmail(String encodedEmail) {
-        byte[] decodedBytes = Base64.getDecoder().decode(encodedEmail);
-        String decodedEmail = new String(decodedBytes);
-        return decodedEmail;
-    }
 
     private BindingResult validateVerificationCode(ForGotPassword verificationCode) {
         // Membuat BindingResult untuk menampung hasil validasi
@@ -1210,7 +1195,6 @@ public class ProfileImpl implements CustomerService {
             admin.setName(signupRequest.getName());
             admin.setAddress(signupRequest.getAddress());
             admin.setToken("Kosong");
-            customerRepository.save(admin);
             javaMailSender.send(message);
             return customerRepository.save(admin);
         } else {
