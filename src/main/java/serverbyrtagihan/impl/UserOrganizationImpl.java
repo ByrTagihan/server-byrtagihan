@@ -58,21 +58,21 @@ public class UserOrganizationImpl implements UserOrganizationService {
     }
 
     @Override
-    public UserOrganizationModel put(Long id, UserOrganizationModel customer, String jwtToken) {
+    public UserOrganizationModel put(Long id, UserOrganizationModel user, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             UserOrganizationModel update = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-            update.setName(customer.getName());
-            update.setAddres(customer.getAddres());
-            update.setHp(customer.getHp());
-            update.setEmail(customer.getEmail());
-            update.setCity(customer.getCity());
-            update.setProvinsi(customer.getProvinsi());
-            update.setBalance(customer.getBalance());
-            update.setBank_account_name(customer.getBank_account_name());
-            update.setBank_account_number(customer.getBank_account_number());
-            update.setBank_name(customer.getBank_name());
+            update.setName(user.getName());
+            update.setAddres(user.getAddres());
+            update.setHp(user.getHp());
+            update.setEmail(user.getEmail());
+            update.setCity(user.getCity());
+            update.setProvinsi(user.getProvinsi());
+            update.setBalance(user.getBalance());
+            update.setBankAccountName(user.getBankAccountName());
+            update.setBankAccountNumber(user.getBankAccountNumber());
+            update.setBankName(user.getBankName());
             return userRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");

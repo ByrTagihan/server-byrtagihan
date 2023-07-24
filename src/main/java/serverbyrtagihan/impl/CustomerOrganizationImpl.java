@@ -70,9 +70,9 @@ public class CustomerOrganizationImpl implements CustomerOrganizationService {
             update.setCity(customer.getCity());
             update.setProvinsi(customer.getProvinsi());
             update.setBalance(customer.getBalance());
-            update.setBank_account_name(customer.getBank_account_name());
-            update.setBank_account_number(customer.getBank_account_number());
-            update.setBank_name(customer.getBank_name());
+            update.setBankAccountName(customer.getBankAccountName());
+            update.setBankAccountNumber(customer.getBankAccountNumber());
+            update.setBankName(customer.getBankName());
             return customerRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");

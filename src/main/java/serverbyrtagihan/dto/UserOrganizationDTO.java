@@ -3,17 +3,18 @@ package serverbyrtagihan.dto;
 public class UserOrganizationDTO {
 
     public long id;
-
     public String name;
+
+    public Long customerId;
     public String addres;
     public String hp;
     public String email;
     public String city;
     public String provinsi;
     public String balance;
-    public String bank_acount_number;
-    public String bank_account_name;
-    public String bank_name;
+    public String bankAccountNumber;
+    public String bankAccountName;
+    public String bankName;
 
     public String getHp() {
         return hp;
@@ -81,23 +82,35 @@ public class UserOrganizationDTO {
         this.balance = balance;
     }
 
-    public void setBank_acount_number(String bank_acount_number) {
-        this.bank_acount_number = bank_acount_number;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public String getBank_account_name() {
-        return bank_account_name;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
-    public void setBank_account_name(String bank_account_name) {
-        this.bank_account_name = bank_account_name;
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
     }
 
-    public String getBank_name() {
-        return bank_name;
+    public void setBankAccountNumber(String bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
     }
 
-    public void setBank_name(String bank_name) {
-        this.bank_name = bank_name;
+    public String getBankAccountName() {
+        return bankAccountName;
+    }
+
+    public void setBankAccountName(String bankAccountName) {
+        this.bankAccountName = bankAccountName;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

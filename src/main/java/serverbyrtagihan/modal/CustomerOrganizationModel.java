@@ -12,8 +12,8 @@ public class CustomerOrganizationModel extends DateConfig {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private long customer_id;
-
+    @Column(name = "customer_id")
+    private Long customerId = 0L;
     @Column(name = "name")
     private String name;
 
@@ -36,16 +36,15 @@ public class CustomerOrganizationModel extends DateConfig {
     private String balance;
 
     @Column(name = "bank_account_number")
-    private String bank_account_number;
+    private String bankAccountNumber;
 
     @Column(name = "bank_account_name")
-    private String bank_account_name;
+    private String bankAccountName;
 
     @Column(name = "bank_name")
-    private String bank_name;
+    private String bankName;
 
-    public CustomerOrganizationModel() {
-    }
+
 
     public long getId() {
         return id;
@@ -55,12 +54,12 @@ public class CustomerOrganizationModel extends DateConfig {
         this.id = id;
     }
 
-    public long getCustomer_id() {
-        return customer_id;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {
@@ -119,27 +118,27 @@ public class CustomerOrganizationModel extends DateConfig {
         this.balance = balance;
     }
 
-    public String getBank_account_number() {
-        return bank_account_number;
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
     }
 
-    public void setBank_account_number(String bank_account_number) {
-        this.bank_account_number = bank_account_number;
+    public void setBankAccountNumber(String bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
     }
 
-    public String getBank_account_name() {
-        return bank_account_name;
+    public String getBankAccountName() {
+        return bankAccountName;
     }
 
-    public void setBank_account_name(String bank_account_name) {
-        this.bank_account_name = bank_account_name;
+    public void setBankAccountName(String bankAccountName) {
+        this.bankAccountName = bankAccountName;
     }
 
-    public String getBank_name() {
-        return bank_name;
+    public String getBankName() {
+        return bankName;
     }
 
-    public void setBank_name(String bank_name) {
-        this.bank_name = bank_name;
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

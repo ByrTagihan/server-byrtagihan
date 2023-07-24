@@ -14,7 +14,7 @@ Member extends DateConfig {
     @Id
     private Long id;
 
-    @Column(name = "unique_id")
+    @Column(name = "uniqueId")
     private String uniqueId;
 
     @Column(name = "name")
@@ -31,6 +31,12 @@ Member extends DateConfig {
     @Lob
     @Column(name = "picture")
     private String picture;
+
+    @Column(name = "active")
+    private boolean active;
+
+    @Column(name = "token")
+    private String token;
 
     public Member() {
     }
@@ -89,5 +95,21 @@ Member extends DateConfig {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

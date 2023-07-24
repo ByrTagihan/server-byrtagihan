@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/organization")
+@RequestMapping("/api")
 public class CustomerOrganizationController{
 
     @Autowired

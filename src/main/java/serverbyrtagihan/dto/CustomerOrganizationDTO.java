@@ -11,9 +11,9 @@ public class CustomerOrganizationDTO {
     public String city;
     public String provinsi;
     public String balance;
-    public String bank_acount_number;
-    public String bank_account_name;
-    public String bank_name;
+    public String bankAccountNumber;
+    public String bankAccountName;
+    public String bankName;
 
     public String getHp() {
         return hp;
@@ -81,23 +81,27 @@ public class CustomerOrganizationDTO {
         this.balance = balance;
     }
 
-    public void setBank_acount_number(String bank_acount_number) {
-        this.bank_acount_number = bank_acount_number;
+    public String getBankAccountNumber() {
+        return bankAccountNumber;
     }
 
-    public String getBank_account_name() {
-        return bank_account_name;
+    public void setBankAccountNumber(String bankAccountNumber) {
+        this.bankAccountNumber = bankAccountNumber;
     }
 
-    public void setBank_account_name(String bank_account_name) {
-        this.bank_account_name = bank_account_name;
+    public String getBankAccountName() {
+        return bankAccountName;
     }
 
-    public String getBank_name() {
-        return bank_name;
+    public void setBankAccountName(String bankAccountName) {
+        this.bankAccountName = bankAccountName;
     }
 
-    public void setBank_name(String bank_name) {
-        this.bank_name = bank_name;
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

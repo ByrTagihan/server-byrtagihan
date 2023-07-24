@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.UserOrganizationDTO;
+import serverbyrtagihan.modal.CustomerOrganizationModel;
 import serverbyrtagihan.modal.UserOrganizationModel;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;

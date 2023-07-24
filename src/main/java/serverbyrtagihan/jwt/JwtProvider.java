@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Component
-public class JwtProvider {
+public class  JwtProvider {
 
     private static String secretKey = "Token";
     private static Integer expired = 900000;

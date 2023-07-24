@@ -1,9 +1,12 @@
 package serverbyrtagihan.service;
 
 
+import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
+import serverbyrtagihan.modal.ForGotPasswordMember;
 import serverbyrtagihan.modal.Member;
 
+import javax.mail.MessagingException;
 import java.util.*;
 
 public interface MemberService {
