@@ -60,9 +60,9 @@ public class MemberController {
     }
 
     @PostMapping("/customer/member")
-    public CommonResponse<Member> registerMember(@RequestBody Member member ,HttpServletRequest request) {
+    public CommonResponse<Member> registerMember(@RequestBody MemberDTO member ,HttpServletRequest request) {
         String jwtToken = request.getHeader("Authorization").substring(7);
-        return ResponseHelper.ok(service.add(member , jwtToken));
+        return ResponseHelper.ok(service.add(modelMapper.map(member , Member.class) , jwtToken));
     }
 
 
