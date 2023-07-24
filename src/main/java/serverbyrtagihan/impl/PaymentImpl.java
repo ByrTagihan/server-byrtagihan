@@ -2,6 +2,10 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.repository.OrganizationRepository;
@@ -14,7 +18,6 @@ import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.PaymentService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -33,11 +36,23 @@ public class PaymentImpl implements PaymentService {
     PaymentRepository paymentRepository;
 
     @Override
-    public List<Payment> Get(String jwtToken) {
+    public Page<Payment> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return paymentRepository.findAll();
+            if (search != null && !search.isEmpty()) {
+                return paymentRepository.findAllByKeyword(search, pageable);
+            } else {
+                return paymentRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }

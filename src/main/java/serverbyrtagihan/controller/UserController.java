@@ -51,6 +51,8 @@ public class UserController {
     @Autowired
     private JavaMailSender javaMailSender;
 
+    private static final String JWT_PREFIX = "jwt ";
+
 
     @PostMapping("/user/login")
     public CommonResponse<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
@@ -59,7 +61,7 @@ public class UserController {
         if (conPassword) {
             String token = jwtUtils.generateToken(user.getEmail());
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", "true");
+            response.put("data", user);
             response.put("token", token);
             response.put("type-token", "User");
             return ResponseHelper.ok(response);
@@ -433,13 +435,13 @@ public class UserController {
 
     @GetMapping(path = "/user/profile")
     public CommonResponse<User> getById(HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(userService.getProfileUser(jwtToken));
     }
 
     @PutMapping(path = "/user/update{id}", consumes = "multipart/form-data")
     public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(userService.update(id, update, multipartFile, jwtToken));
     }
 

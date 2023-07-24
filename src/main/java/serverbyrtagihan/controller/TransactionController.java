@@ -28,27 +28,29 @@ public class TransactionController {
     @Autowired
     ModelMapper modelMapper;
 
+    private static final String JWT_PREFIX = "jwt ";
+
     @PostMapping(path = "/user/transaction")
     public CommonResponse<Transaction> Post(@RequestBody TransactionDTO transactionDTO, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transactionService.add(modelMapper.map(transactionDTO, Transaction.class), jwtToken));
     }
 
     @PutMapping(path = "/user/transaction/{id}")
     public CommonResponse<Transaction> Put(@PathVariable("id") Long id, @RequestBody PutTransactionDTO transactionDTO, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transactionService.put(id, modelMapper.map(transactionDTO, Transaction.class), jwtToken));
     }
 
     @GetMapping(path = "/user/transaction/{id}")
     public CommonResponse<Transaction> Preview(@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transactionService.preview(id, jwtToken));
     }
 
     @DeleteMapping(path = "/user/transaction/{id}")
     public CommonResponse<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transactionService.delete(id, jwtToken));
     }
 
@@ -60,7 +62,7 @@ public class TransactionController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Transaction> transactionPage;
 

@@ -28,6 +28,9 @@ public class CustomerMemberBillController {
     @Autowired
     private ModelMapper modelMapper;
 
+
+    private static final String JWT_PREFIX = "jwt ";
+
     @GetMapping(path = "/customer/member/{memberid}/bill")
     public PaginationResponse<List<Bill>> getAll(
             HttpServletRequest request, @PathVariable("memberid") Long memberId,
@@ -36,7 +39,7 @@ public class CustomerMemberBillController {
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
     ) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Bill> billPage;
 
@@ -60,37 +63,37 @@ public class CustomerMemberBillController {
 
     @GetMapping(path = "/customer/member/{memberid}/bill/{id}")
     public CommonResponse<Bill> getById(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.getByIdInMember(memberId, id, jwtToken));
     }
 
     @PostMapping(path = "/customer/member/{memberid}/bill")
     public CommonResponse<Bill> add(HttpServletRequest request, @PathVariable("memberid") Long memberId, @RequestBody BillDTO bill) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.addByMemberId(modelMapper.map(bill, Bill.class), memberId, jwtToken));
     }
 
     @PutMapping(path = "/customer/member/{memberid}/bill/{id}")
     public CommonResponse<Bill> put(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id, @RequestBody BillDTO bill) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.putByIdInMember(modelMapper.map(bill, Bill.class), memberId, id, jwtToken));
     }
 
     @PutMapping(path = "/customer/member/{memberid}/bill/{id}/paid")
     public CommonResponse<Bill> paid(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id, BillPaidDTO bill) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.paidByIdInMember(modelMapper.map(bill, Bill.class), memberId, id, jwtToken));
     }
 
     @PutMapping(path = "/customer/member/{memberid}/bill/{id}/unpaid")
     public CommonResponse<Bill> unpaid(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id, BillPaidDTO bill) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.unpaidByIdInMember(modelMapper.map(bill, Bill.class), memberId, id, jwtToken));
     }
 
     @DeleteMapping(path = "/customer/member/{memberid}/bill/{id}")
     public CommonResponse<?> delete(HttpServletRequest request, @PathVariable("memberid") Long memberId, @PathVariable("id") Long id) {
-        String jwtToken = request.getHeader("Authorization").substring(7);
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.deleteByIdInMember(memberId, id, jwtToken));
     }
 }
