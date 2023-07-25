@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.PaymentDto;
 import serverbyrtagihan.modal.Payment;
-import serverbyrtagihan.modal.Transaction;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.PaginationResponse;
 import serverbyrtagihan.response.ResponseHelper;
