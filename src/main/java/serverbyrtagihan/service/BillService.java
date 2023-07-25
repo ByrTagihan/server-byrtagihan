@@ -38,4 +38,7 @@ public interface BillService {
     Bill unpaidByIdInMember(Bill bill, Long memberId, Long id, String jwtToken);
 
     Map<String, Boolean> deleteByIdInMember(Long memberId, Long id, String jwtToken);
+
+    Bill paymentById(Bill bill, Long id, String jwtToken);
+
 }
