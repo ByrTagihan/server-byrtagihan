@@ -4,6 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.dto.BillDTO;
+import serverbyrtagihan.dto.BillMemberDTO;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.response.PaginationResponse;
 import serverbyrtagihan.service.BillService;
@@ -56,5 +58,17 @@ public class MemberBillController {
         pagination.put("total_page", totalPages);
 
         return ResponseHelper.okWithPagination(bills, pagination);
+    }
+
+    @PostMapping(path = "/member/bill/{bill_id}/payment")
+    public CommonResponse<Bill> paymentById(HttpServletRequest request, @PathVariable("bill_id") Long bill_id, @RequestBody BillMemberDTO bill) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(billService.paymentById(modelMapper.map(bill, Bill.class), bill_id, jwtToken));
+    }
+
+    @PostMapping(path = "/member/bill/all/{bill_id}/payment")
+    public CommonResponse<Bill> paymentByAll(HttpServletRequest request, @PathVariable("bill_id") Long bill_id, @RequestBody BillMemberDTO bill) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(billService.paymentById(modelMapper.map(bill, Bill.class), bill_id, jwtToken));
     }
 }

@@ -30,12 +30,14 @@ public class SwaggerConfig {
                 .apis(RequestHandlerSelectors.basePackage("serverbyrtagihan.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .apiInfo( apiInfo());
+                .apiInfo( apiInfo())
+                .securitySchemes(Arrays.asList(apiKey()))
+                .securityContexts(Arrays.asList(securityContext()));
     }
     private ApiInfo apiInfo() {
         return new ApiInfo(
                 "Api documentation",
-                "Example documentation",
+                "BayarTagihan documentation",
                 "1.0.0",
                 "",
                 "",

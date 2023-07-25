@@ -283,4 +283,23 @@ public class BillServiceImpl implements BillService {
             throw new BadRequestException("Token not valid");
         }
     }
+
+    @Override
+    public Bill paymentById(Bill bill, Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        Long memberId = Long.valueOf(claims.getId());
+        if (typeToken.equals("Member")) {
+            Bill bills = billRepository.findByIdInMember(memberId, id);
+            if (bills.getPaid_id() == 0) {
+                throw new NotFoundException("Tagihan Sudah Dibayar");
+            }
+            bills.setPaid_id(2L);
+            bills.setPaid_date(bill.getPaid_date());
+            bills.setPaid_amount(bill.getPaid_amount());
+            return billRepository.save(bills);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
 }
