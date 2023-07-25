@@ -17,6 +17,7 @@ import serverbyrtagihan.modal.Payment;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.PaymentService;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +35,8 @@ public class PaymentImpl implements PaymentService {
 
     @Autowired
     PaymentRepository paymentRepository;
+
+    private static final int DATE = 1000 * 3600;
 
     @Override
     public Page<Payment> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
@@ -75,11 +78,12 @@ public class PaymentImpl implements PaymentService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             Payment update = paymentRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-            update.setOrganizationId(organizationRepository.findById(paymentDto.getOrganizationId()).orElseThrow(() -> new NotFoundException("Id Organization nOt Found")));
-            update.setMemberId(memberRepository.findById(paymentDto.getMemberId()).orElseThrow(() -> new NotFoundException("Member Id Not Found")));
+            update.setOrganization_id(paymentDto.getOrganizationId());
+            update.setMember_id(paymentDto.getMemberId());
             update.setDescription(paymentDto.getDescription());
             update.setPeriode(paymentDto.getPeriode());
-            update.setAmount(paymentDto.getAmount());;
+            update.setAmount(paymentDto.getAmount());
+            update.setVa_expired_date(new Date(new Date().getTime() + DATE));
             return paymentRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
@@ -92,11 +96,19 @@ public class PaymentImpl implements PaymentService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             Payment update = new Payment();
-            update.setOrganizationId(organizationRepository.findById(paymentDto.getOrganizationId()).orElseThrow(() -> new NotFoundException("Organization Not Found")));
-            update.setMemberId(memberRepository.findById((paymentDto.getMemberId())).orElseThrow(() -> new NotFoundException("Member Id Not Found")));
+            update.setOrganization_id(paymentDto.getOrganizationId());
+            update.setMember_id(paymentDto.getMemberId());
             update.setDescription(paymentDto.getDescription());
             update.setPeriode(paymentDto.getPeriode());
             update.setAmount(paymentDto.getAmount());
+            update.setVa_number(update.getVa_number());
+            update.setBill_ids(update.getBill_ids());
+            update.setChannel_name(update.getChannel_name());
+            update.setStatus(update.getStatus());
+            update.setOrganization_name(update.getOrganization_name());
+            update.setChannel_id(update.getChannel_id());
+            update.setFee_admin(update.getFee_admin());
+            update.setVa_expired_date(new Date(new Date().getTime() +DATE));
             return paymentRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
