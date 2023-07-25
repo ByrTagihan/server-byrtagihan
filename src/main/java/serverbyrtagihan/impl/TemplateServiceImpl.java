@@ -2,56 +2,75 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.modal.UserOrganizationModel;
-import serverbyrtagihan.repository.UserOrganizationRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
+import serverbyrtagihan.modal.Template;
+import serverbyrtagihan.modal.UserOrganizationModel;
+import serverbyrtagihan.repository.TemplateRepository;
+import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.service.UserOrganizationService;
-
+import serverbyrtagihan.service.TemplateService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserOrganizationImpl implements UserOrganizationService {
+public class TemplateServiceImpl implements TemplateService {
+    @Autowired
+    TemplateRepository templateRepository;
 
     @Autowired
-    private UserOrganizationRepository userRepository;
+    UserRepository userRepository;
 
     @Autowired
     private JwtUtils jwtUtils;
 
+    //Customer
     @Override
-    public UserOrganizationModel add(UserOrganizationModel userOrganizationModel, String jwtToken) {
+    public Page<Template> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return userRepository.save(userOrganizationModel);
+            if (search != null && !search.isEmpty()) {
+                return templateRepository.findAllByKeyword(search, pageable);
+            } else {
+                return templateRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
     @Override
-    public List<UserOrganizationModel> getAll(String jwtToken) {
+    public Template add(Template template, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return userRepository.findAll();
+            return templateRepository.save(template);
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
     @Override
-    public UserOrganizationModel preview(Long id, String jwtToken) {
+    public Template getById(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
+            return templateRepository.findById(id).orElseThrow(()-> new NotFoundException("Not found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -74,6 +93,17 @@ public class UserOrganizationImpl implements UserOrganizationService {
             update.setBankAccountNumber(user.getBankAccountNumber());
             update.setBankName(user.getBankName());
             return userRepository.save(update);
+        }}
+
+    public Template put(Template template, Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            Template templates = templateRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
+            templates.setName(template.getName());
+            templates.setContent(template.getContent());
+
+            return templateRepository.save(templates);
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -85,7 +115,7 @@ public class UserOrganizationImpl implements UserOrganizationService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             try {
-                userRepository.deleteById(id);
+                templateRepository.deleteById(id);
                 Map<String, Boolean> res = new HashMap<>();
                 res.put("Deleted", Boolean.TRUE);
                 return res;

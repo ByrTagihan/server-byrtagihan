@@ -2,7 +2,12 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.repository.ChannelRepository;
 import serverbyrtagihan.service.ChannelService;
 import serverbyrtagihan.exception.BadRequestException;
@@ -34,15 +39,52 @@ public class ChannelImpl implements ChannelService {
     }
 
     @Override
-    public List<Channel> getAll(String jwtToken) {
+    public Page<Channel> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            return channelRepository.findAll();
+            if (search != null && !search.isEmpty()) {
+                return channelRepository.findAllByKeyword(search, pageable);
+            } else {
+                return channelRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
+
+
+    @Override
+    public Page<Channel> getAllMember(String jwtToken, Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            if (search != null && !search.isEmpty()) {
+                return channelRepository.findAllByKeyword(search, pageable);
+            } else {
+                return channelRepository.findAll(pageable);
+            }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
 
     @Override
     public Channel preview(Long id, String jwtToken) {
@@ -50,6 +92,16 @@ public class ChannelImpl implements ChannelService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             return channelRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<Channel> preview( String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            return channelRepository.findAll();
         } else {
             throw new BadRequestException("Token not valid");
         }

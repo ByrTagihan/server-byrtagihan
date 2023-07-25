@@ -18,8 +18,15 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     Bill findByIdInMember(Long memberId, Long id);
 
     @Query(value = "SELECT * FROM bill WHERE member_id = :memberId", nativeQuery = true)
-    Page<Bill> findBillsByMember(String memberId, Pageable pageable);
+    Page<Bill> findByMemberId(String memberId, Pageable pageable);
 
-    @Query("SELECT b FROM Bill b WHERE LOWER(b.description) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.memberName) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.periode) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.amount) LIKE LOWER(concat('%', :keyword, '%'))")
+    @Query("SELECT b FROM Bill b WHERE LOWER(b.description) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.member_name) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.periode) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.amount) LIKE LOWER(concat('%', :keyword, '%'))")
     Page<Bill> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT b FROM Bill b WHERE LOWER(b.description) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.member_name) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.periode) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.amount) LIKE LOWER(concat('%', :keyword, '%') AND member_id = :memberId )")
+    Page<Bill> findAllByKeywordMember(Long memberId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT b FROM Bill b WHERE LOWER(b.description) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.member_name) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.periode) LIKE LOWER(concat('%', :keyword, '%')) OR LOWER(b.amount) LIKE LOWER(concat('%', :keyword, '%') AND member_id = :memberId )")
+    Page<Bill> findAllByKeywordMember(String memberId, @Param("keyword") String keyword, Pageable pageable);
+
 }

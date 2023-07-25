@@ -17,8 +17,7 @@ import java.util.UUID;
 public class  JwtProvider {
 
     private static String secretKey = "Token";
-    private static Integer expired = 900000;
-
+    private static Long expired = 9000000000L;
     @Autowired
     private TokenRepository tokenRepository;
 

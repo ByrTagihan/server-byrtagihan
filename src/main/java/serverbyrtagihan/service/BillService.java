@@ -8,9 +8,7 @@ import java.util.Map;
 public interface BillService {
 
     //Customer
-    Page<Bill> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
-
-    Page<Bill> searchBillsWithPagination(String jwtToken, String search, Long page, Long pageSize, String sortBy, String sortDirection);
+    Page<Bill> getAll(String jwtToken, Long page, Long limit, String sort, String search);
 
     Bill add(Bill bill, String jwtToken);
 
@@ -25,9 +23,9 @@ public interface BillService {
     Map<String, Boolean> delete(Long id, String jwtToken);
 
     //Member
-    Page<Bill> getByMemberId(Long memberId, String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
+    Page<Bill> getByMemberId(Long memberId, String jwtToken, Long page, Long limit, String sort, String search);
 
-    Page<Bill> getBillsByMemberId(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
+    Page<Bill> getBillsByMemberId(String jwtToken, Long page, Long limit, String sort, String search);
 
     Bill addByMemberId(Bill bill, Long memberId, String jwtToken);
 

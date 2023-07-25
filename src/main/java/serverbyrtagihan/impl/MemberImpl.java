@@ -2,6 +2,10 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.repository.MemberRepository;
@@ -14,7 +18,6 @@ import serverbyrtagihan.service.MemberService;
 
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -49,11 +52,36 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddres(member.getAddres());
-            memberRepository.save(admin);
+            return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
         }
-        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member addInUser(Member member, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            if (memberRepository.findByUniqueId(member.getUniqueId()).isPresent()) {
+                throw new BadRequestException("Unique id telah digunakan");
+            }
+            String UserPassword = member.getPassword().trim();
+            boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
+            if (PasswordIsNotValid) {
+                throw new BadRequestException("Passowrd tidak valid!!");
+            }
+            // Create new user's account
+            Member admin = new Member();
+            admin.setUniqueId(member.getUniqueId());
+            admin.setPassword(encoder.encode(member.getPassword()));
+            admin.setHp(member.getHp());
+            admin.setName(member.getName());
+            admin.setAddres(member.getAddres());
+            return memberRepository.save(admin);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
     }
 
     @Override
@@ -62,6 +90,17 @@ public class MemberImpl implements MemberService {
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
+            return memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public Member getByIdInUser(Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
             return memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         } else {
             throw new BadRequestException("Token not valid");
@@ -92,35 +131,90 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public List<Member> getAll(String jwtToken) {
+    public Page<Member> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return memberRepository.findAll();
+            if (search != null && !search.isEmpty()) {
+                return memberRepository.findAllByKeyword(search, pageable);
+            } else {
+                return memberRepository.findAll(pageable);
+            }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public Page<Member> getAllInUser(String jwtToken, Long page, Long limit, String sort, String search) {
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            if (search != null && !search.isEmpty()) {
+                return memberRepository.findAllByKeyword(search, pageable);
+            } else {
+                return memberRepository.findAll(pageable);
+            }
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
+
     @Override
     public Member put(Member member, Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
             update.setAddres(member.getAddres());
             update.setHp(member.getHp());
-            update.setPassword(member.getPassword());
-
+            return memberRepository.save(update);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public Member putInUser(Member member, Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setName(member.getName());
+            update.setAddres(member.getAddres());
+            update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
 
+    @Override
+    public Member putPassword(Member member, Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setPassword(encoder.encode(member.getPassword()));
+            return memberRepository.save(update);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
 
     @Override
     public Map<String, Boolean> delete(Long id, String jwtToken) {
@@ -142,5 +236,23 @@ public class MemberImpl implements MemberService {
 
     }
 
+    @Override
+    public Map<String, Boolean> deleteInUser(Long id, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            try {
+                memberRepository.deleteById(id);
+                Map<String, Boolean> res = new HashMap<>();
+                res.put("Deleted", Boolean.TRUE);
+                return res;
+            } catch (Exception e) {
+                return null;
+            }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
 
+    }
 }
