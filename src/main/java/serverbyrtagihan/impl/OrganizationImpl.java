@@ -51,45 +51,43 @@ public class OrganizationImpl implements OrganizationService {
     }
 
     @Override
-    public Organization put(Long id, OrganizationDto organization, String jwtToken) {
+    public Organization put(Long id, Organization organization, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
       String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            Organization update = organizationRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-            update.setName(organization.getName());
-           update.setCustomerId(customerRepository.findById(organization.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer Id Not Found")));
-           update.setAddres(organization.getAddres());
-            update.setHp(organization.getHp());
-            update.setEmail(organization.getEmail());
-           update.setCity(organization.getCity());
-            update.setProvinsi(organization.getProvinsi());
-           update.setBalance(organization.getBalance());
-           update.setBank_account_number(organization.getBank_acount_number());
-           update.setBank_account_name(organization.getBank_account_name());
-            update.setBank_name(organization.getBank_name());
-           return organizationRepository.save(update);
+            organization.setName(organization.getName());
+           organization.setCustomer_id(organization.getCustomer_id());
+           organization.setAddress(organization.getAddress());
+            organization.setHp(organization.getHp());
+            organization.setEmail(organization.getEmail());
+           organization.setCity(organization.getCity());
+            organization.setProvinsi(organization.getProvinsi());
+           organization.setBalance(organization.getBalance());
+           organization.setBank_account_number(organization.getBank_account_number());
+           organization.setBank_account_name(organization.getBank_account_name());
+            organization.setBank_name(organization.getBank_name());
+           return organizationRepository.save(organization);
        } else {throw new BadRequestException("Token not valid");
 }
     }
 
     @Override
-    public Organization add(OrganizationDto organization, String jwtToken) {
+    public Organization add(Organization organization, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            Organization update = new Organization();
-            update.setName(organization.getName());
-            update.setCustomerId(customerRepository.findById(organization.getCustomerId()).orElseThrow(() -> new NotFoundException("Customer Id Not Found")));
-           update.setAddres(organization.getAddres());
-           update.setHp(organization.getHp());
-            update.setEmail(organization.getEmail());
-            update.setCity(organization.getCity());
-            update.setProvinsi(organization.getProvinsi());
-            update.setBalance(organization.getBalance());
-           update.setBank_account_number(organization.getBank_acount_number());
-            update.setBank_account_name(organization.getBank_account_name());
-            update.setBank_name(organization.getBank_name());
-           return organizationRepository.save(update);
+            organization.setName(organization.getName());
+            organization.setCustomer_id(organization.getCustomer_id());
+            organization.setAddress(organization.getAddress());
+            organization.setHp(organization.getHp());
+            organization.setEmail(organization.getEmail());
+            organization.setCity(organization.getCity());
+            organization.setProvinsi(organization.getProvinsi());
+            organization.setBalance(organization.getBalance());
+            organization.setBank_account_number(organization.getBank_account_number());
+            organization.setBank_account_name(organization.getBank_account_name());
+            organization.setBank_name(organization.getBank_name());
+           return organizationRepository.save(organization);
        } else {
             throw new BadRequestException("Token not valid");
        }

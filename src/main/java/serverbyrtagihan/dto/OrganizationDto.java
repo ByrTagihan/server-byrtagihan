@@ -4,9 +4,9 @@ public class OrganizationDto {
 
     private String name;
 
-    private Long customerId;
+    private Long customer_id;
 
-    private String addres;
+    private String address;
 
     private String hp;
 
@@ -32,20 +32,20 @@ public class OrganizationDto {
         this.name = name;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public Long getCustomer_id() {
+        return customer_id;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setCustomer_id(Long customer_id) {
+        this.customer_id = customer_id;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getHp() {

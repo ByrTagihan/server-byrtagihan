@@ -20,8 +20,8 @@ Member extends DateConfig {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "addres")
-    private String addres;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "hp")
     private String hp;
@@ -59,12 +59,12 @@ Member extends DateConfig {
         this.name = name;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getHp() {

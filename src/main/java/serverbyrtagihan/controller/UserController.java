@@ -439,10 +439,10 @@ public class UserController {
         return ResponseHelper.ok(userService.getProfileUser(jwtToken));
     }
 
-    @PutMapping(path = "/user/update{id}", consumes = "multipart/form-data")
-    public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
+    @PutMapping(path = "/user/profile{id}")
+    public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userService.update(id, update, multipartFile, jwtToken));
+        return ResponseHelper.ok(userService.update(id, update , jwtToken));
     }
 
     @PutMapping(path = "/user/password{id}")

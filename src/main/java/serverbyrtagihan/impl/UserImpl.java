@@ -802,7 +802,7 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken) {
+    public User update(Long id, ProfileDTO profileDTO , String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
         String typeToken = claims.getAudience();

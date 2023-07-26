@@ -12,9 +12,9 @@ public interface OrganizationService {
 
     Organization preview(Long id, String jwtToken);
 
-    Organization put(Long id ,OrganizationDto organization , String jwtToken);
+    Organization put(Long id ,Organization organization , String jwtToken);
 
-    Organization add(OrganizationDto organization, String jwtToken);
+    Organization add(Organization organization, String jwtToken);
 
     Map<String, Boolean> delete(Long id , String jwtToken);
 }

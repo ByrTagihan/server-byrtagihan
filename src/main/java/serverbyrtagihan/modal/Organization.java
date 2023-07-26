@@ -15,12 +15,11 @@ public class Organization extends DateConfig {
     @Column(name = "name")
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customerId;
+    @Column(name = "customer_id")
+    private Long customer_id;
 
-    @Column(name = "addres")
-    private String addres;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "hp")
     private String hp;
@@ -35,7 +34,7 @@ public class Organization extends DateConfig {
     private String provinsi;
 
     @Column(name = "balance")
-    private Double balance;
+    private Double balance = 0.0;
 
     @Column(name = "bank_account_number")
     private int bank_account_number;
@@ -65,20 +64,20 @@ public class Organization extends DateConfig {
         this.name = name;
     }
 
-    public Customer getCustomerId() {
-        return customerId;
+    public Long getCustomer_id() {
+        return customer_id;
     }
 
-    public void setCustomerId(Customer customerId) {
-        this.customerId = customerId;
+    public void setCustomer_id(Long customer_id) {
+        this.customer_id = customer_id;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getHp() {

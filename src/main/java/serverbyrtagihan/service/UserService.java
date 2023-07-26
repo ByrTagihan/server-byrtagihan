@@ -18,7 +18,7 @@ public interface UserService {
 
     User getProfileUser(String jwtToken);
 
-    User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken);
+    User update(Long id, ProfileDTO profileDTO , String jwtToken);
 
     User updatePassword(Long id, User user);
 
