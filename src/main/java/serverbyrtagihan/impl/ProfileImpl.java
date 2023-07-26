@@ -1230,7 +1230,7 @@ public class ProfileImpl implements CustomerService {
             update.setName(customer.getName());
             update.setAddress(customer.getAddress());
             update.setHp(customer.getHp());
-            update.setPassword(encoder.encode(customer.getPicture()));
+            update.setPassword(encoder.encode(customer.getPassword()));
             update.setActive(customer.isActive());
             update.setOrganizationId(customer.getOrganizationId());
             return customerRepository.save(update);
@@ -1281,7 +1281,7 @@ public class ProfileImpl implements CustomerService {
     public Map<String, Boolean> delete(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        if (typeToken.equals("Customer")) {
+        if (typeToken.equals("User")) {
             try {
                 customerRepository.deleteById(id);
                 Map<String, Boolean> res = new HashMap<>();
