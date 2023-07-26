@@ -1,17 +1,20 @@
 package serverbyrtagihan.service;
 
 
-import serverbyrtagihan.dto.ForGotPass;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.data.domain.Page;
+import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.dto.PasswordDTO;
-import serverbyrtagihan.modal.ForGotPasswordMember;
 import serverbyrtagihan.modal.Member;
 
-import javax.mail.MessagingException;
 import java.util.*;
 
 public interface MemberService {
     Member add(Member member , String jwtToken);
+
+    Member getProfileMember(String jwtToken);
+
+    Member update(Long id, MemberDTO memberDTO, String jwtToken);
 
     Member addInUser(Member member, String jwtToken);
 

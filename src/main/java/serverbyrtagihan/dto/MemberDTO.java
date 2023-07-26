@@ -1,15 +1,31 @@
 package serverbyrtagihan.dto;
 
 
+import javax.persistence.Column;
+import javax.persistence.Lob;
+
 public class MemberDTO {
     public String uniqueId;
 
     public String name;
-    public String addres;
+
+    public String address;
 
     public String hp;
 
     public String password;
+
+    public String vaBni;
+
+    public Long lastPaymentIdBni;
+
+    public Long trxIdBni;
+
+
+    public String lastLogin;
+
+    @Lob
+    public String picture;
 
 
     public String getUniqueId() {
@@ -28,12 +44,12 @@ public class MemberDTO {
         this.name = name;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getHp() {
@@ -50,5 +66,46 @@ public class MemberDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getVaBni() {
+        return vaBni;
+    }
+
+    public void setVaBni(String vaBni) {
+        this.vaBni = vaBni;
+    }
+
+
+    public Long getLastPaymentIdBni() {
+        return lastPaymentIdBni;
+    }
+
+    public void setLastPaymentIdBni(Long lastPaymentIdBni) {
+        this.lastPaymentIdBni = lastPaymentIdBni;
+    }
+
+    public Long getTrxIdBni() {
+        return trxIdBni;
+    }
+
+    public void setTrxIdBni(Long trxIdBni) {
+        this.trxIdBni = trxIdBni;
+    }
+
+    public String getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
     }
 }

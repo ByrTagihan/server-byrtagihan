@@ -14,14 +14,14 @@ Member extends DateConfig {
     @Id
     private Long id;
 
-    @Column(name = "uniqueId")
+    @Column(name = "unique_id")
     private String uniqueId;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "addres")
-    private String addres;
+    @Column(name = "address")
+    private String address;
 
     @Column(name = "hp")
     private String hp;
@@ -37,6 +37,18 @@ Member extends DateConfig {
 
     @Column(name = "token")
     private String token;
+
+    @Column(name = "va_bni")
+    private String vaBni;
+
+    @Column(name = "last_payment_id_bni")
+    private Long lastPaymentIdBni;
+
+    @Column(name = "trx_id_bni")
+    private Long trxIdBni;
+
+    @Column(name = "last_login")
+    private String lastLogin;
 
     public Member() {
     }
@@ -65,12 +77,12 @@ Member extends DateConfig {
         this.name = name;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getHp() {
@@ -111,5 +123,37 @@ Member extends DateConfig {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getVaBni() {
+        return vaBni;
+    }
+
+    public void setVaBni(String vaBni) {
+        this.vaBni = vaBni;
+    }
+
+    public Long getLastPaymentIdBni() {
+        return lastPaymentIdBni;
+    }
+
+    public void setLastPaymentIdBni(Long lastPaymentIdBni) {
+        this.lastPaymentIdBni = lastPaymentIdBni;
+    }
+
+    public Long getTrxIdBni() {
+        return trxIdBni;
+    }
+
+    public void setTrxIdBni(Long trxIdBni) {
+        this.trxIdBni = trxIdBni;
+    }
+
+    public String getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(String lastLogin) {
+        this.lastLogin = lastLogin;
     }
 }

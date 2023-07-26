@@ -8,6 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.dto.MemberDTO;
+import serverbyrtagihan.dto.ProfileDTO;
+import serverbyrtagihan.modal.User;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
@@ -51,7 +55,7 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddres(member.getAddres());
+            admin.setAddress(member.getAddress());
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -77,7 +81,7 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddres(member.getAddres());
+            admin.setAddress(member.getAddress());
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -125,6 +129,18 @@ public class MemberImpl implements MemberService {
             } else {
                 throw new NotFoundException("Password lama tidak sesuai");
             }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public Member getProfileMember(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String uniqueId = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            return memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Id Not Found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -181,7 +197,7 @@ public class MemberImpl implements MemberService {
         if (typeToken.equals("Customer")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
-            update.setAddres(member.getAddres());
+            update.setAddress(member.getAddress());
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
@@ -195,7 +211,7 @@ public class MemberImpl implements MemberService {
         if (typeToken.equals("User")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
-            update.setAddres(member.getAddres());
+            update.setAddress(member.getAddress());
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
@@ -213,6 +229,23 @@ public class MemberImpl implements MemberService {
             return memberRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public Member update(Long id, MemberDTO memberDTO, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String uniqueId = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            Member update = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setName(memberDTO.getName());
+            update.setAddress(memberDTO.getAddress());
+            update.setHp(memberDTO.getHp());
+            update.setPicture(memberDTO.getPicture());
+            return memberRepository.save(update);
+        } else {
+            throw new BadRequestException("Token Tidak Cocok");
         }
     }
 

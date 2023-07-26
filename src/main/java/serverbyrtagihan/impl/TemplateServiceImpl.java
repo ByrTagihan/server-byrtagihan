@@ -76,24 +76,6 @@ public class TemplateServiceImpl implements TemplateService {
         }
     }
 
-    @Override
-    public UserOrganizationModel put(Long id, UserOrganizationModel user, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            UserOrganizationModel update = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-            update.setName(user.getName());
-            update.setAddres(user.getAddres());
-            update.setHp(user.getHp());
-            update.setEmail(user.getEmail());
-            update.setCity(user.getCity());
-            update.setProvinsi(user.getProvinsi());
-            update.setBalance(user.getBalance());
-            update.setBankAccountName(user.getBankAccountName());
-            update.setBankAccountNumber(user.getBankAccountNumber());
-            update.setBankName(user.getBankName());
-            return userRepository.save(update);
-        }}
 
     public Template put(Template template, Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);

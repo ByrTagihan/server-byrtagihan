@@ -7,11 +7,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.dto.MemberDTO;
-import serverbyrtagihan.dto.Password;
-import serverbyrtagihan.dto.PasswordDTO;
+import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.BadRequestException;
 import org.springframework.data.domain.Page;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.modal.User;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
@@ -46,6 +47,9 @@ public class MemberController {
     MemberRepository memberRepository;
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private MemberService memberService;
 
 
     private static final String JWT_PREFIX = "jwt ";
@@ -420,7 +424,7 @@ public class MemberController {
         member.setActive(signUpMemberRequest.isActive());
         member.setHp(signUpMemberRequest.getHp());
         member.setName(signUpMemberRequest.getName());
-        member.setAddres(signUpMemberRequest.getAddres());
+        member.setAddress(signUpMemberRequest.getAddres());
         member.setToken("Kosong");
         memberRepository.save(member);
 
@@ -513,6 +517,19 @@ public class MemberController {
 
         return ResponseHelper.okWithPagination(channels, pagination);
     }
+
+    @GetMapping(path = "/member/profile")
+    public CommonResponse<Member> getById(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(memberService.getProfileMember(jwtToken));
+    }
+
+    @PutMapping(path = "/member/update{id}", consumes = "multipart/form-data")
+    public CommonResponse<Member> update(@PathVariable("id") Long id, @RequestBody MemberDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(memberService.update(id, update, jwtToken));
+    }
+
 
     @PutMapping(path = "/customer/member/{id}")
     public CommonResponse<Member> put (@PathVariable("id") Long id, @RequestBody MemberDTO memberDTO, HttpServletRequest request){
