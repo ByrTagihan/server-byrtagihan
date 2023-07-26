@@ -24,7 +24,7 @@ public class EcollectionService {
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<EcollectionDTO> requestEntity = new HttpEntity<>(payload, headers);
-
+        System.out.println("Percobaan");
         return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
     }
 }
