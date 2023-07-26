@@ -1194,6 +1194,7 @@ public class ProfileImpl implements CustomerService {
             admin.setHp(signupRequest.getHp());
             admin.setName(signupRequest.getName());
             admin.setAddress(signupRequest.getAddress());
+            admin.setOrganization_id(null);
             admin.setToken("Kosong");
             javaMailSender.send(message);
             return customerRepository.save(admin);
@@ -1212,7 +1213,7 @@ public class ProfileImpl implements CustomerService {
             Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(customer.getName());
             update.setAddress(customer.getAddress());
-            update.setHp(customer.getHp());
+            update.setHp(customer.getHp());         
             update.setPicture(customer.getPicture());
             return customerRepository.save(update);
         } else {
@@ -1223,16 +1224,20 @@ public class ProfileImpl implements CustomerService {
     @Override
     public Customer put2(Customer customer, String jwtToken, Long id) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             Customer update = customerRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            update.setOrganization_id(customer.getOrganization_id());
             update.setName(customer.getName());
             update.setAddress(customer.getAddress());
             update.setHp(customer.getHp());
             update.setPassword(encoder.encode(customer.getPassword()));
             update.setActive(customer.isActive());
-            update.setOrganizationId(customer.getOrganizationId());
+            String UserPassword = customer.getPassword().trim();
+            boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
+            if (PasswordIsNotValid) {
+                throw new BadRequestException("Kesalahan: Password tidak valid");
+            }
             return customerRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
