@@ -1,5 +1,7 @@
 package serverbyrtagihan.dto;
 
+import java.util.Date;
+
 public class PaymentDto {
 
     private Long organizationId;
@@ -8,9 +10,9 @@ public class PaymentDto {
 
     private String description;
 
-    private String periode;
+    private Date periode;
 
-    private int amount;
+    private Double amount;
 
     public Long getOrganizationId() {
         return organizationId;
@@ -36,19 +38,19 @@ public class PaymentDto {
         this.description = description;
     }
 
-    public String getPeriode() {
+    public Date getPeriode() {
         return periode;
     }
 
-    public void setPeriode(String periode) {
+    public void setPeriode(Date periode) {
         this.periode = periode;
     }
 
-    public int getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 }

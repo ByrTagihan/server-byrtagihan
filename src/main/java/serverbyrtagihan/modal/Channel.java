@@ -14,8 +14,8 @@ public class Channel extends DateConfig {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "active")
-    private Boolean active;
+    @Column(name = "active", nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean active;
 
     public Channel() {
     }

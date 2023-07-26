@@ -2,6 +2,7 @@ package serverbyrtagihan.service;
 
 import org.springframework.data.domain.Page;
 import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.modal.Payment;
 
 import java.util.Map;
 
@@ -39,6 +40,6 @@ public interface BillService {
 
     Map<String, Boolean> deleteByIdInMember(Long memberId, Long id, String jwtToken);
 
-    Bill paymentById(Bill bill, Long id, String jwtToken);
+    Payment paymentById(Payment payment, Long id, String jwtToken);
 
 }
