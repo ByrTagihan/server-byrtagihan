@@ -126,7 +126,7 @@ public class PaymentImpl implements PaymentService {
                 res.put("Deleted", Boolean.TRUE);
                 return res;
             } catch (Exception e) {
-                return null;
+                throw new NotFoundException("id not found");
             }
         } else {
             throw new BadRequestException("Token not valid");

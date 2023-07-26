@@ -102,7 +102,7 @@ public class TemplateServiceImpl implements TemplateService {
                 res.put("Deleted", Boolean.TRUE);
                 return res;
             } catch (Exception e) {
-                return null;
+                throw new NotFoundException("id not found");
             }
         } else {
             throw new BadRequestException("Token not valid");
