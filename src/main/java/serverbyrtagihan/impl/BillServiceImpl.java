@@ -7,20 +7,27 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.modal.Channel;
+import serverbyrtagihan.modal.Payment;
 import serverbyrtagihan.repository.BillRepository;
 import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.repository.ChannelRepository;
+import serverbyrtagihan.repository.PaymentRepository;
 import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BillServiceImpl implements BillService {
     @Autowired
     BillRepository billRepository;
+    @Autowired
+    ChannelRepository channelRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -129,7 +136,7 @@ public class BillServiceImpl implements BillService {
                 res.put("Deleted", Boolean.TRUE);
                 return res;
             } catch (Exception e) {
-                return null;
+                throw new NotFoundException("id not found");
             }
         } else {
             throw new BadRequestException("Token not valid");
@@ -277,7 +284,7 @@ public class BillServiceImpl implements BillService {
                 res.put("Deleted", Boolean.TRUE);
                 return res;
             } catch (Exception e) {
-                return null;
+                throw new NotFoundException("id not found");
             }
         } else {
             throw new BadRequestException("Token not valid");
@@ -285,19 +292,36 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill paymentById(Bill bill, Long id, String jwtToken) {
+    public Payment paymentById(Payment payment, Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         Long memberId = Long.valueOf(claims.getId());
         if (typeToken.equals("Member")) {
             Bill bills = billRepository.findByIdInMember(memberId, id);
-            if (bills.getPaid_id() == 0) {
+            if (bills.getPaid_id() != 0) {
                 throw new NotFoundException("Tagihan Sudah Dibayar");
             }
+            Channel channels = channelRepository.findById(payment.getChannel_id()).orElseThrow(() -> new NotFoundException("Channel Not found"));
             bills.setPaid_id(2L);
-            bills.setPaid_date(bill.getPaid_date());
-            bills.setPaid_amount(bill.getPaid_amount());
-            return billRepository.save(bills);
+            bills.setPaid_date(new Date());
+            bills.setPaid_amount(bills.getAmount());
+            bills.setPayment_id(payment.getId());
+            billRepository.save(bills);
+
+            payment.setOrganization_id(bills.getOrganization_id());
+            payment.setOrganization_name(bills.getOrganization_name());
+            payment.setMember_id(bills.getMember_id());
+            payment.setDescription(bills.getDescription());
+            payment.setPeriode(bills.getPeriode());
+            payment.setAmount(bills.getAmount());
+            payment.setChannel_id(payment.getChannel_id());
+            payment.setChannel_name(channels.getName());
+            payment.setBill_ids(String.valueOf(bills.getId()));
+            payment.setVa_number("12345");
+            payment.setVa_expired_date(new Date(System.currentTimeMillis() + 3600 * 1000));
+            payment.setFee_admin(5000.0);
+
+            return paymentRepository.save(payment);
         } else {
             throw new BadRequestException("Token not valid");
         }
