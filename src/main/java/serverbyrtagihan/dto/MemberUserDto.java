@@ -1,18 +1,12 @@
 package serverbyrtagihan.dto;
 
-import javax.persistence.Lob;
-
-public class ProfileDTO {
+public class MemberUserDto {
 
     public String name;
 
-    public String hp;
-
-    @Lob
-    public String picture;
-
     public String address;
 
+    public String hp;
 
     public String getName() {
         return name;
@@ -20,14 +14,6 @@ public class ProfileDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getHp() {
-        return hp;
-    }
-
-    public void setHp(String hp) {
-        this.hp = hp;
     }
 
     public String getAddress() {
@@ -38,11 +24,11 @@ public class ProfileDTO {
         this.address = address;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getHp() {
+        return hp;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setHp(String hp) {
+        this.hp = hp;
     }
 }

@@ -433,16 +433,10 @@ public class UserController {
         return ResponseHelper.ok(new MessageResponse("Register telah berhasil!"));
     }
 
-    @GetMapping(path = "/user/profile")
-    public CommonResponse<User> getById(HttpServletRequest request) {
+    @PutMapping(path = "/user/profile")
+    public CommonResponse<User> update(@RequestBody ProfileDTO update, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userService.getProfileUser(jwtToken));
-    }
-
-    @PutMapping(path = "/user/update{id}", consumes = "multipart/form-data")
-    public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userService.update(id, update, multipartFile, jwtToken));
+        return ResponseHelper.ok(userService.update(update , jwtToken));
     }
 
     @PutMapping(path = "/user/password{id}")
@@ -450,7 +444,7 @@ public class UserController {
         return ResponseHelper.ok(userService.updatePassword(id, modelMapper.map(password, User.class)));
     }
 
-    @GetMapping("/user/profile/all")
+    @GetMapping("/user/profile")
     public CommonResponse<List<User>> getAll(String jwtToken) {
         return ResponseHelper.ok(userService.getAllTagihan(jwtToken));
     }

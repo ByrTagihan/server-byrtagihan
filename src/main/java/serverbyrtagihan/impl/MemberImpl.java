@@ -183,7 +183,7 @@ public class MemberImpl implements MemberService {
         if (typeToken.equals("Customer")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
-            update.setAddres(member.getAddres());
+            update.setAddress(member.getAddress());
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
@@ -197,7 +197,7 @@ public class MemberImpl implements MemberService {
         if (typeToken.equals("User")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
-            update.setAddres(member.getAddres());
+            update.setAddress(member.getAddress());
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {

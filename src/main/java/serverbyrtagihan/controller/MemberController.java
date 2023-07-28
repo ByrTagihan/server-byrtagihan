@@ -6,14 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.dto.*;
 import serverbyrtagihan.repository.MemberRepository;
-import serverbyrtagihan.dto.Password;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.modal.Channel;
 import serverbyrtagihan.repository.MemberRepository;
-import serverbyrtagihan.dto.LoginMember;
-import serverbyrtagihan.dto.MemberDTO;
-import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.modal.Member;
@@ -151,7 +148,7 @@ public class MemberController {
         return ResponseHelper.ok(service.put(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }
     @PutMapping(path = "/user/member/{id}")
-    public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberDTO memberDTO, HttpServletRequest request) {
+    public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberUserDto memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }
