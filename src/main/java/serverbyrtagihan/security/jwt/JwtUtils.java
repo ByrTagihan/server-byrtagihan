@@ -41,7 +41,7 @@ public class JwtUtils {
                 .claim("id" , adminPrincipal.getId())
                 .setAudience("Customer")
                 .setSubject((adminPrincipal.getUsername()))
-                .claim("organization_id" , adminPrincipal.getOrganizationIdId())
+                .setId(String.valueOf(adminPrincipal.getOrganizationIdId()))
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();

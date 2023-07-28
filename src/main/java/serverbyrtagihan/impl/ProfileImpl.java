@@ -1293,7 +1293,7 @@ public class ProfileImpl implements CustomerService {
                 res.put("Deleted", Boolean.TRUE);
                 return res;
             } catch (Exception e) {
-                throw new NotFoundException("id not found");
+                throw new NotFoundException("Customer not found");
             }
         } else {
             throw new BadRequestException("Token not valid");
