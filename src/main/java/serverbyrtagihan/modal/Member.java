@@ -31,6 +31,8 @@ Member extends DateConfig {
     @Lob
     @Column(name = "picture")
     private String picture;
+    @Column(name = "organization_id")
+    private Long organization_id;
 
     public Member() {
     }
@@ -89,5 +91,13 @@ Member extends DateConfig {
 
     public void setPicture(String picture) {
         this.picture = picture;
+    }
+
+    public Long getOrganization_id() {
+        return organization_id;
+    }
+
+    public void setOrganization_id(Long organization_id) {
+        this.organization_id = organization_id;
     }
 }

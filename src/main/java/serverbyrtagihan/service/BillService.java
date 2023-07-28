@@ -1,9 +1,11 @@
 package serverbyrtagihan.service;
 
 import org.springframework.data.domain.Page;
+import serverbyrtagihan.dto.ReportBill;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.modal.Payment;
 
+import java.util.List;
 import java.util.Map;
 
 public interface BillService {
@@ -41,5 +43,8 @@ public interface BillService {
     Map<String, Boolean> deleteByIdInMember(Long memberId, Long id, String jwtToken);
 
     Payment paymentById(Payment payment, Long id, String jwtToken);
+
+    List<ReportBill> getReportRecapBillCustomer(String jwtToken);
+    List<ReportBill> getReportRecapBillMember(String jwtToken);
 
 }

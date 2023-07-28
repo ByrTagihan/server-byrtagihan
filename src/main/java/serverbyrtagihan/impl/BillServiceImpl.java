@@ -7,17 +7,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.modal.Channel;
-import serverbyrtagihan.modal.Payment;
-import serverbyrtagihan.repository.BillRepository;
-import serverbyrtagihan.modal.Bill;
-import serverbyrtagihan.repository.ChannelRepository;
-import serverbyrtagihan.repository.PaymentRepository;
+import serverbyrtagihan.dto.ReportBill;
+import serverbyrtagihan.modal.*;
+import serverbyrtagihan.repository.*;
 import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -26,6 +24,8 @@ public class BillServiceImpl implements BillService {
     BillRepository billRepository;
     @Autowired
     ChannelRepository channelRepository;
+    @Autowired
+    MemberRepository memberRepository;
     @Autowired
     PaymentRepository paymentRepository;
     @Autowired
@@ -71,7 +71,7 @@ public class BillServiceImpl implements BillService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return billRepository.findById(id).orElseThrow(()-> new NotFoundException("Not found"));
+            return billRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -322,6 +322,62 @@ public class BillServiceImpl implements BillService {
             payment.setFee_admin(5000.0);
 
             return paymentRepository.save(payment);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public List<ReportBill> getReportRecapBillCustomer(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            String id = claims.getId();
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = billRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<ReportBill> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportBill dto = new ReportBill();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                dto.setUnpaid_bill(Double.parseDouble(result[3].toString()));
+                dto.setPaid_bill(Double.parseDouble(result[4].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public List<ReportBill> getReportRecapBillMember(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            String unique = claims.getSubject();
+            Member member = memberRepository.findByUniqueId(unique).get();
+            String id = String.valueOf( member.getOrganization_id());
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = billRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<ReportBill> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportBill dto = new ReportBill();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                dto.setUnpaid_bill(Double.parseDouble(result[3].toString()));
+                dto.setPaid_bill(Double.parseDouble(result[4].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
         } else {
             throw new BadRequestException("Token not valid");
         }

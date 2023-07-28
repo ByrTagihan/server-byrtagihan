@@ -25,7 +25,7 @@ public class Transaction extends DateConfig {
     private Date priode;
 
     @Column(name = "amount")
-    private Float amount;
+    private Double amount;
 
     @Column(name = "organization_name")
     private String organization_name;
@@ -73,11 +73,11 @@ public class Transaction extends DateConfig {
         this.priode = priode;
     }
 
-    public Float getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Float amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

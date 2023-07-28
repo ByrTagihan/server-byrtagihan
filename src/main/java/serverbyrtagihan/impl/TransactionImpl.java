@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.dto.ReportTranscation;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.modal.Member;
@@ -18,8 +19,7 @@ import serverbyrtagihan.repository.TransactionRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.TransactionService;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class TransactionImpl implements TransactionService {
@@ -116,6 +116,57 @@ public class TransactionImpl implements TransactionService {
             } catch (Exception e) {
                 throw new NotFoundException("id not found");
             }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<ReportTranscation> getReportRecapTrancationMember(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            String unique = claims.getSubject();
+            Member member = memberRepository.findByUniqueId(unique).get();
+            String id = String.valueOf( member.getOrganization_id());
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = transactionRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<ReportTranscation> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportTranscation dto = new ReportTranscation();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<ReportTranscation> getReportRecapTrancationCustomer(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            String unique = claims.getSubject();
+           String id = claims.getId();
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = transactionRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<ReportTranscation> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportTranscation dto = new ReportTranscation();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
         } else {
             throw new BadRequestException("Token not valid");
         }

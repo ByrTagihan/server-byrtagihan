@@ -3,6 +3,7 @@ package serverbyrtagihan.controller;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.BillDTO;
 import serverbyrtagihan.dto.BillPaidDTO;
@@ -37,7 +38,7 @@ public class CustomerBillController {
             @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
             @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
             @RequestParam(required = false) String search
-     ) {
+    ) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         Page<Bill> billPage;
@@ -94,5 +95,17 @@ public class CustomerBillController {
     public CommonResponse<?> delete(HttpServletRequest request, @PathVariable("id") Long id) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(billService.delete(id, jwtToken));
+    }
+
+    @GetMapping("/customer/report/recap/bill")
+    public CommonResponse<?> getReportRecapBillCustomer(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(billService.getReportRecapBillCustomer(jwtToken));
+    }
+
+    @GetMapping("/member/report/recap/bill")
+    public CommonResponse<?> getReportRecapBillMember(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(billService.getReportRecapBillCustomer(jwtToken));
     }
 }
