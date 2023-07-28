@@ -10,9 +10,13 @@ public interface OrganizationService {
 
     List<Organization> get(String jwtToken);
 
+    List<Organization> getOrganizationCustomer(String jwtToken);
+
     Organization preview(Long id, String jwtToken);
 
     Organization put(Long id ,Organization organization , String jwtToken);
+
+    Organization putOrganizationCustomer(Long id , Organization organization , String jwtToken);
 
     Organization add(Organization organization, String jwtToken);
 

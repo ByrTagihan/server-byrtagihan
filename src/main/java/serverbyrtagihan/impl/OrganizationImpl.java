@@ -40,6 +40,17 @@ public class OrganizationImpl implements OrganizationService {
     }
 
     @Override
+    public List<Organization> getOrganizationCustomer(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            return organizationRepository.findAll();
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
     public Organization preview(Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
        String typeToken = claims.getAudience();
@@ -69,6 +80,27 @@ public class OrganizationImpl implements OrganizationService {
            return organizationRepository.save(organization);
        } else {throw new BadRequestException("Token not valid");
 }
+    }
+
+    @Override
+    public Organization putOrganizationCustomer(Long id, Organization organization, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            organization.setName(organization.getName());
+            organization.setCustomer_id(organization.getCustomer_id());
+            organization.setAddress(organization.getAddress());
+            organization.setHp(organization.getHp());
+            organization.setEmail(organization.getEmail());
+            organization.setCity(organization.getCity());
+            organization.setProvinsi(organization.getProvinsi());
+            organization.setBalance(organization.getBalance());
+            organization.setBank_account_number(organization.getBank_account_number());
+            organization.setBank_account_name(organization.getBank_account_name());
+            organization.setBank_name(organization.getBank_name());
+            return organizationRepository.save(organization);
+        } else {throw new BadRequestException("Token not valid");
+        }
     }
 
     @Override

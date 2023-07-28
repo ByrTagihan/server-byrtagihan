@@ -452,7 +452,6 @@ public class UserController {
     @PostMapping("/user/forgot_password")
     public CommonResponse<ForGotPass> sendEmail(@RequestBody ForGotPass forGotPass) throws MessagingException {
         return ResponseHelper.ok(userService.sendEmail(forGotPass));
-
     }
 
     @PostMapping(path = "/user/verification_code")
