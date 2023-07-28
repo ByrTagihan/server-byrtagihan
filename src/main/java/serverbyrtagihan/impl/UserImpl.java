@@ -788,21 +788,8 @@ public class UserImpl implements UserService {
         return forGotPass;
     }
 
-
     @Override
-    public User getProfileUser(String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            return userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-
-    @Override
-    public User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken) {
+    public User update(ProfileDTO profileDTO , String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
         String typeToken = claims.getAudience();

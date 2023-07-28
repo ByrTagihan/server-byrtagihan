@@ -51,7 +51,7 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddres(member.getAddres());
+            admin.setAddress(member.getAddress());
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -77,7 +77,7 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddres(member.getAddres());
+            admin.setAddress(member.getAddress());
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -181,7 +181,7 @@ public class MemberImpl implements MemberService {
         if (typeToken.equals("Customer")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
-            update.setAddres(member.getAddres());
+            update.setAddress(member.getAddress());
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
@@ -195,7 +195,7 @@ public class MemberImpl implements MemberService {
         if (typeToken.equals("User")) {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
-            update.setAddres(member.getAddres());
+            update.setAddress(member.getAddress());
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
