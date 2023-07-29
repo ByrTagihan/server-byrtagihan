@@ -51,7 +51,7 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddres(member.getAddres());
+            admin.setAddress(member.getAddress());
             admin.setOrganization_id(0L);
             return memberRepository.save(admin);
         } else {
@@ -78,7 +78,7 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddres(member.getAddres());
+            admin.setAddress(member.getAddress());
             admin.setOrganization_id(0L);
             return memberRepository.save(admin);
         } else {
