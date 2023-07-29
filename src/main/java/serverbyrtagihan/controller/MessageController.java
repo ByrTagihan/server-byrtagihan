@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.MessageDTO;
+import serverbyrtagihan.dto.MessageStatusDTO;
 import serverbyrtagihan.modal.Message;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.PaginationResponse;
@@ -77,6 +78,13 @@ public class MessageController {
                 String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
         return ResponseHelper.ok(messageService.put(modelMapper.map(message, Message.class), id, jwtToken));
+    }
+
+    @PutMapping(path = "/user/message/{id}/status")
+    public CommonResponse<Message> putStatus(HttpServletRequest request, @RequestBody MessageStatusDTO message, @PathVariable("id") Long id) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+
+        return ResponseHelper.ok(messageService.putStatus(modelMapper.map(message, Message.class), id, jwtToken));
     }
 
     @DeleteMapping(path = "/user/message/{id}")
