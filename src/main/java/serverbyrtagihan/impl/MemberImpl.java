@@ -51,7 +51,8 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddress(member.getAddress());
+            admin.setAddres(member.getAddres());
+            admin.setOrganization_id(0L);
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -77,7 +78,8 @@ public class MemberImpl implements MemberService {
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
-            admin.setAddress(member.getAddress());
+            admin.setAddres(member.getAddres());
+            admin.setOrganization_id(0L);
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");

@@ -28,7 +28,7 @@ public class CustomerDetailsImpl implements UserDetails {
                 admin.getId(),
                 admin.getEmail(),
                 admin.getPassword(),
-                admin.getOrganizationId());
+                admin.getOrganization_id());
     }
 
 
