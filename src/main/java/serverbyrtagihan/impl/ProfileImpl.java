@@ -35,9 +35,6 @@ import java.util.*;
 
 @Service
 public class ProfileImpl implements CustomerService {
-    private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/byrtagihan-ca34f.appspot.com/o/%s?alt=media";
-
-
     @Autowired
     CustomerRepository customerRepository;
 

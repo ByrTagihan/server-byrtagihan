@@ -22,10 +22,8 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    @Value("${bezkoder.app.jwtSecret}")
-    private String jwtSecret;
-    @Value("${bezkoder.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    private String jwtSecret = "bayartagihan";
+    private int jwtExpirationMs = 604800000;
     private static final String SECRET_KEY = "bayartagihan";
 
     @Autowired
@@ -53,7 +51,7 @@ public class JwtUtils {
 
     private String createToken(String user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
+        Date expiryDate = new Date(now.getTime() + jwtExpirationMs);
         User user1 = userRepository.findByEmail(user).get();
         return Jwts.builder()
                 .claim("data", user1)

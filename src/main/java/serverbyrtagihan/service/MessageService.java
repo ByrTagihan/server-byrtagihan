@@ -16,5 +16,7 @@ public interface MessageService {
 
     Message put(Message message, Long id, String jwtToken);
 
+    Message putStatus(Message message, Long id, String jwtToken);
+
     Map<String, Boolean> delete(Long id, String jwtToken);
 }
