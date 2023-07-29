@@ -41,6 +41,17 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
             "WHERE YEAR(periode) = :year AND organization_id = :organizationId " +
             "GROUP BY periode " +
             "ORDER BY periode", nativeQuery = true)
-    List<Object[]> getBillingSummaryByYearAndOrganizationId(int year, String organizationId);
+    List<Object[]> getReport(int year, String organizationId);
+
+    @Query(value = "SELECT periode AS periode, " +
+            "COUNT(1) AS count_bill, " +
+            "SUM(amount) AS total_bill, " +
+            "SUM(CASE WHEN paid_id = 0 THEN amount ELSE 0 END) AS unpaid_bill, " +
+            "SUM(CASE WHEN paid_id > 0 THEN amount ELSE 0 END) AS paid_bill " +
+            "FROM bill " +
+            "WHERE YEAR(periode) = :year " +
+            "GROUP BY periode " +
+            "ORDER BY periode", nativeQuery = true)
+    List<Object[]> getReportRoleUser(int year);
 
 }

@@ -23,5 +23,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "WHERE YEAR(priode) = :year AND organization_id = :organizationId " +
             "GROUP BY priode " +
             "ORDER BY priode",nativeQuery = true)
-    List<Object[]> getBillingSummaryByYearAndOrganizationId(int year, String organizationId);
+    List<Object[]> getReport(int year, String organizationId);
+    @Query(value = "SELECT priode AS periode, " +
+            "COUNT(1) AS count_bill, " +
+            "SUM(amount) AS total_bill " +
+            "FROM transaction " +
+            "WHERE YEAR(priode) = :year " +
+            "GROUP BY priode " +
+            "ORDER BY priode",nativeQuery = true)
+    List<Object[]> getReportRoleUser(int year);
 }

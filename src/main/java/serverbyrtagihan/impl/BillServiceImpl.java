@@ -15,7 +15,6 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -334,7 +333,32 @@ public class BillServiceImpl implements BillService {
         if (typeToken.equals("Customer")) {
             String id = claims.getId();
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            List<Object[]> billingSummaryResults = billRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
+            List<ReportBill> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportBill dto = new ReportBill();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                dto.setUnpaid_bill(Double.parseDouble(result[3].toString()));
+                dto.setPaid_bill(Double.parseDouble(result[4].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<ReportBill> getReportRecapBillUser(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = billRepository.getReportRoleUser(year);
             List<ReportBill> billingSummaryDTOList = new ArrayList<>();
 
 
@@ -363,7 +387,7 @@ public class BillServiceImpl implements BillService {
             Member member = memberRepository.findByUniqueId(unique).get();
             String id = String.valueOf( member.getOrganization_id());
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            List<Object[]> billingSummaryResults = billRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
             List<ReportBill> billingSummaryDTOList = new ArrayList<>();
 
 

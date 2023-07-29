@@ -45,6 +45,9 @@ public interface BillService {
     Payment paymentById(Payment payment, Long id, String jwtToken);
 
     List<ReportBill> getReportRecapBillCustomer(String jwtToken);
+
+    List<ReportBill> getReportRecapBillUser(String jwtToken);
+
     List<ReportBill> getReportRecapBillMember(String jwtToken);
 
 }
