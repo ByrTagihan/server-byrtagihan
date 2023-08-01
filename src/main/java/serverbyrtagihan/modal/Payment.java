@@ -45,11 +45,11 @@ public class Payment extends DateConfig {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "periode")
-    private String periode;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date periode;
 
     @Column(name = "amount")
-    private int amount;
+    private Double amount;
 
     @Column(name = "fee_admin")
     private Double fee_admin = 0.0;
@@ -71,19 +71,19 @@ public class Payment extends DateConfig {
         this.description = description;
     }
 
-    public String getPeriode() {
+    public Date getPeriode() {
         return periode;
     }
 
-    public void setPeriode(String periode) {
+    public void setPeriode(Date periode) {
         this.periode = periode;
     }
 
-    public int getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 

@@ -16,9 +16,8 @@ public interface UserService {
 
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 
-    User getProfileUser(String jwtToken);
 
-    User update(Long id, ProfileDTO profileDTO, MultipartFile multipartFile, String jwtToken);
+    User update(ProfileDTO profileDTO , String jwtToken);
 
     User updatePassword(Long id, User user);
 

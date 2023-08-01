@@ -30,12 +30,12 @@ public class UserOrganizationController{
     @PostMapping(path = "/user/organization")
     public CommonResponse<Organization> post(@RequestBody OrganizationDto organizationDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userOrganizationService.add(organizationDTO, jwtToken));
+        return ResponseHelper.ok(userOrganizationService.add(modelMapper.map(organizationDTO , Organization.class), jwtToken));
     }
     @PutMapping(path = "/user/organization/{id}")
     public CommonResponse<Organization> Put(@RequestBody OrganizationDto organizationDTO, @PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userOrganizationService.put(id,organizationDTO, jwtToken));
+        return ResponseHelper.ok(userOrganizationService.put(id,modelMapper.map(organizationDTO, Organization.class), jwtToken));
     }
 
     @GetMapping(path = "/user/organization/{id}")

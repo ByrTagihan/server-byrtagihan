@@ -5,9 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.BadRequestException;
 import org.springframework.data.domain.Page;
 import serverbyrtagihan.repository.MemberRepository;
@@ -67,6 +69,18 @@ public class MemberController {
         } else {
             throw new NotFoundException("Password not valid");
         }
+    public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUniqueId(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateTokenMember(authentication);
+
+        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Username not found"));
+        Map<Object, Object> response = new HashMap<>();
+        response.put("data", member);
+        response.put("token", jwt);
+        response.put("type-token", "Member");
+        return ResponseHelper.ok(response);
     }
 
 
@@ -537,6 +551,7 @@ public class MemberController {
     @PutMapping(path = "/user/member/{id}")
     public CommonResponse<Member> putInUser (@PathVariable("id") Long id, @RequestBody MemberDTO
             memberDTO, HttpServletRequest request){
+    public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberUserDto memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }

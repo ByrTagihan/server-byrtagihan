@@ -7,20 +7,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.repository.BillRepository;
-import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.dto.ReportBill;
+import serverbyrtagihan.modal.*;
+import serverbyrtagihan.repository.*;
 import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class BillServiceImpl implements BillService {
     @Autowired
     BillRepository billRepository;
+    @Autowired
+    ChannelRepository channelRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    PaymentRepository paymentRepository;
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -64,7 +70,7 @@ public class BillServiceImpl implements BillService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            return billRepository.findById(id).orElseThrow(()-> new NotFoundException("Not found"));
+            return billRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -285,19 +291,117 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public Bill paymentById(Bill bill, Long id, String jwtToken) {
+    public Payment paymentById(Payment payment, Long id, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         Long memberId = Long.valueOf(claims.getId());
         if (typeToken.equals("Member")) {
             Bill bills = billRepository.findByIdInMember(memberId, id);
-            if (bills.getPaid_id() == 0) {
+            if (bills.getPaid_id() != 0) {
                 throw new NotFoundException("Tagihan Sudah Dibayar");
             }
+            Channel channels = channelRepository.findById(payment.getChannel_id()).orElseThrow(() -> new NotFoundException("Channel Not found"));
             bills.setPaid_id(2L);
-            bills.setPaid_date(bill.getPaid_date());
-            bills.setPaid_amount(bill.getPaid_amount());
-            return billRepository.save(bills);
+            bills.setPaid_date(new Date());
+            bills.setPaid_amount(bills.getAmount());
+            bills.setPayment_id(payment.getId());
+            billRepository.save(bills);
+
+            payment.setOrganization_id(bills.getOrganization_id());
+            payment.setOrganization_name(bills.getOrganization_name());
+            payment.setMember_id(bills.getMember_id());
+            payment.setDescription(bills.getDescription());
+            payment.setPeriode(bills.getPeriode());
+            payment.setAmount(bills.getAmount());
+            payment.setChannel_id(payment.getChannel_id());
+            payment.setChannel_name(channels.getName());
+            payment.setBill_ids(String.valueOf(bills.getId()));
+            payment.setVa_number("12345");
+            payment.setVa_expired_date(new Date(System.currentTimeMillis() + 3600 * 1000));
+            payment.setFee_admin(5000.0);
+
+            return paymentRepository.save(payment);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public List<ReportBill> getReportRecapBillCustomer(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Customer")) {
+            String id = claims.getId();
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
+            List<ReportBill> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportBill dto = new ReportBill();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                dto.setUnpaid_bill(Double.parseDouble(result[3].toString()));
+                dto.setPaid_bill(Double.parseDouble(result[4].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<ReportBill> getReportRecapBillUser(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = billRepository.getReportRoleUser(year);
+            List<ReportBill> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportBill dto = new ReportBill();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                dto.setUnpaid_bill(Double.parseDouble(result[3].toString()));
+                dto.setPaid_bill(Double.parseDouble(result[4].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public List<ReportBill> getReportRecapBillMember(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("Member")) {
+            String unique = claims.getSubject();
+            Member member = memberRepository.findByUniqueId(unique).get();
+            String id = String.valueOf( member.getOrganization_id());
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
+            List<ReportBill> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportBill dto = new ReportBill();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                dto.setUnpaid_bill(Double.parseDouble(result[3].toString()));
+                dto.setPaid_bill(Double.parseDouble(result[4].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
         } else {
             throw new BadRequestException("Token not valid");
         }

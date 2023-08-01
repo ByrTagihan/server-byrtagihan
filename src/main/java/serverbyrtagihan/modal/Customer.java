@@ -39,8 +39,8 @@ public class Customer extends DateConfig  {
     private String token;
 
 
-    @Column(name = "organizaion_id")
-    private Long organizationId;
+    @Column(name = "organization_id")
+    private Long organization_id;
 
 
     public Customer() {
@@ -118,13 +118,13 @@ public class Customer extends DateConfig  {
     public void setToken(String token) {
         this.token = token;
     }
-    
 
-    public Long getOrganizationId() {
-        return organizationId;
+
+    public Long getOrganization_id() {
+        return organization_id;
     }
 
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
+    public void setOrganization_id(Long organization_id) {
+        this.organization_id = organization_id;
     }
 }

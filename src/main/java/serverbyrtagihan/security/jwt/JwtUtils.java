@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import serverbyrtagihan.impl.MemberDetailsImpl;
+import serverbyrtagihan.impl.UserDetailsImpl;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.impl.CustomerDetailsImpl;
@@ -22,10 +24,8 @@ import java.util.Date;
 @Component
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
-    @Value("${bezkoder.app.jwtSecret}")
-    private String jwtSecret;
-    @Value("${bezkoder.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    private String jwtSecret = "bayartagihan";
+    private int jwtExpirationMs = 604800000;
     private static final String SECRET_KEY = "bayartagihan";
 
     @Autowired
@@ -33,59 +33,50 @@ public class JwtUtils {
     @Autowired
     MemberRepository memberRepository;
 
+
+
     public String generateJwtToken(Authentication authentication) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
         CustomerDetailsImpl adminPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
                 .claim("id" , adminPrincipal.getId())
                 .setAudience("Customer")
                 .setSubject((adminPrincipal.getUsername()))
-                .claim("organization_id" , adminPrincipal.getOrganizationIdId())
-                .setExpiration(expiryDate)
+                .setId(String.valueOf(adminPrincipal.getOrganizationIdId()))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
 
-    public String generateToken(String username) {
-        return createToken( username);
-    }
 
-    private String createToken(String user) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
-        User user1 = userRepository.findByEmail(user).get();
+    public String generateToken(Authentication authentication) {
+        UserDetailsImpl adminPrincipal = (UserDetailsImpl) authentication.getPrincipal();
+        User user = userRepository.findByEmail(adminPrincipal.getUsername()).get();
         return Jwts.builder()
-                .claim("data", user1)
-                .setSubject(user)
-                .claim("id" , user1.getId())
+                .claim("data", user)
+                .setSubject(adminPrincipal.getUsername())
+                .claim("id" , adminPrincipal.getId())
                 .setAudience("User")
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    public String generateTokenMember(String username) {
-        return createTokenMember( username);
-    }
 
-    private String createTokenMember(String uniqueId) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 3600000 * 168);
-        Member member = memberRepository.findByUniqueId(uniqueId).get();
+
+
+    public String generateTokenMember(Authentication authentication) {
+        MemberDetailsImpl adminPrincipal = (MemberDetailsImpl) authentication.getPrincipal();
         return Jwts.builder()
-                .setSubject(uniqueId)
-                .claim("id" , member.getId())
-                .setId(String.valueOf(member.getId()))
+                .setSubject(adminPrincipal.getUsername())
+                .setId(String.valueOf(adminPrincipal.getId()))
                 .setAudience("Member")
-                .setIssuedAt(now)
-                .setExpiration(expiryDate)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
-
-
     public static Claims decodeJwt(String jwtToken) {
         Jws<Claims> jwsClaims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
@@ -98,6 +89,7 @@ public class JwtUtils {
     }
 
     public boolean validateJwtToken(String authToken) {
+
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
             return true;

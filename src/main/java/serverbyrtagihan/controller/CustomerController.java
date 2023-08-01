@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.repository.CustomerOrganizationRepository;
 import serverbyrtagihan.repository.CustomerRepository;
@@ -113,8 +114,8 @@ public class CustomerController {
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
-        CustomerDetailsImpl userDetails = (CustomerDetailsImpl) authentication.getPrincipal();
-        Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).get();
+
+        Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
         Map<Object, Object> response = new HashMap<>();
         response.put("data", customer);
         response.put("token", jwt);

@@ -83,4 +83,19 @@ public class TransactionController {
 
         return ResponseHelper.okWithPagination(transactions, pagination);
     }
+    @GetMapping("/member/report/recap/transaction")
+    public CommonResponse<?> getReportRecapTransactionMember(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(transactionService.getReportRecapTrancationMember(jwtToken));
+    }
+    @GetMapping("/customer/report/recap/transaction")
+    public CommonResponse<?> getReportRecapTransactionCustomer(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(transactionService.getReportRecapTrancationCustomer(jwtToken));
+    }
+    @GetMapping("/user/report/recap/transaction")
+    public CommonResponse<?> getReportRecapTransactionUser(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(transactionService.getReportRecapTransactionUser(jwtToken));
+    }
 }

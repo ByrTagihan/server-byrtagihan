@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/member/login/**",
             "/api/member/login",
             "/api/user/login/**",
-            "/api/**"
+            "/api/member/login/**"
     };
 
 
@@ -84,5 +84,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
 
 }

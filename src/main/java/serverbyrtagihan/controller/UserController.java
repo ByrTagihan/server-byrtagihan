@@ -5,9 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import serverbyrtagihan.impl.CustomerDetailsImpl;
+import serverbyrtagihan.impl.UserDetailsImpl;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.service.UserService;
 import serverbyrtagihan.dto.*;
@@ -56,18 +61,17 @@ public class UserController {
 
     @PostMapping("/user/login")
     public CommonResponse<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Email not found"));
-        boolean conPassword = encoder.matches(loginRequest.getPassword() , user.getPassword());
-        if (conPassword) {
-            String token = jwtUtils.generateToken(user.getEmail());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateToken(authentication);
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", user);
-            response.put("token", token);
+            response.put("data", userDetails);
+            response.put("token", jwt);
             response.put("type-token", "User");
             return ResponseHelper.ok(response);
-        } else {
-            throw new NotFoundException("Password not valid");
-        }
     }
 
     @PostMapping("/user/register")
@@ -433,16 +437,10 @@ public class UserController {
         return ResponseHelper.ok(new MessageResponse("Register telah berhasil!"));
     }
 
-    @GetMapping(path = "/user/profile")
-    public CommonResponse<User> getById(HttpServletRequest request) {
+    @PutMapping(path = "/user/profile")
+    public CommonResponse<User> update(@RequestBody ProfileDTO update, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userService.getProfileUser(jwtToken));
-    }
-
-    @PutMapping(path = "/user/update{id}", consumes = "multipart/form-data")
-    public CommonResponse<User> update(@PathVariable("id") Long id, @RequestBody ProfileDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userService.update(id, update, multipartFile, jwtToken));
+        return ResponseHelper.ok(userService.update(update , jwtToken));
     }
 
     @PutMapping(path = "/user/password{id}")
@@ -450,7 +448,7 @@ public class UserController {
         return ResponseHelper.ok(userService.updatePassword(id, modelMapper.map(password, User.class)));
     }
 
-    @GetMapping("/user/profile/all")
+    @GetMapping("/user/profile")
     public CommonResponse<List<User>> getAll(String jwtToken) {
         return ResponseHelper.ok(userService.getAllTagihan(jwtToken));
     }
