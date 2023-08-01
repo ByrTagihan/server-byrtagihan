@@ -4,9 +4,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
+import serverbyrtagihan.impl.MemberDetailsImpl;
+import serverbyrtagihan.impl.UserDetailsImpl;
+import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import serverbyrtagihan.modal.Channel;
@@ -45,18 +51,17 @@ public class MemberController {
 
     @PostMapping("/member/login")
     public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
-        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("UniqueId not found"));
-        boolean conPassword = encoder.matches(loginRequest.getPassword() , member.getPassword());
-        if (conPassword) {
-            String token = jwtUtils.generateTokenMember(member.getUniqueId());
-            Map<Object, Object> response = new HashMap<>();
-            response.put("data", member);
-            response.put("token", token);
-            response.put("type-token", "Member");
-            return ResponseHelper.ok(response);
-        } else {
-            throw new NotFoundException("Password not valid");
-        }
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getUniqueId(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateTokenMember(authentication);
+
+        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Username not found"));
+        Map<Object, Object> response = new HashMap<>();
+        response.put("data", member);
+        response.put("token", jwt);
+        response.put("type-token", "Member");
+        return ResponseHelper.ok(response);
     }
 
     @PostMapping("/customer/member")

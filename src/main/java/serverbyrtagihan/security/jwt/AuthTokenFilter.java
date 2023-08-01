@@ -1,10 +1,18 @@
 package serverbyrtagihan.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.impl.CustomerDetailsServiceImpl;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.FilterChain;
@@ -28,12 +36,28 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             String jwt = parseJwt(request);
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
                 String username = jwtUtils.getUserNameFromJwtToken(jwt);
+                UserDetails userDetails = adminDetailsService.loadUserByUsername(username);
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails, null, userDetails.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (Exception e) {
-            logger.error("Cannot set user authentication: {}", e);
+        }  catch (ExpiredJwtException e) {
+           throw new BadRequestException("Token has expired");
+        }catch (MalformedJwtException e) {
+            throw new BadRequestException("Invalid JWT token: {}"+ e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            throw new BadRequestException("JWT token is unsupported: {}"+ e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("JWT claims string is empty: {}"+ e.getMessage());
+        }
+        catch (Exception e) {
+            throw new BadRequestException("Cannot set user authentication: {}"+ e);
         }
         filterChain.doFilter(request, response);
     }
+
+
 
     private static final String AUTH_HEADER_NAME = "auth-tgh";
     private static final String JWT_PREFIX = "jwt ";
