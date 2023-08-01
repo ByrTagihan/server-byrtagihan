@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "member")
 public class
-Member extends DateConfig {
+Member extends DateConfig{
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -23,7 +23,7 @@ Member extends DateConfig {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "hp")
+    @Column(name = "hp", unique = true)
     private String hp;
 
     @Column(name = "password")
@@ -49,6 +49,11 @@ Member extends DateConfig {
 
     @Column(name = "last_login")
     private String lastLogin;
+
+    @Column(name = "username")
+    private String username;
+
+
 
     public Member() {
     }
@@ -155,5 +160,13 @@ Member extends DateConfig {
 
     public void setLastLogin(String lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

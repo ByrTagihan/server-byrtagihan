@@ -7,12 +7,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.BadRequestException;
 import org.springframework.data.domain.Page;
-import serverbyrtagihan.modal.Customer;
-import serverbyrtagihan.modal.User;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
@@ -45,6 +42,7 @@ public class MemberController {
     private ModelMapper modelMapper;
     @Autowired
     MemberRepository memberRepository;
+
     @Autowired
     private JavaMailSender javaMailSender;
 
@@ -524,8 +522,8 @@ public class MemberController {
         return ResponseHelper.ok(memberService.getProfileMember(jwtToken));
     }
 
-    @PutMapping(path = "/member/update{id}", consumes = "multipart/form-data")
-    public CommonResponse<Member> update(@PathVariable("id") Long id, @RequestBody MemberDTO update, @RequestPart("file") MultipartFile multipartFile, HttpServletRequest request) {
+    @PutMapping(path = "/member/update{id}")
+    public CommonResponse<Member> update(@PathVariable("id") Long id, @RequestBody MemberDTO update, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(memberService.update(id, update, jwtToken));
     }
@@ -568,5 +566,5 @@ public class MemberController {
 
 
 
-    }
 
+}

@@ -6,16 +6,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.dto.MemberDTO;
-import serverbyrtagihan.dto.ProfileDTO;
-import serverbyrtagihan.modal.User;
+import serverbyrtagihan.dto.*;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
@@ -35,6 +32,17 @@ public class MemberImpl implements MemberService {
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    JavaMailSender javaMailSender;
+
+
+    @Autowired
+    public MemberImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
+
 
     @Override
     public Member add(Member member, String jwtToken) {
@@ -232,6 +240,9 @@ public class MemberImpl implements MemberService {
         }
     }
 
+
+
+
     @Override
     public Member update(Long id, MemberDTO memberDTO, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
@@ -248,6 +259,8 @@ public class MemberImpl implements MemberService {
             throw new BadRequestException("Token Tidak Cocok");
         }
     }
+
+
 
     @Override
     public Map<String, Boolean> delete(Long id, String jwtToken) {
