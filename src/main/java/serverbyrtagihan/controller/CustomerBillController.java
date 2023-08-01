@@ -106,6 +106,11 @@ public class CustomerBillController {
     @GetMapping("/member/report/recap/bill")
     public CommonResponse<?> getReportRecapBillMember(HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(billService.getReportRecapBillCustomer(jwtToken));
+        return ResponseHelper.ok(billService.getReportRecapBillMember(jwtToken));
+    }
+    @GetMapping("/user/report/recap/bill")
+    public CommonResponse<?> getReportRecapBillUser(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(billService.getReportRecapBillUser(jwtToken));
     }
 }

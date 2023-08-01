@@ -20,5 +20,7 @@ public interface TransactionService {
 
     List<ReportTranscation> getReportRecapTrancationMember(String jwtToken);
 
+    List<ReportTranscation> getReportRecapTransactionUser(String jwtToken);
+
     List<ReportTranscation> getReportRecapTrancationCustomer(String jwtToken);
 }

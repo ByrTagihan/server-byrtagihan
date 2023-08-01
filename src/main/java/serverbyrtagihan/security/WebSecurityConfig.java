@@ -53,9 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/swagger-ui/**",
             // API controller
             "/api/customer/login/**",
-            "/api/member/login",
             "/api/user/login/**",
-            "/api/**"
+            "/api/member/login/**"
     };
 
 
@@ -80,5 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
 
 }

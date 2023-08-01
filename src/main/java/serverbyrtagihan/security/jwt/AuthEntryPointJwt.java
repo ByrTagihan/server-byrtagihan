@@ -1,8 +1,13 @@
 package serverbyrtagihan.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -19,14 +24,28 @@ import java.util.Map;
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
-
+    private String jwtSecret = "bayartagihan";
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        String jwt = request.getHeader("auth-tgh");
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         final Map<String, Object> body = new HashMap<>();
-        body.put("status", HttpServletResponse.SC_UNAUTHORIZED);
-        body.put("title", "Unauthorized");
+        try {
+            Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
+        } catch (MalformedJwtException e) {
+            body.put("title","401 Unauthorized");
+            body.put("description","Invalid JWT token ");
+        } catch (ExpiredJwtException e) {
+            body.put("title","401 Unauthorized");
+            body.put("description","JWT token is expired");
+        } catch (UnsupportedJwtException e) {
+            body.put("title","401 Unauthorized");
+            body.put("description","JWT token is unsupported");
+        } catch (IllegalArgumentException e) {
+            body.put("title","401 Unauthorized");
+            body.put("description","JWT claims string is empty");
+        }
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
     }

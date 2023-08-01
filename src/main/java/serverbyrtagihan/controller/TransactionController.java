@@ -93,4 +93,9 @@ public class TransactionController {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(transactionService.getReportRecapTrancationCustomer(jwtToken));
     }
+    @GetMapping("/user/report/recap/transaction")
+    public CommonResponse<?> getReportRecapTransactionUser(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(transactionService.getReportRecapTransactionUser(jwtToken));
+    }
 }

@@ -5,9 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.modal.User;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.repository.CustomerRepository;
+import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.exception.NotFoundException;
 
@@ -16,13 +18,26 @@ import javax.transaction.Transactional;
 @Service
 public class CustomerDetailsServiceImpl implements UserDetailsService {
     @Autowired
-    CustomerRepository adminRepository;
+    CustomerRepository customerRepository;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-       Customer admin = adminRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Email not found"));
-        return CustomerDetailsImpl.build(admin);
+        if (memberRepository.existsByUniqueId(username)) {
+            Member member = memberRepository.findByUniqueId(username).orElseThrow(() -> new NotFoundException("Username not found"));;
+            return MemberDetailsImpl.buildMember(member);
+        } else if (userRepository.existsByEmail(username)){
+            User user = userRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Username not found"));;
+            return UserDetailsImpl.buildUser(user);
+        } else if (customerRepository.existsByEmail(username)) {
+            Customer customer = customerRepository.findByEmail(username).orElseThrow(() -> new NotFoundException("Username not found"));;
+            return CustomerDetailsImpl.build(customer);
+        }
+        throw new NotFoundException("User Not Found with username: " + username);
     }
 
 }

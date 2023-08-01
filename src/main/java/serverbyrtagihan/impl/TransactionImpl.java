@@ -129,7 +129,30 @@ public class TransactionImpl implements TransactionService {
             Member member = memberRepository.findByUniqueId(unique).get();
             String id = String.valueOf( member.getOrganization_id());
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            List<Object[]> billingSummaryResults = transactionRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<Object[]> billingSummaryResults = transactionRepository.getReport(year, id);
+            List<ReportTranscation> billingSummaryDTOList = new ArrayList<>();
+
+
+            for (Object[] result : billingSummaryResults) {
+                ReportTranscation dto = new ReportTranscation();
+                dto.setPeriode((Date) result[0]);
+                dto.setCount_bill(Integer.parseInt(result[1].toString()));
+                dto.setTotal_bill(Double.parseDouble(result[2].toString()));
+                billingSummaryDTOList.add(dto);
+            }
+
+            return billingSummaryDTOList;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+    @Override
+    public List<ReportTranscation> getReportRecapTransactionUser(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            int year = Calendar.getInstance().get(Calendar.YEAR);
+            List<Object[]> billingSummaryResults = transactionRepository.getReportRoleUser(year);
             List<ReportTranscation> billingSummaryDTOList = new ArrayList<>();
 
 
@@ -154,7 +177,7 @@ public class TransactionImpl implements TransactionService {
             String unique = claims.getSubject();
            String id = claims.getId();
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            List<Object[]> billingSummaryResults = transactionRepository.getBillingSummaryByYearAndOrganizationId(year, id);
+            List<Object[]> billingSummaryResults = transactionRepository.getReport(year, id);
             List<ReportTranscation> billingSummaryDTOList = new ArrayList<>();
 
 
