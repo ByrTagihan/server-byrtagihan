@@ -1,5 +1,7 @@
 package serverbyrtagihan.dto;
 
+import java.util.Date;
+
 public class EcollectionDTO {
     private String client_id;
     private String trx_amount;
@@ -8,9 +10,11 @@ public class EcollectionDTO {
     private String customer_phone;
     private String virtual_account;
     private String trx_id;
-    private String datetime_expired;
+    private Date datetime_expired;
     private String description;
     private String type;
+
+    private String billing_type;
 
     public String getClient_id() {
         return client_id;
@@ -68,11 +72,11 @@ public class EcollectionDTO {
         this.trx_id = trx_id;
     }
 
-    public String getDatetime_expired() {
+    public Date getDatetime_expired() {
         return datetime_expired;
     }
 
-    public void setDatetime_expired(String datetime_expired) {
+    public void setDatetime_expired(Date datetime_expired) {
         this.datetime_expired = datetime_expired;
     }
 
@@ -90,5 +94,13 @@ public class EcollectionDTO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getBilling_type() {
+        return billing_type;
+    }
+
+    public void setBilling_type(String billing_type) {
+        this.billing_type = billing_type;
     }
 }

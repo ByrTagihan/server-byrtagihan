@@ -16,26 +16,26 @@ public class DateConfig {
     @CreationTimestamp
     @Column(name = "created_date", nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdDate;
+    private Date created_date;
 
     @UpdateTimestamp
     @Column(name = "updated_date")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date updatedDate;
+    private Date updated_date;
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getCreated_date() {
+        return created_date;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setCreated_date(Date created_date) {
+        this.created_date = created_date;
     }
 
-    public Date getUpdatedDate() {
-        return updatedDate;
+    public Date getUpdated_date() {
+        return updated_date;
     }
 
-    public void setUpdatedDate(Date updatedDate) {
-        this.updatedDate = updatedDate;
+    public void setUpdated_date(Date updated_date) {
+        this.updated_date = updated_date;
     }
 }
