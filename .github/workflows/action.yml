@@ -30,8 +30,8 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
           
-            sudo systemctl stop server-byrtagihan
+            sudo  stop server-byrtagihan
           
-            scp target/server-byrtagihan.jar javaserver@103.31.250.187:/src/main/java/serverbyrtagihan
+            scp target/server-byrtagihan-0.0.1-SNAPSHOT.jar javaserver@103.31.250.187:server-byrtagihan/target/server-byrtagihan-0.0.1-SNAPSHOT.jar
 
-            sudo systemctl start server-byrtagihan
+            sudo  start server-byrtagihan
