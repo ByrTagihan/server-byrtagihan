@@ -45,10 +45,13 @@ public class EcollectionService {
                 String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
                 String prefix = "988"; // from BNI
 
+                String va_number = prefix + cid + "69813549";
+
                 String parsedData = hash.hashData(payloadJson, cid, key);
                 String decodeData = hash.parseData(parsedData, cid, key);
                 System.out.println(parsedData);
-                System.out.println("B" + decodeData);
+                System.out.println(decodeData);
+                System.out.println(va_number);
 
                 BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
                 bniRequestDTO.setClient_id(cid);
