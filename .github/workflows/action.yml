@@ -1,0 +1,29 @@
+name: Example Workflow with SSH Action
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SSH and execute Maven command on the server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 103.31.250.187
+          username: javaserver
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            echo "Hello from SSH Action!"
+            # Add your commands here
+
+            # For example, change directory and run 'mvn clean install'
+            cd server-byrtagihan
+            mvn clean install
