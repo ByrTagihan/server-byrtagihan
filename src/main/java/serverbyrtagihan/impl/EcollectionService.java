@@ -1,12 +1,22 @@
 package serverbyrtagihan.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import serverbyrtagihan.dto.BNIRequestDTO;
 import serverbyrtagihan.dto.EcollectionDTO;
+import serverbyrtagihan.dto.ReportBill;
+import serverbyrtagihan.exception.BadRequestException;
+import serverbyrtagihan.modal.Member;
+import serverbyrtagihan.security.jwt.JwtUtils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 @Service
 public class EcollectionService {
@@ -17,32 +27,40 @@ public class EcollectionService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> sendPayloadToEcollection(String apiUrl, EcollectionDTO payload) {
+    public ResponseEntity<String> sendPayloadToEcollection(String apiUrl, EcollectionDTO payload, String jwtToken) {
         try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
+            Claims claims = JwtUtils.decodeJwt(jwtToken);
+            String typeToken = claims.getAudience();
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            String payloadJson = objectMapper.writeValueAsString(payload);
+            if (typeToken.equals("User")) {
 
-            BniEncryption hash = new BniEncryption();
-            String cid = "99129"; // from BNI
-            String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
-            String prefix = "988"; // from BNI
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_JSON);
 
-            String parsedData = hash.hashData(payloadJson, cid, key);
-            String decodeData = hash.parseData(parsedData, cid, key);
-            System.out.println(parsedData);
-            System.out.println("B" + decodeData);
+                ObjectMapper objectMapper = new ObjectMapper();
+                String payloadJson = objectMapper.writeValueAsString(payload);
 
-            BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
-            bniRequestDTO.setClient_id(cid);
-            bniRequestDTO.setPrefix(prefix);
-            bniRequestDTO.setData(parsedData);
+                BniEncryption hash = new BniEncryption();
+                String cid = "99129"; // from BNI
+                String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
+                String prefix = "988"; // from BNI
 
-            HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
-            System.out.println("Percobaan");
-            return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+                String parsedData = hash.hashData(payloadJson, cid, key);
+                String decodeData = hash.parseData(parsedData, cid, key);
+                System.out.println(parsedData);
+                System.out.println("B" + decodeData);
+
+                BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
+                bniRequestDTO.setClient_id(cid);
+                bniRequestDTO.setPrefix(prefix);
+                bniRequestDTO.setData(parsedData);
+
+                HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
+                System.out.println("Percobaan");
+                return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+            } else {
+                throw new BadRequestException("Token not valid");
+            }
         } catch (Exception e) {
             e.printStackTrace();
 
