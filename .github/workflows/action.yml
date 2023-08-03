@@ -32,6 +32,6 @@ jobs:
           
             sudo systemctl stop server-byrtagihan
           
-            scp target/server-byrtagihan.jar javaserver@103.31.250.187:/target/
+            scp target/server-byrtagihan.jar javaserver@103.31.250.187:/src/main/java/serverbyrtagihan
 
             sudo systemctl start server-byrtagihan
