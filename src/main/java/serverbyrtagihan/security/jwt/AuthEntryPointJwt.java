@@ -34,17 +34,17 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(jwt);
         } catch (MalformedJwtException e) {
+            body.put("description","Not enough segments");
             body.put("title","401 Unauthorized");
-            body.put("description","Invalid JWT token ");
         } catch (ExpiredJwtException e) {
+            body.put("description","Signature has expired");
             body.put("title","401 Unauthorized");
-            body.put("description","JWT token is expired");
         } catch (UnsupportedJwtException e) {
-            body.put("title","401 Unauthorized");
             body.put("description","JWT token is unsupported");
-        } catch (IllegalArgumentException e) {
             body.put("title","401 Unauthorized");
-            body.put("description","JWT claims string is empty");
+        } catch (IllegalArgumentException e) {
+            body.put("description","Missing Authorization Header");
+            body.put("title","401 Unauthorized");
         }
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(response.getOutputStream(), body);
