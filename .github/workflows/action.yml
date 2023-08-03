@@ -22,8 +22,4 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             echo "Hello from SSH Action!"
-            # Add your commands here
-
-            # For example, change directory and run 'mvn clean install'
-            cd server-byrtagihan
             mvn clean install
