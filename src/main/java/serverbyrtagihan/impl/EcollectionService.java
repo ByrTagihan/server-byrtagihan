@@ -37,8 +37,12 @@ public class EcollectionService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
 
+                payload.setDatetime_expired(new Date(System.currentTimeMillis() + 3600 * 1000));
+
                 ObjectMapper objectMapper = new ObjectMapper();
                 String payloadJson = objectMapper.writeValueAsString(payload);
+
+                System.out.println(payload.getDatetime_expired());
 
                 BniEncryption hash = new BniEncryption();
                 String cid = "99129"; // from BNI
@@ -57,6 +61,7 @@ public class EcollectionService {
                 bniRequestDTO.setClient_id(cid);
                 bniRequestDTO.setPrefix(prefix);
                 bniRequestDTO.setData(parsedData);
+
 
                 HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
                 System.out.println("Percobaan");
