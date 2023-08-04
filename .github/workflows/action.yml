@@ -1,4 +1,4 @@
-name: CI/CD with Maven
+name: CI/CD with Maven and SSH
 
 on:
   push:
@@ -28,10 +28,12 @@ jobs:
           host: 103.31.250.187
           username: javaserver
           password: ${{ secrets.SSH_PASSWORD }}
-          script-DskipTests: |
+          script: |
           
-            sudo  stop server-byrtagihan
-          
-            scp target/server-byrtagihan-0.0.1-SNAPSHOT.jar javaserver@103.31.250.187:server-byrtagihan/target/server-byrtagihan-0.0.1-SNAPSHOT.jar
+            systemctl stop server-byrtagihan
 
-            sudo  start server-byrtagihan
+         
+            scp target/server-byrtagihan-0.0.1-SNAPSHOT.jar javaserver@103.31.250.187:server-byrtagihan/
+
+           
+            systemctl start server-byrtagihan
