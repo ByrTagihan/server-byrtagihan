@@ -18,9 +18,9 @@ public class MemberDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
-    public MemberDetailsImpl(Long id, String uniqueId, String password, Long organizationId) {
+    public MemberDetailsImpl(Long id, String unique_id, String password, Long organizationId) {
         this.id = id;
-        this.username = uniqueId;
+        this.username = unique_id;
         this.password = password;
         this.organizationId = organizationId;
     }
@@ -28,7 +28,7 @@ public class MemberDetailsImpl implements UserDetails {
     public static MemberDetailsImpl buildMember(Member admin) {
         return new MemberDetailsImpl(
                 admin.getId(),
-                admin.getUniqueId(),
+                admin.getUnique_id(),
                 admin.getPassword(),
                 admin.getOrganization_id());
     }

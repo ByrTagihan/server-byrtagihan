@@ -27,7 +27,7 @@ public class CustomerDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) {
-        if (memberRepository.existsByUniqueId(username)) {
+        if (memberRepository.findByUniqueId(username).isPresent()) {
             Member member = memberRepository.findByUniqueId(username).orElseThrow(() -> new NotFoundException("Username not found"));;
             return MemberDetailsImpl.buildMember(member);
         } else if (userRepository.existsByEmail(username)){
