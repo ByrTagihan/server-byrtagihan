@@ -1,4 +1,4 @@
-name: Example Workflow with SSH Action
+name: CI/CD with Maven and SSH
 
 on:
   push:
@@ -6,20 +6,34 @@ on:
       - develop
 
 jobs:
-  deploy:
-    name: Deploy to Server
+  build:
+    name: Build and Deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: SSH and execute Maven command on the server
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Build with Maven
+        run: mvn clean install
+
+      - name: Deploy to Server
         uses: appleboy/ssh-action@master
         with:
           host: 103.31.250.187
           username: javaserver
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-            echo "Hello from SSH Action!"
-            mvn clean install
+          
+            systemctl stop server-byrtagihan
+
+         
+            scp target/server-byrtagihan-0.0.1-SNAPSHOT.jar javaserver@103.31.250.187:server-byrtagihan/
+
+           
+            systemctl start server-byrtagihan

@@ -23,7 +23,7 @@ Member extends DateConfig {
     private String organization_name;
 
     @Column(name = "unique_id")
-    private String uniqueId;
+    private String unique_id;
 
     @Column(name = "name")
     private String name;
@@ -84,12 +84,12 @@ Member extends DateConfig {
         this.organization_name = organization_name;
     }
 
-    public String getUniqueId() {
-        return uniqueId;
+    public String getUnique_id() {
+        return unique_id;
     }
 
-    public void setUniqueId(String unique_id) {
-        this.uniqueId = unique_id;
+    public void setUnique_id(String unique_id) {
+        this.unique_id = unique_id;
     }
 
     public String getName() {

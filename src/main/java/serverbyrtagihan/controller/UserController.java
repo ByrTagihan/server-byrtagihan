@@ -60,18 +60,23 @@ public class UserController {
 
 
     @PostMapping("/user/login")
-    public CommonResponse<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateToken(authentication);
+    public CommonResponse<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
+        if (encoder.matches(user.getPassword(), loginRequest.getPassword())) {
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateToken(authentication);
+
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             Map<Object, Object> response = new HashMap<>();
-            response.put("data", userDetails);
+            response.put("data",user );
             response.put("token", jwt);
             response.put("type-token", "User");
             return ResponseHelper.ok(response);
+        }
+        throw new NotFoundException("Password not valid");
     }
 
     @PostMapping("/user/register")
@@ -411,7 +416,7 @@ public class UserController {
                 "\n" +
                 "</html>");
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-           throw new BadRequestException("Email al ready");
+            throw new BadRequestException("Email al ready");
         }
         String UserEmail = signUpRequest.getEmail().trim();
         boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
@@ -421,7 +426,7 @@ public class UserController {
         String UserPassword = signUpRequest.getPassword().trim();
         boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
         if (PasswordIsNotValid) {
-           throw new BadRequestException("Password not valid");
+            throw new BadRequestException("Password not valid");
         }
         // Create new user's account
         User admin = new User();
@@ -440,7 +445,7 @@ public class UserController {
     @PutMapping(path = "/user/profile")
     public CommonResponse<User> update(@RequestBody ProfileDTO update, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(userService.update(update , jwtToken));
+        return ResponseHelper.ok(userService.update(update, jwtToken));
     }
 
     @PutMapping(path = "/user/password{id}")

@@ -50,29 +50,34 @@ public class MemberController {
     private static final String JWT_PREFIX = "jwt ";
 
     @PostMapping("/member/login")
-    public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUniqueId(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateTokenMember(authentication);
+    public CommonResponse<?> authenticate(@RequestBody LoginMember loginRequest) {
+        Member member = memberRepository.findByUniqueId(loginRequest.getUnique_id()).orElseThrow(() -> new NotFoundException("Username not found"));
+        if (encoder.matches(member.getPassword(), loginRequest.getPassword())) {
 
-        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Username not found"));
-        Map<Object, Object> response = new HashMap<>();
-        response.put("data", member);
-        response.put("token", jwt);
-        response.put("type-token", "Member");
-        return ResponseHelper.ok(response);
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUnique_id(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateTokenMember(authentication);
+
+            Map<Object, Object> response = new HashMap<>();
+            response.put("data", member);
+            response.put("token", jwt);
+            response.put("type-token", "Member");
+            return ResponseHelper.ok(response);
+        }
+        throw new NotFoundException("Password not valid");
     }
 
     @PostMapping("/customer/member")
-    public CommonResponse<Member> registerMember(@RequestBody Member member ,HttpServletRequest request) {
+    public CommonResponse<Member> registerMember(@RequestBody Member member, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(service.add(member , jwtToken));
+        return ResponseHelper.ok(service.add(member, jwtToken));
     }
+
     @PostMapping("/user/member")
-    public CommonResponse<Member> registerMemberInUser(@RequestBody Member member ,HttpServletRequest request) {
+    public CommonResponse<Member> registerMemberInUser(@RequestBody Member member, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(service.addInUser(member , jwtToken));
+        return ResponseHelper.ok(service.addInUser(member, jwtToken));
     }
 
 
@@ -117,6 +122,7 @@ public class MemberController {
 
         return ResponseHelper.okWithPagination(channels, pagination);
     }
+
     @GetMapping(path = "/user/member")
     public PaginationResponse<List<Member>> getAllInUser(
             HttpServletRequest request,
@@ -152,11 +158,13 @@ public class MemberController {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.put(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }
+
     @PutMapping(path = "/user/member/{id}")
     public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberUserDto memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }
+
     @PutMapping(path = "/customer/member/{id}/password")
     public CommonResponse<Member> putPass(@PathVariable("id") Long id, @RequestBody Password memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
@@ -168,11 +176,13 @@ public class MemberController {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.delete(id, jwtToken));
     }
+
     @DeleteMapping(path = "/user/member/{id}")
     public CommonResponse<?> deleteInUser(@PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.deleteInUser(id, jwtToken));
     }
+
     @PutMapping(path = "/member/password")
     public CommonResponse<Member> putPassword(@RequestBody PasswordDTO password, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
