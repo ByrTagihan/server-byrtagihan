@@ -37,7 +37,7 @@ public class MemberImpl implements MemberService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            if (memberRepository.findByUniqueId(member.getUniqueId()).isPresent()) {
+            if (memberRepository.findByUniqueId(member.getUnique_id()).isPresent()) {
                 throw new BadRequestException("Unique id telah digunakan");
             }
             String UserPassword = member.getPassword().trim();
@@ -47,7 +47,7 @@ public class MemberImpl implements MemberService {
             }
             // Create new user's account
             Member admin = new Member();
-            admin.setUniqueId(member.getUniqueId());
+            admin.setUnique_id(member.getUnique_id());
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
@@ -64,7 +64,7 @@ public class MemberImpl implements MemberService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            if (memberRepository.findByUniqueId(member.getUniqueId()).isPresent()) {
+            if (memberRepository.findByUniqueId(member.getUnique_id()).isPresent()) {
                 throw new BadRequestException("Unique id telah digunakan");
             }
             String UserPassword = member.getPassword().trim();
@@ -74,7 +74,7 @@ public class MemberImpl implements MemberService {
             }
             // Create new user's account
             Member admin = new Member();
-            admin.setUniqueId(member.getUniqueId());
+            admin.setUnique_id(member.getUnique_id());
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
