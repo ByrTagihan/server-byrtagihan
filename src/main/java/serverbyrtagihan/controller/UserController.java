@@ -62,7 +62,6 @@ public class UserController {
     @PostMapping("/user/login")
     public CommonResponse<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
-        if (encoder.matches(user.getPassword(), loginRequest.getPassword())) {
 
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -75,8 +74,6 @@ public class UserController {
             response.put("token", jwt);
             response.put("type-token", "User");
             return ResponseHelper.ok(response);
-        }
-        throw new NotFoundException("Password not valid");
     }
 
     @PostMapping("/user/register")
