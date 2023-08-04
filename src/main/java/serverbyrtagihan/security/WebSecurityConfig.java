@@ -57,7 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/api/member/login/**",
             "/api/member/forgot_password",
             "/api/customer/forgot_password",
-            "/api/user/forgot_password"
+            "/api/user/forgot_password",
+            "api/user/verification_code"
     };
 
 
