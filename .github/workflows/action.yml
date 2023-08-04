@@ -28,7 +28,7 @@ jobs:
           host: 103.31.250.187
           username: javaserver
           password: ${{ secrets.SSH_PASSWORD }}
-          script: |
+          script-DskipTests: |
           
             sudo  stop server-byrtagihan
           
