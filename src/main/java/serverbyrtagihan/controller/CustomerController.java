@@ -111,8 +111,6 @@ public class CustomerController {
     @PostMapping("/customer/login")
     public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
         Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
-        if (encoder.matches(customer.getPassword(), loginRequest.getPassword())){
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -123,8 +121,6 @@ public class CustomerController {
         response.put("token", jwt);
         response.put("type-token", "Customer");
         return ResponseHelper.ok(response);
-        }
-        throw new NotFoundException("Password not valid");
     }
 
     @PostMapping("/user/customer")
