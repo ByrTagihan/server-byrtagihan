@@ -51,17 +51,7 @@ public class MemberController {
 
     @PostMapping("/member/login")
     public CommonResponse<?> authenticate(@RequestBody LoginMember loginRequest) {
-        Member member = memberRepository.findByUniqueId(loginRequest.getUnique_id()).orElseThrow(() -> new NotFoundException("Username not found"));
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUnique_id(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateTokenMember(authentication);
-            Map<Object, Object> response = new HashMap<>();
-            response.put("data", member);
-            response.put("token", jwt);
-            response.put("type-token", "Member");
-            return ResponseHelper.ok(response);
+            return ResponseHelper.ok(service.login(loginRequest));
 
     }
 

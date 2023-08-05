@@ -6,14 +6,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import serverbyrtagihan.modal.Channel;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.dto.ForGotPass;
@@ -21,7 +23,7 @@ import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
-import serverbyrtagihan.response.MessageResponse;
+import serverbyrtagihan.response.LoginRequest;
 import serverbyrtagihan.response.SignupRequest;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.modal.Customer;
@@ -30,7 +32,6 @@ import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.util.Base64.Encoder;
 import java.util.*;
 
 @Service
@@ -45,6 +46,8 @@ public class ProfileImpl implements CustomerService {
 
     @Autowired
     private JavaMailSender javaMailSender;
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Autowired
     PasswordEncoder encoder;
@@ -82,6 +85,7 @@ public class ProfileImpl implements CustomerService {
 
         return bindingResult;
     }
+
     @Override
     public Page<Customer> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
 
@@ -105,6 +109,23 @@ public class ProfileImpl implements CustomerService {
         }
     }
 
+    @Override
+    public Map<Object, Object> login(LoginRequest loginRequest) {
+        Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
+        if (encoder.matches( loginRequest.getPassword(),customer.getPassword())) {
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
+            Map<Object, Object> response = new HashMap<>();
+            response.put("data", customer);
+            response.put("token", jwt);
+            response.put("type-token", "Customer");
+            return response;
+        }
+        throw new NotFoundException("Password not found");
+    }
 
     @Override
     public ForGotPassword verificationPass(ForGotPassword verification) throws MessagingException {
@@ -1171,22 +1192,22 @@ public class ProfileImpl implements CustomerService {
                     "\n" +
                     "</html>");
             if (customerRepository.existsByEmail(signupRequest.getEmail())) {
-              throw new NotFoundException("Kesalahan: Email telah digunakan!");
+                throw new NotFoundException("Kesalahan: Email telah digunakan!");
             }
             String UserEmail = signupRequest.getEmail().trim();
             boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
             if (EmailIsNotValid) {
-              throw new BadRequestException("Kesalahan: Email tidak valid");
+                throw new BadRequestException("Kesalahan: Email tidak valid");
             }
             String UserPassword = signupRequest.getPassword().trim();
             boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
             if (PasswordIsNotValid) {
-             throw new BadRequestException("Kesalahan: Password tidak valid");
+                throw new BadRequestException("Kesalahan: Password tidak valid");
             }
             // Create new user's account
             Customer admin = new Customer();
             admin.setEmail(signupRequest.getEmail());
-            admin.setPassword( encoder.encode(signupRequest.getPassword()));
+            admin.setPassword(encoder.encode(signupRequest.getPassword()));
             admin.setActive(signupRequest.isActive());
             admin.setHp(signupRequest.getHp());
             admin.setName(signupRequest.getName());
@@ -1210,7 +1231,7 @@ public class ProfileImpl implements CustomerService {
             Customer update = customerRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(customer.getName());
             update.setAddress(customer.getAddress());
-            update.setHp(customer.getHp());         
+            update.setHp(customer.getHp());
             update.setPicture(customer.getPicture());
             return customerRepository.save(update);
         } else {

@@ -4,11 +4,14 @@ import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.modal.User;
 import serverbyrtagihan.repository.GetVerification;
@@ -18,12 +21,15 @@ import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.exception.VerificationCodeValidator;
+import serverbyrtagihan.response.LoginRequest;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.UserService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Service
@@ -39,6 +45,9 @@ public class UserImpl implements UserService {
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Autowired
     private GetVerification getVerification;
@@ -786,6 +795,24 @@ public class UserImpl implements UserService {
             throw new NotFoundException("Email not found");
         }
         return forGotPass;
+    }
+    @Override
+    public Map<Object, Object> login(LoginRequest loginRequest) {
+
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
+        if (encoder.matches( loginRequest.getPassword(),user.getPassword())) {
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateToken(authentication);
+            Map<Object, Object> response = new HashMap<>();
+            response.put("data", user);
+            response.put("token", jwt);
+            response.put("type-token", "Customer");
+            return response;
+        }
+        throw new NotFoundException("Password not found");
     }
 
     @Override
