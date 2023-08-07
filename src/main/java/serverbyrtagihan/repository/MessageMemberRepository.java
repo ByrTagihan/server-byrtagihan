@@ -2,12 +2,12 @@ package serverbyrtagihan.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import serverbyrtagihan.modal.Member;
-import serverbyrtagihan.modal.MessageMember;
+import serverbyrtagihan.modal.Message;
 
 import java.util.List;
 
-public interface MessageMemberRepository extends JpaRepository<MessageMember, Long> {
+public interface MessageMemberRepository extends JpaRepository<Message, Long> {
 
-    List<MessageMember> findByMember(Member member);
+    List<Message> findByMember(Member member);
 
 }

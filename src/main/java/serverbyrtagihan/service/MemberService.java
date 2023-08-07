@@ -10,7 +10,6 @@ import java.util.*;
 
 public interface MemberService {
 
-
     Member add(Member member , String jwtToken);
 
     Member getProfileMember(String jwtToken);

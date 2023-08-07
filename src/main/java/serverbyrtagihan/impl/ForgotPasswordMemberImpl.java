@@ -2,22 +2,28 @@ package serverbyrtagihan.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import serverbyrtagihan.dto.MemberDTO;
-import serverbyrtagihan.dto.MessageMemberDTO;
+import org.springframework.web.bind.annotation.RequestParam;
+import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.modal.Member;
-import serverbyrtagihan.modal.MessageMember;
+import serverbyrtagihan.modal.Message;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.repository.MessageMemberRepository;
+import serverbyrtagihan.service.ForgotPasswordService;
 
 @Service
-public class ForgotPasswordMemberImpl {
+public class ForgotPasswordMemberImpl implements ForgotPasswordService {
     @Autowired
     private MemberRepository memberRepository;
 
     @Autowired
     private MessageMemberRepository messageRepository;
 
-    public void forgotPassword(String hp) {
+    @Override
+    public Member findByHp(String hp) {
+        return memberRepository.findByHp(hp);
+    }
+
+    public void forgotPassword(@RequestParam("hp")String hp) {
 
         // Cari user berdasarkan nomor telepon
         Member member = memberRepository.findByHp(hp);
@@ -26,17 +32,17 @@ public class ForgotPasswordMemberImpl {
             String resetCode = generateResetCode();
 
             // Simpan pesan di tabel "Message"
-            MessageMember messageMember = new MessageMember();
-            messageMember.setMember(member);
-            messageMember.setContent("Kode reset password Anda: " + resetCode);
-            messageRepository.save(messageMember);
+            Message message = new Message();
+            message.setMember(member);
+            message.setContent("Kode reset password Anda: " + resetCode);
+            messageRepository.save(message);
 
             // Lakukan logika pengiriman pesan ke nomor telepon, seperti menggunakan layanan SMS gateway
             sendResetCodeViaSMS(hp, resetCode);
         } else {
             // Jika nomor telepon tidak ditemukan, lakukan penanganan kesalahan yang sesuai.
             // Contoh: lempar exception atau kirim pesan bahwa nomor telepon tidak valid.
-            throw new RuntimeException("Nomor telepon tidak valid.");
+            throw new NotFoundException("Nomor telepon tidak ditemukan.");
         }
     }
 
@@ -50,18 +56,5 @@ public class ForgotPasswordMemberImpl {
         // Implementasikan logika pengiriman SMS ke nomor telepon tertentu menggunakan layanan SMS gateway.
         // Contoh: kirim HTTP request ke layanan SMS gateway yang terintegrasi dengan aplikasi Anda.
         System.out.println("Mengirim SMS ke " + hp + ": " + resetCode);
-    }
-
-    // Konversi entitas "Member" dan "Message" menjadi DTO
-    private MemberDTO convertToMemberDTO(MemberDTO member) {
-        MemberDTO memberDTO = new MemberDTO();
-        memberDTO.setHp(member.getHp());
-        return memberDTO;
-    }
-
-    private MessageMemberDTO convertToMessageMemberDTO(MessageMember messageMember) {
-        MessageMemberDTO messageDTO = new MessageMemberDTO();
-        messageDTO.setContent(messageMember.getContent());
-        return messageDTO;
     }
 }

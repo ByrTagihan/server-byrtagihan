@@ -30,7 +30,7 @@ public class MemberDetailsImpl implements UserDetails {
                 admin.getId(),
                 admin.getUniqueId(),
                 admin.getPassword(),
-                admin.getOrganization_id());
+                admin.getOrganizationId());
     }
 
 

@@ -16,12 +16,10 @@ public interface MemberRepository  extends JpaRepository<Member, Long> {
     Page<Member> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 
     Optional<Member> findByUniqueId(String uniqueId);
-    Boolean existsByUniqueId(String uniqueId);
 
+    Boolean existsByUniqueId(String uniqueId);
 
     Optional<Member> findByToken(String token);
-
-    Boolean existsByUniqueId(String uniqueId);
 
     @Query("SELECT u FROM Member u WHERE u.hp = ?1")
     Member findByHp(String hp);

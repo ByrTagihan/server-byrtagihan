@@ -64,7 +64,7 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
-            admin.setOrganization_id(0L);
+            admin.setOrganizationId(0L);
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
@@ -91,7 +91,7 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
-            admin.setOrganization_id(0L);
+            admin.setOrganizationId(0L);
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");

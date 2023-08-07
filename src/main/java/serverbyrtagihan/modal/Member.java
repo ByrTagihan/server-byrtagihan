@@ -32,7 +32,7 @@ Member extends DateConfig{
     @Column(name = "picture")
     private String picture;
     @Column(name = "organization_id")
-    private Long organization_id;
+    private Long organizationId;
 
     @Column(name = "active")
     private boolean active;
@@ -164,17 +164,20 @@ Member extends DateConfig{
         this.lastLogin = lastLogin;
     }
 
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    public Long getOrganization_id() {
-        return organization_id;
-    }
-
-    public void setOrganization_id(Long organization_id) {
-        this.organization_id = organization_id;
     }
 }
+

@@ -385,7 +385,7 @@ public class BillServiceImpl implements BillService {
         if (typeToken.equals("Member")) {
             String unique = claims.getSubject();
             Member member = memberRepository.findByUniqueId(unique).get();
-            String id = String.valueOf( member.getOrganization_id());
+            String id = String.valueOf( member.getOrganizationId());
             int year = Calendar.getInstance().get(Calendar.YEAR);
             List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
             List<ReportBill> billingSummaryDTOList = new ArrayList<>();

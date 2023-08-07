@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.BadRequestException;
 import org.springframework.data.domain.Page;
 import serverbyrtagihan.repository.MemberRepository;
@@ -56,19 +57,7 @@ public class MemberController {
 
 
     @PostMapping("/member/login")
-    public CommonResponse<?> authenticate(@RequestBody LoginMemberRequest loginRequest) {
-        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("UniqueId not found"));
-        boolean conPassword = encoder.matches(loginRequest.getPassword(), member.getPassword());
-        if (conPassword) {
-            String token = jwtUtils.generateTokenMember(member.getUniqueId());
-            Map<Object, Object> response = new HashMap<>();
-            response.put("data", member);
-            response.put("token", token);
-            response.put("type-token", "Member");
-            return ResponseHelper.ok(response);
-        } else {
-            throw new NotFoundException("Password not valid");
-        }
+
     public CommonResponse<?> authenticate( @RequestBody LoginMember loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUniqueId(), loginRequest.getPassword()));
@@ -549,8 +538,7 @@ public class MemberController {
         return ResponseHelper.ok(service.put(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }
     @PutMapping(path = "/user/member/{id}")
-    public CommonResponse<Member> putInUser (@PathVariable("id") Long id, @RequestBody MemberDTO
-            memberDTO, HttpServletRequest request){
+
     public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberUserDto memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
