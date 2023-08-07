@@ -1,9 +1,11 @@
 package serverbyrtagihan.modal;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "member")
@@ -14,8 +16,14 @@ Member extends DateConfig{
     @Id
     private Long id;
 
+    @Column(name = "organization_id")
+    private Long organization_id;
+
+    @Column(name = "organization_name")
+    private String organization_name;
+
     @Column(name = "unique_id")
-    private String uniqueId;
+    private String unique_id;
 
     @Column(name = "name")
     private String name;
@@ -28,17 +36,23 @@ Member extends DateConfig{
 
     @Column(name = "password")
     private String password;
+
+    @Column(name = "token")
+    private String token;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "last_login")
+    private Date last_login;
+
     @Lob
     @Column(name = "picture")
     private String picture;
+
     @Column(name = "organization_id")
     private Long organizationId;
 
     @Column(name = "active")
     private boolean active;
-
-    @Column(name = "token")
-    private String token;
 
     @Column(name = "va_bni")
     private String vaBni;
@@ -56,16 +70,16 @@ Member extends DateConfig{
     private String username;
 
 
+    @Column(name = "va_bni")
+    private String va_bni;
+
+    @Column(name = "last_payment_id_bni")
+    private Long last_payment_id_bni;
+
+    @Column(name = "trx_id_bni")
+    private Long trx_id_bni;
 
     public Member() {
-    }
-
-    public String getUniqueId() {
-        return uniqueId;
-    }
-
-    public void setUniqueId(String uniqueId) {
-        this.uniqueId = uniqueId;
     }
 
     public Long getId() {
@@ -74,6 +88,30 @@ Member extends DateConfig{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getOrganization_id() {
+        return organization_id;
+    }
+
+    public void setOrganization_id(Long organization_id) {
+        this.organization_id = organization_id;
+    }
+
+    public String getOrganization_name() {
+        return organization_name;
+    }
+
+    public void setOrganization_name(String organization_name) {
+        this.organization_name = organization_name;
+    }
+
+    public String getUnique_id() {
+        return unique_id;
+    }
+
+    public void setUnique_id(String unique_id) {
+        this.unique_id = unique_id;
     }
 
     public String getName() {
@@ -106,22 +144,6 @@ Member extends DateConfig{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     public String getToken() {
@@ -164,6 +186,54 @@ Member extends DateConfig{
         this.lastLogin = lastLogin;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getVa_bni() {
+        return va_bni;
+    }
+
+    public void setVa_bni(String va_bni) {
+        this.va_bni = va_bni;
+    }
+
+    public Long getLast_payment_id_bni() {
+        return last_payment_id_bni;
+    }
+
+    public void setLast_payment_id_bni(Long last_payment_id_bni) {
+        this.last_payment_id_bni = last_payment_id_bni;
+    }
+
+    public Long getTrx_id_bni() {
+        return trx_id_bni;
+    }
+
+    public void setTrx_id_bni(Long trx_id_bni) {
+        this.trx_id_bni = trx_id_bni;
+    }
+
+    public Date getLast_login() {
+        return last_login;
+    }
+
+    public void setLast_login(Date last_login) {
+        this.last_login = last_login;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
     public Long getOrganizationId() {
         return organizationId;
     }
@@ -172,12 +242,11 @@ Member extends DateConfig{
         this.organizationId = organizationId;
     }
 
-    public String getUsername() {
-        return username;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
-

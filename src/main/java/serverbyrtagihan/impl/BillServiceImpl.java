@@ -295,8 +295,10 @@ public class BillServiceImpl implements BillService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         Long memberId = Long.valueOf(claims.getId());
+        String uniqueId = claims.getSubject();
         if (typeToken.equals("Member")) {
             Bill bills = billRepository.findByIdInMember(memberId, id);
+            Member members = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Member Not found"));;
             if (bills.getPaid_id() != 0) {
                 throw new NotFoundException("Tagihan Sudah Dibayar");
             }
@@ -306,6 +308,14 @@ public class BillServiceImpl implements BillService {
             bills.setPaid_amount(bills.getAmount());
             bills.setPayment_id(payment.getId());
             billRepository.save(bills);
+
+            String cid = "99129"; // from BNI
+            String prefix = "988"; // from BNI
+            String va_number = prefix + cid + members.getHp();
+
+            if (members.getVa_bni() == null) {
+                members.setVa_bni(va_number);
+            }
 
             payment.setOrganization_id(bills.getOrganization_id());
             payment.setOrganization_name(bills.getOrganization_name());

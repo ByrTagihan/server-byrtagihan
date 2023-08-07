@@ -22,7 +22,7 @@ public class SignUpMemberRequest {
     @Column(name = "hp")
     private String hp;
 
-    public String getUniqueId() {
+    public String getUnique_id() {
         return uniqueId;
     }
 
