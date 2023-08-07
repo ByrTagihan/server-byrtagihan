@@ -40,9 +40,8 @@ Member extends DateConfig {
     @Column(name = "token")
     private String token;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_login")
-    private Date last_login;
+    private String last_login;
 
     @Lob
     @Column(name = "picture")
@@ -132,11 +131,11 @@ Member extends DateConfig {
         this.token = token;
     }
 
-    public Date getLast_login() {
+    public String getLast_login() {
         return last_login;
     }
 
-    public void setLast_login(Date last_login) {
+    public void setLast_login(String last_login) {
         this.last_login = last_login;
     }
 

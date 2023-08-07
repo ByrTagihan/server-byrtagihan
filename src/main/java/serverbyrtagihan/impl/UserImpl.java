@@ -27,6 +27,9 @@ import serverbyrtagihan.service.UserService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -796,12 +799,17 @@ public class UserImpl implements UserService {
         }
         return forGotPass;
     }
+
     @Override
     public Map<Object, Object> login(LoginRequest loginRequest) {
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
-        if (encoder.matches( loginRequest.getPassword(),user.getPassword())) {
-
+        if (encoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            LocalDateTime waktuSaatIni = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String waktuFormatted = waktuSaatIni.format(formatter);
+            user.setLast_login(waktuFormatted);
+            userRepository.save(user);
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -809,6 +817,7 @@ public class UserImpl implements UserService {
             Map<Object, Object> response = new HashMap<>();
             response.put("data", user);
             response.put("token", jwt);
+            response.put("last_login", waktuFormatted);
             response.put("type-token", "Customer");
             return response;
         }
@@ -816,7 +825,7 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public User update(ProfileDTO profileDTO , String jwtToken) {
+    public User update(ProfileDTO profileDTO, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
@@ -845,7 +854,7 @@ public class UserImpl implements UserService {
         String email = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-        return userRepository.findAll();
+            return userRepository.findAll();
         } else {
             throw new BadRequestException("Token not valid");
         }

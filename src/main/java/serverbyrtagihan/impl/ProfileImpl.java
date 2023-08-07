@@ -32,6 +32,11 @@ import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -118,9 +123,16 @@ public class ProfileImpl implements CustomerService {
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
+
+            LocalDateTime waktuSaatIni = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String waktuFormatted = waktuSaatIni.format(formatter);
+            customer.setLast_login(waktuFormatted);
+            customerRepository.save(customer);
             Map<Object, Object> response = new HashMap<>();
             response.put("data", customer);
             response.put("token", jwt);
+            response.put("last_login", waktuFormatted);
             response.put("type-token", "Customer");
             return response;
         }

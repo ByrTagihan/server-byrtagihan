@@ -22,6 +22,9 @@ import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -125,9 +128,15 @@ public class MemberImpl implements MemberService {
                     new UsernamePasswordAuthenticationToken(loginRequest.getUnique_id(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateTokenMember(authentication);
+            LocalDateTime waktuSaatIni = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String waktuFormatted = waktuSaatIni.format(formatter);
+            member.setLast_login(waktuFormatted);
+            memberRepository.save(member);
             Map<Object, Object> response = new HashMap<>();
             response.put("data", member);
             response.put("token", jwt);
+            response.put("last_login", waktuFormatted);
             response.put("type-token", "Customer");
             return response;
         }
