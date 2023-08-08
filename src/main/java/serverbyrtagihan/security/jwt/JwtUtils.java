@@ -9,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import serverbyrtagihan.impl.MemberDetailsImpl;
 import serverbyrtagihan.impl.UserDetailsImpl;
+import serverbyrtagihan.modal.Customer;
+import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.impl.CustomerDetailsImpl;
@@ -32,14 +34,18 @@ public class JwtUtils {
     UserRepository userRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    CustomerRepository customerRepository;
 
 
 
     public String generateJwtToken(Authentication authentication) {
         CustomerDetailsImpl adminPrincipal = (CustomerDetailsImpl) authentication.getPrincipal();
+        Customer customer = customerRepository.findByEmail(adminPrincipal.getUsername()).get();
         return Jwts.builder()
                 .claim("id" , adminPrincipal.getId())
                 .setAudience("Customer")
+                .claim("data",customer )
                 .setSubject((adminPrincipal.getUsername()))
                 .setId(String.valueOf(adminPrincipal.getOrganizationIdId()))
                 .setIssuedAt(new Date())
@@ -68,10 +74,12 @@ public class JwtUtils {
 
     public String generateTokenMember(Authentication authentication) {
         MemberDetailsImpl adminPrincipal = (MemberDetailsImpl) authentication.getPrincipal();
+        Member member = memberRepository.findByUniqueId(adminPrincipal.getUsername()).get();
         return Jwts.builder()
                 .setSubject(adminPrincipal.getUsername())
                 .setId(String.valueOf(adminPrincipal.getId()))
                 .setAudience("Member")
+                .claim("data", member)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
