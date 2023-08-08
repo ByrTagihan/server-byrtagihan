@@ -13,6 +13,9 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -37,12 +40,9 @@ public class EcollectionService {
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
 
-                payload.setDatetime_expired(new Date(System.currentTimeMillis() + 3600 * 1000));
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 String payloadJson = objectMapper.writeValueAsString(payload);
-
-                System.out.println(payload.getDatetime_expired());
 
                 BniEncryption hash = new BniEncryption();
                 String cid = "99129"; // from BNI
@@ -53,18 +53,13 @@ public class EcollectionService {
 
                 String parsedData = hash.hashData(payloadJson, cid, key);
                 String decodeData = hash.parseData(parsedData, cid, key);
-                System.out.println(parsedData);
-                System.out.println(decodeData);
-                System.out.println(va_number);
 
                 BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
                 bniRequestDTO.setClient_id(cid);
                 bniRequestDTO.setPrefix(prefix);
                 bniRequestDTO.setData(parsedData);
 
-
                 HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
-                System.out.println("Percobaan");
                 return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
             } else {
                 throw new BadRequestException("Token not valid");

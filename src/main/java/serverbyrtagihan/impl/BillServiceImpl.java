@@ -21,6 +21,9 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
+import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -388,7 +391,13 @@ public class BillServiceImpl implements BillService {
             payment.setChannel_name(channels.getName());
             payment.setBill_ids(String.valueOf(bills.getId()));
             payment.setVa_number(va_number);
-            payment.setVa_expired_date(new Date(System.currentTimeMillis() + 3600 * 1000));
+
+            ZonedDateTime currentDateTime = ZonedDateTime.now();
+            ZonedDateTime newDateTime = currentDateTime.plusHours(1);
+            DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssXXX");
+            String outputDateTime = newDateTime.format(outputFormatter);
+
+            payment.setVa_expired_date(outputDateTime);
             payment.setFee_admin(5000.0);
 
             paymentRepository.save(payment);
@@ -418,8 +427,6 @@ public class BillServiceImpl implements BillService {
                 bniRequestDTO.setClient_id(cid);
                 bniRequestDTO.setPrefix(prefix);
                 bniRequestDTO.setData(parsedData);
-                System.out.println(parsedData);
-                System.out.println(decodeData);
 
                 HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
                 String apiUrl = "https://apibeta.bni-ecollection.com/";
