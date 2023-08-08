@@ -818,7 +818,7 @@ public class UserImpl implements UserService {
             response.put("data", user);
             response.put("token", jwt);
             response.put("last_login", waktuFormatted);
-            response.put("type-token", "Customer");
+            response.put("type-token", "User");
             return response;
         }
         throw new NotFoundException("Password not found");
