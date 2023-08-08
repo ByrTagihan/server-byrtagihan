@@ -5,6 +5,7 @@ import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.response.LoginRequest;
 import serverbyrtagihan.response.SignupRequest;
 
 import javax.mail.MessagingException;
@@ -31,6 +32,8 @@ public interface CustomerService {
     Customer putPicture(Customer customer, String jwtToken);
 
     Page<Customer> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
+
+    Map<Object, Object> login(LoginRequest loginRequest);
 
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 

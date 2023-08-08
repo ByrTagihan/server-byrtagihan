@@ -1,13 +1,15 @@
 package serverbyrtagihan.modal;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "customer")
-public class Customer extends DateConfig  {
+public class Customer extends DateConfig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,7 +17,7 @@ public class Customer extends DateConfig  {
     @Column(name = "email")
     private String email;
 
-    @Column (name = "password")
+    @Column(name = "password")
     private String password;
 
     @Column(name = "nama")
@@ -37,6 +39,9 @@ public class Customer extends DateConfig  {
 
     @Column(name = "token")
     private String token;
+
+    @Column(name = "last_login")
+    private String last_login;
 
 
     @Column(name = "organization_id")
@@ -126,5 +131,13 @@ public class Customer extends DateConfig  {
 
     public void setOrganization_id(Long organization_id) {
         this.organization_id = organization_id;
+    }
+
+    public String getLast_login() {
+        return last_login;
+    }
+
+    public void setLast_login(String last_login) {
+        this.last_login = last_login;
     }
 }

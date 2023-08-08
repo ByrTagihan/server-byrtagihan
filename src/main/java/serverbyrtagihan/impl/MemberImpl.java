@@ -6,17 +6,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
+import org.springframework.security.core.Authentication;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +36,9 @@ public class MemberImpl implements MemberService {
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 
     @Autowired
     JwtUtils jwtUtils;
@@ -108,6 +119,30 @@ public class MemberImpl implements MemberService {
             throw new BadRequestException("Token not valid");
         }
     }
+    @Override
+    public Map<Object, Object> login(LoginMember loginRequest) {
+        Member member = memberRepository.findByUniqueId(loginRequest.getUnique_id()).orElseThrow(() -> new NotFoundException("Username not found"));
+        if (encoder.matches( loginRequest.getPassword(),member.getPassword())) {
+
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUnique_id(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateTokenMember(authentication);
+            LocalDateTime waktuSaatIni = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String waktuFormatted = waktuSaatIni.format(formatter);
+            member.setLast_login(waktuFormatted);
+            memberRepository.save(member);
+            Map<Object, Object> response = new HashMap<>();
+            response.put("data", member);
+            response.put("token", jwt);
+            response.put("last_login", waktuFormatted);
+            response.put("type-token", "Customer");
+            return response;
+        }
+        throw new NotFoundException("Password not found");
+    }
+
 
     @Override
     public Member putPass(PasswordDTO member, String jwtToken) {
