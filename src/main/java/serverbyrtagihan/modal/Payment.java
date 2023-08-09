@@ -35,9 +35,8 @@ public class Payment extends DateConfig {
     @Column(name = "va_number")
     private String va_number;
 
-    @Column(name = "va_expired_date", nullable = false, updatable = false)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date va_expired_date;
+    @Column(name = "va_expired_date")
+    private String va_expired_date;
 
     @Column(name = "status")
     private int status;
@@ -95,11 +94,11 @@ public class Payment extends DateConfig {
         this.va_number = va_number;
     }
 
-    public Date getVa_expired_date() {
+    public String getVa_expired_date() {
         return va_expired_date;
     }
 
-    public void setVa_expired_date(Date va_expired_date) {
+    public void setVa_expired_date(String va_expired_date) {
         this.va_expired_date = va_expired_date;
     }
 

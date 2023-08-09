@@ -1,6 +1,7 @@
 package serverbyrtagihan.service;
 
 import org.springframework.data.domain.Page;
+import serverbyrtagihan.dto.BNIRequestDTO;
 import serverbyrtagihan.dto.ReportBill;
 import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.modal.Payment;
@@ -42,7 +43,7 @@ public interface BillService {
 
     Map<String, Boolean> deleteByIdInMember(Long memberId, Long id, String jwtToken);
 
-    Payment paymentById(Payment payment, Long id, String jwtToken);
+    BNIRequestDTO paymentById(Payment payment, Long id, String jwtToken);
 
     List<ReportBill> getReportRecapBillCustomer(String jwtToken);
 

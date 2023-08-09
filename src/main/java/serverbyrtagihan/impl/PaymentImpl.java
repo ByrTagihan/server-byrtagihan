@@ -83,7 +83,6 @@ public class PaymentImpl implements PaymentService {
             update.setDescription(paymentDto.getDescription());
             update.setPeriode(paymentDto.getPeriode());
             update.setAmount(paymentDto.getAmount());
-            update.setVa_expired_date(new Date(new Date().getTime() + DATE));
             return paymentRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
@@ -108,7 +107,6 @@ public class PaymentImpl implements PaymentService {
             update.setOrganization_name(update.getOrganization_name());
             update.setChannel_id(update.getChannel_id());
             update.setFee_admin(update.getFee_admin());
-            update.setVa_expired_date(new Date(new Date().getTime() +DATE));
             return paymentRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");
