@@ -1,11 +1,13 @@
 package serverbyrtagihan.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EcollectionResponseDTO {
     private String status;
     private String data;
+    private JsonNode datas;
 
     private String message;
 
@@ -31,6 +33,14 @@ public class EcollectionResponseDTO {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public JsonNode getDatas() {
+        return datas;
+    }
+
+    public void setDatas(JsonNode datas) {
+        this.datas = datas;
     }
 }
 

@@ -14,6 +14,8 @@ import serverbyrtagihan.dto.EcollectionResponseDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
+import java.util.Map;
+
 @Service
 public class EcollectionService {
     private final RestTemplate restTemplate;
@@ -58,7 +60,7 @@ public class EcollectionService {
                 if (responseDTO.getData() != null){
                     String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
                     JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
-                    responseDTO.setData(decryptedDataJson.toString());
+                    responseDTO.setDatas(decryptedDataJson);
                 }
 
                 return responseDTO;
