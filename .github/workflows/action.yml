@@ -32,5 +32,5 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
             cd byrtagihan/server-byrtagihan
-            git pull origin develop
-            mvn clean install
+            sudo git pull origin develop
+            sudo mvn clean install
