@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import serverbyrtagihan.dto.EcollectionResponseDTO;
 import serverbyrtagihan.impl.EcollectionService;
 import serverbyrtagihan.dto.EcollectionDTO;
 
@@ -26,13 +27,13 @@ public class EcollectionController {
     }
 
     @PostMapping("/sendToEcollection")
-    public ResponseEntity<String> sendToEcollection(@RequestBody EcollectionDTO payload, HttpServletRequest request) {
+    public ResponseEntity<EcollectionResponseDTO> sendToEcollection(@RequestBody EcollectionDTO payload, HttpServletRequest request) {
         String apiUrl = "https://apibeta.bni-ecollection.com/";
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
 
-        ResponseEntity<String> response = ecollectionService.sendPayloadToEcollection(apiUrl, payload, jwtToken);
+        EcollectionResponseDTO response = ecollectionService.sendPayloadToEcollection(apiUrl, payload, jwtToken);
 
-        return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
 

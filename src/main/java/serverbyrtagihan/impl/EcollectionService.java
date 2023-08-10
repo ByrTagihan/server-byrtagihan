@@ -8,18 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import serverbyrtagihan.dto.BNIRequestDTO;
 import serverbyrtagihan.dto.EcollectionDTO;
-import serverbyrtagihan.dto.ReportBill;
+import serverbyrtagihan.dto.EcollectionResponseDTO;
 import serverbyrtagihan.exception.BadRequestException;
-import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
-
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class EcollectionService {
@@ -30,7 +21,7 @@ public class EcollectionService {
         this.restTemplate = restTemplate;
     }
 
-    public ResponseEntity<String> sendPayloadToEcollection(String apiUrl, EcollectionDTO payload, String jwtToken) {
+    public EcollectionResponseDTO sendPayloadToEcollection(String apiUrl, EcollectionDTO payload, String jwtToken) {
         try {
             Claims claims = JwtUtils.decodeJwt(jwtToken);
             String typeToken = claims.getAudience();
@@ -49,10 +40,7 @@ public class EcollectionService {
                 String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
                 String prefix = "988"; // from BNI
 
-                String va_number = prefix + cid + "69813549";
-
                 String parsedData = hash.hashData(payloadJson, cid, key);
-                String decodeData = hash.parseData(parsedData, cid, key);
 
                 BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
                 bniRequestDTO.setClient_id(cid);
@@ -60,17 +48,24 @@ public class EcollectionService {
                 bniRequestDTO.setData(parsedData);
 
                 HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
-                return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+
+                ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+                String responseBody = responseEntity.getBody();
+
+                EcollectionResponseDTO responseDTO = objectMapper.readValue(responseBody, EcollectionResponseDTO.class);
+                if (responseDTO.getData() != null){
+                    String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
+                    responseDTO.setData(decryptedData);
+                }
+
+                return responseDTO;
             } else {
                 throw new BadRequestException("Token not valid");
             }
         } catch (Exception e) {
             e.printStackTrace();
 
-            // If an exception occurs, return an appropriate ResponseEntity indicating the failure.
-            // You can customize the response based on your requirements.
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to send payload to Ecollection: " + e.getMessage());
+            throw new BadRequestException("Failed to send payload to Ecollection");
         }
     }
 }
