@@ -33,4 +33,6 @@ jobs:
           script: |
             cd byrtagihan/server-byrtagihan
             sudo git pull origin develop
+            ${{ secrets.SSH_PASSWORD }}
             sudo mvn clean install
+            ${{ secrets.SSH_PASSWORD }}
