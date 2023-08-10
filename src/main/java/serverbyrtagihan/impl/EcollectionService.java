@@ -3,6 +3,7 @@ package serverbyrtagihan.impl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -57,8 +58,7 @@ public class EcollectionService {
                 if (responseDTO.getData() != null){
                     String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
                     JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
-                    responseDTO.setData(decryptedData);
-                    responseDTO.setDataJson(decryptedDataJson);
+                    responseDTO.setData(decryptedDataJson.toString());
                 }
 
                 return responseDTO;
