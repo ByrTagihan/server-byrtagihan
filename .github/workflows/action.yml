@@ -24,12 +24,13 @@ jobs:
         continue-on-error: true 
         id: mvn_build
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.0
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@master
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Deploy via SSH
-        run: |
-          ssh javaserver@103.31.250.187 'cd byrtagihan/server-byrtagihan && git pull origin develop && mvn clean install'
-        continue-on-error: true  
+          host: 103.31.250.187
+          username: javaserver
+          password: ${{ secrets.SSH_PASSWORD }}
+          script: |
+            cd byrtagihan/server-byrtagihan
+            echo "${{ secrets.SSH_PASSWORD }}" | sudo -S git pull origin develop
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S mvn clean install
