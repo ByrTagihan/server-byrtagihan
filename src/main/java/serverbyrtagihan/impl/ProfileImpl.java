@@ -133,7 +133,7 @@ public class ProfileImpl implements CustomerService {
             response.put("data", customer);
             response.put("token", jwt);
             response.put("last_login", waktuFormatted);
-            response.put("type-token", "Customer");
+            response.put("type_token", "Customer");
             return response;
         }
         throw new NotFoundException("Password not found");

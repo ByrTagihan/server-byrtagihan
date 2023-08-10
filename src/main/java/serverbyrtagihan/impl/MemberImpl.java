@@ -137,7 +137,7 @@ public class MemberImpl implements MemberService {
             response.put("data", member);
             response.put("token", jwt);
             response.put("last_login", waktuFormatted);
-            response.put("type-token", "Member");
+            response.put("type_token", "Member");
             return response;
         }
         throw new NotFoundException("Password not found");
