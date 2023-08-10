@@ -25,8 +25,10 @@ public class ResponseHelper {
     }
 
     public static <T> ResponseEntity<CommonResponse<T>> error(String eror, HttpStatus httpStatus) {
+        String code = String.valueOf(httpStatus.value());
         CommonResponse<T> response = new CommonResponse<>();
-        response.setStatus(String.valueOf(httpStatus.value()));
+        response.setStatus(code + " ERROR");
+        response.setCode(httpStatus.value());
         response.setMessage(httpStatus.name());
         response.setData((T) eror);
         return new ResponseEntity<>(response, httpStatus);
