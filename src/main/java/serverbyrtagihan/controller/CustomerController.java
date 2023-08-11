@@ -110,23 +110,13 @@ public class CustomerController {
 
     @PostMapping("/customer/login")
     public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
-        Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
-
-        Map<Object, Object> response = new HashMap<>();
-        response.put("data", customer);
-        response.put("token", jwt);
-        response.put("type-token", "Customer");
-        return ResponseHelper.ok(response);
+        return ResponseHelper.ok(customerService.login(loginRequest));
     }
 
     @PostMapping("/user/customer")
-    public CommonResponse<Customer> registerUser(@RequestBody SignupRequest customer , HttpServletRequest request) throws MessagingException {
+    public CommonResponse<Customer> registerUser(@RequestBody SignupRequest customer, HttpServletRequest request) throws MessagingException {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(customerService.post(customer , jwtToken));
+        return ResponseHelper.ok(customerService.post(customer, jwtToken));
     }
 
     @PostMapping("/customer/forgot_password")

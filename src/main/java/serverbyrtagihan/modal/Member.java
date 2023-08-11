@@ -1,7 +1,6 @@
 package serverbyrtagihan.modal;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -10,7 +9,7 @@ import java.util.Date;
 @Entity
 @Table(name = "member")
 public class
-Member extends DateConfig{
+Member extends DateConfig {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -40,9 +39,8 @@ Member extends DateConfig{
     @Column(name = "token")
     private String token;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "last_login")
-    private Date last_login;
+    private String last_login;
 
     @Lob
     @Column(name = "picture")
@@ -160,6 +158,40 @@ Member extends DateConfig{
 
     public void setVaBni(String vaBni) {
         this.vaBni = vaBni;
+
+
+    }
+
+    public String getLast_login() {
+        return last_login;
+    }
+
+    public void setLast_login(String last_login) {
+        this.last_login = last_login;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Long getLastPaymentIdBni() {
@@ -216,37 +248,5 @@ Member extends DateConfig{
 
     public void setTrx_id_bni(Long trx_id_bni) {
         this.trx_id_bni = trx_id_bni;
-    }
-
-    public Date getLast_login() {
-        return last_login;
-    }
-
-    public void setLast_login(Date last_login) {
-        this.last_login = last_login;
-    }
-
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

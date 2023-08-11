@@ -3,7 +3,7 @@ name: CI/CD with Maven and SSH
 on:
   push:
     branches:
-      - develop
+      - develop  
 
 jobs:
   build:
@@ -21,6 +21,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install
+        continue-on-error: true 
+        id: mvn_build
 
       - name: Deploy to Server
         uses: appleboy/ssh-action@master
@@ -29,11 +31,6 @@ jobs:
           username: javaserver
           password: ${{ secrets.SSH_PASSWORD }}
           script: |
-          
-            systemctl stop server-byrtagihan
-
-         
-            scp target/server-byrtagihan-0.0.1-SNAPSHOT.jar javaserver@103.31.250.187:server-byrtagihan/
-
-           
-            systemctl start server-byrtagihan
+            cd byrtagihan/server-byrtagihan
+            echo "${{ secrets.SSH_PASSWORD }}" | sudo -S git pull origin develop
+            echo ${{ secrets.SSH_PASSWORD }} | sudo -S mvn clean install

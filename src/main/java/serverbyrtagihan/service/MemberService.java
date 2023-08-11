@@ -2,6 +2,7 @@ package serverbyrtagihan.service;
 
 
 import org.springframework.data.domain.Page;
+import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
@@ -22,6 +23,8 @@ public interface MemberService {
     Member getById(Long id , String jwtToken);
 
     Member getByIdInUser(Long id, String jwtToken);
+
+    Map<Object, Object> login(LoginMember loginRequest);
 
     Member putPass(PasswordDTO member, String jwtToken);
 

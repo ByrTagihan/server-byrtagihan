@@ -61,19 +61,7 @@ public class UserController {
 
     @PostMapping("/user/login")
     public CommonResponse<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateToken(authentication);
-
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            Map<Object, Object> response = new HashMap<>();
-            response.put("data",user );
-            response.put("token", jwt);
-            response.put("type-token", "User");
-            return ResponseHelper.ok(response);
+            return ResponseHelper.ok(userService.login(loginRequest));
     }
 
     @PostMapping("/user/register")

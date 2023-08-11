@@ -1,5 +1,8 @@
 package serverbyrtagihan.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import javax.persistence.Column;
 import java.util.Date;
 
 public class EcollectionDTO {
@@ -10,7 +13,8 @@ public class EcollectionDTO {
     private String customer_phone;
     private String virtual_account;
     private String trx_id;
-    private Date datetime_expired;
+    @Column(name = "va_expired_date")
+    private String datetime_expired;
     private String description;
     private String type;
 
@@ -72,11 +76,11 @@ public class EcollectionDTO {
         this.trx_id = trx_id;
     }
 
-    public Date getDatetime_expired() {
+    public String getDatetime_expired() {
         return datetime_expired;
     }
 
-    public void setDatetime_expired(Date datetime_expired) {
+    public void setDatetime_expired(String datetime_expired) {
         this.datetime_expired = datetime_expired;
     }
 
