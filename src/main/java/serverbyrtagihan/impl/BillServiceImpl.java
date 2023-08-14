@@ -21,7 +21,6 @@ import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -499,7 +498,7 @@ public class BillServiceImpl implements BillService {
         if (typeToken.equals("Member")) {
             String unique = claims.getSubject();
             Member member = memberRepository.findByUniqueId(unique).get();
-            String id = String.valueOf( member.getOrganizationId());
+            String id = String.valueOf( member.getOrganization_id());
             int year = Calendar.getInstance().get(Calendar.YEAR);
             List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
             List<ReportBill> billingSummaryDTOList = new ArrayList<>();

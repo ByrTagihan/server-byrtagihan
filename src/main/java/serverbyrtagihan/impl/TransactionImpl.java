@@ -125,9 +125,9 @@ public class TransactionImpl implements TransactionService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Member")) {
-            String unique = claims.getSubject();
-            Member member = memberRepository.findByUniqueId(unique).get();
-            String id = String.valueOf( member.getOrganizationId());
+            String unique_id = claims.getSubject();
+            Member member = memberRepository.findByUniqueId(unique_id).get();
+            String id = String.valueOf( member.getOrganization_id());
             int year = Calendar.getInstance().get(Calendar.YEAR);
             List<Object[]> billingSummaryResults = transactionRepository.getReport(year, id);
             List<ReportTranscation> billingSummaryDTOList = new ArrayList<>();

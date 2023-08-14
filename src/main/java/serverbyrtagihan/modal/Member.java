@@ -4,7 +4,6 @@ package serverbyrtagihan.modal;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "member")
@@ -22,7 +21,7 @@ Member extends DateConfig {
     private String organization_name;
 
     @Column(name = "unique_id")
-    private String unique_id;
+    private String uniqueId;
 
     @Column(name = "name")
     private String name;
@@ -46,23 +45,10 @@ Member extends DateConfig {
     @Column(name = "picture")
     private String picture;
 
-    @Column(name = "organization_id")
-    private Long organizationId;
 
     @Column(name = "active")
     private boolean active;
 
-    @Column(name = "va_bni")
-    private String vaBni;
-
-    @Column(name = "last_payment_id_bni")
-    private Long lastPaymentIdBni;
-
-    @Column(name = "trx_id_bni")
-    private Long trxIdBni;
-
-    @Column(name = "last_login")
-    private String lastLogin;
 
     @Column(name = "username")
     private String username;
@@ -104,12 +90,12 @@ Member extends DateConfig {
         this.organization_name = organization_name;
     }
 
-    public String getUnique_id() {
-        return unique_id;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public void setUnique_id(String unique_id) {
-        this.unique_id = unique_id;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public String getName() {
@@ -152,15 +138,6 @@ Member extends DateConfig {
         this.token = token;
     }
 
-    public String getVaBni() {
-        return vaBni;
-    }
-
-    public void setVaBni(String vaBni) {
-        this.vaBni = vaBni;
-
-
-    }
 
     public String getLast_login() {
         return last_login;
@@ -178,13 +155,6 @@ Member extends DateConfig {
         this.picture = picture;
     }
 
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
-    }
 
     public boolean isActive() {
         return active;
@@ -194,29 +164,6 @@ Member extends DateConfig {
         this.active = active;
     }
 
-    public Long getLastPaymentIdBni() {
-        return lastPaymentIdBni;
-    }
-
-    public void setLastPaymentIdBni(Long lastPaymentIdBni) {
-        this.lastPaymentIdBni = lastPaymentIdBni;
-    }
-
-    public Long getTrxIdBni() {
-        return trxIdBni;
-    }
-
-    public void setTrxIdBni(Long trxIdBni) {
-        this.trxIdBni = trxIdBni;
-    }
-
-    public String getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(String lastLogin) {
-        this.lastLogin = lastLogin;
-    }
 
     public String getUsername() {
         return username;

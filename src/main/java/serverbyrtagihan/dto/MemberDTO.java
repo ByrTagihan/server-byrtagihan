@@ -15,14 +15,14 @@ public class MemberDTO {
 
     public String password;
 
-    public String vaBni;
+    public String va_bni;
 
-    public Long lastPaymentIdBni;
+    public Long last_payment_id_bni;
 
-    public Long trxIdBni;
+    public Long trx_id_bni;
 
 
-    public String lastLogin;
+    public String last_login;
 
     @Lob
     public String picture;
@@ -68,37 +68,36 @@ public class MemberDTO {
         this.password = password;
     }
 
-    public String getVaBni() {
-        return vaBni;
+    public String getVa_bni() {
+        return va_bni;
     }
 
-    public void setVaBni(String vaBni) {
-        this.vaBni = vaBni;
+    public void setVa_bni(String va_bni) {
+        this.va_bni = va_bni;
     }
 
-
-    public Long getLastPaymentIdBni() {
-        return lastPaymentIdBni;
+    public Long getLast_payment_id_bni() {
+        return last_payment_id_bni;
     }
 
-    public void setLastPaymentIdBni(Long lastPaymentIdBni) {
-        this.lastPaymentIdBni = lastPaymentIdBni;
+    public void setLast_payment_id_bni(Long last_payment_id_bni) {
+        this.last_payment_id_bni = last_payment_id_bni;
     }
 
-    public Long getTrxIdBni() {
-        return trxIdBni;
+    public Long getTrx_id_bni() {
+        return trx_id_bni;
     }
 
-    public void setTrxIdBni(Long trxIdBni) {
-        this.trxIdBni = trxIdBni;
+    public void setTrx_id_bni(Long trx_id_bni) {
+        this.trx_id_bni = trx_id_bni;
     }
 
-    public String getLastLogin() {
-        return lastLogin;
+    public String getLast_login() {
+        return last_login;
     }
 
-    public void setLastLogin(String lastLogin) {
-        this.lastLogin = lastLogin;
+    public void setLast_login(String last_login) {
+        this.last_login = last_login;
     }
 
     public String getPicture() {

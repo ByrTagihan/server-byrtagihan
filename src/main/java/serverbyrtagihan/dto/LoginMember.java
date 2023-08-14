@@ -4,17 +4,17 @@ import javax.persistence.Column;
 
 public class LoginMember {
     @Column(name = "unique_id")
-    private String unique_id;
+    private String uniqueId;
 
     @Column(name = "password")
     private String password;
 
-    public String getUnique_id() {
-        return unique_id;
+    public String getUniqueId() {
+        return uniqueId;
     }
 
-    public void setUnique_id(String unique_id) {
-        this.unique_id = unique_id;
+    public void setUniqueId(String uniqueId) {
+        this.uniqueId = uniqueId;
     }
 
     public String getPassword() {

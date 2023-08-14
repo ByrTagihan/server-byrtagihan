@@ -4,11 +4,12 @@ import javax.persistence.Column;
 
 public class LoginMemberRequest {
 
-    @Column(name = "UniqueId")
+    @Column(name = "unique_id")
     private String uniqueId;
 
     @Column(name = "password")
     private String password;
+
 
     public String getUniqueId() {
         return uniqueId;

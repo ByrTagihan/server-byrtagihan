@@ -59,11 +59,11 @@ public class MemberController {
     @PostMapping("/member/login")
 
 
-    public CommonResponse<?> authenticate(@RequestBody LoginMember loginRequest) {
-        Member member = memberRepository.findByUniqueId(loginRequest.getUnique_id()).orElseThrow(() -> new NotFoundException("Username not found"));
+    public CommonResponse<?> authenticate(@RequestBody LoginMemberRequest loginRequest) {
+        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Username not found"));
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUnique_id(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getUniqueId(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateTokenMember(authentication);
         Map<Object, Object> response = new HashMap<>();
@@ -77,7 +77,7 @@ public class MemberController {
 
     @PostMapping("/member/register")
     public CommonResponse<?> registerUser(@Valid @RequestBody SignUpMemberRequest signUpMemberRequest) throws MessagingException {
-        String unique_id = signUpMemberRequest.getUnique_id();
+        String unique_id = signUpMemberRequest.getUniqueId();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(unique_id);
@@ -306,7 +306,7 @@ public class MemberController {
                 "                            <td class=\"v-container-padding-padding\" style=\"overflow-wrap:break-word;word-break:break-word;padding:32px 46px 10px;font-family:arial,helvetica,sans-serif;\" align=\"left\">\n" +
                 "\n" +
                 "                              <div class=\"v-color v-text-align v-line-height\" style=\"color: #34495e; line-height: 140%; text-align: left; word-wrap: break-word;\">\n" +
-                "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Username:</span>" + signUpMemberRequest.getUnique_id() + "</p>\n" +
+                "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Username:</span>" + signUpMemberRequest.getUniqueId() + "</p>\n" +
                 "                                <p style=\"line-height: 140%; font-size: 14px;\"><span style=\"font-size: 12px; line-height: 16.8px;\">Password:</span>" + signUpMemberRequest.getPassword() + "</p>\n" +
                 "                                <p style=\"line-height: 140%; font-size: 14px;\">&nbsp;</p>\n" +
                 "                                <p style=\"line-height: 140%; font-size: 14px;\">Selamat menggunakan aplikasi byrtagihan.com!</p>\n" +
@@ -411,7 +411,7 @@ public class MemberController {
                 "</body>\n" +
                 "\n" +
                 "</html>");
-        if (memberRepository.existsByUniqueId(signUpMemberRequest.getUnique_id())) {
+        if (memberRepository.existsByUniqueId(signUpMemberRequest.getUniqueId())) {
             throw new BadRequestException("Unique id is already");
         }
 
@@ -422,7 +422,7 @@ public class MemberController {
         }
         // Create new member's account
         Member member = new Member();
-        member.setUnique_id(signUpMemberRequest.getUnique_id());
+        member.setUniqueId(signUpMemberRequest.getUniqueId());
         member.setPassword(encoder.encode(signUpMemberRequest.getPassword()));
         member.setActive(signUpMemberRequest.isActive());
         member.setHp(signUpMemberRequest.getHp());

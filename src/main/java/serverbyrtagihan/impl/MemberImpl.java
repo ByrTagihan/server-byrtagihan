@@ -13,8 +13,6 @@ import serverbyrtagihan.dto.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
@@ -62,7 +60,7 @@ public class MemberImpl implements MemberService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
-            if (memberRepository.findByUniqueId(member.getUnique_id()).isPresent()) {
+            if (memberRepository.findByUniqueId(member.getUniqueId()).isPresent()) {
                 throw new BadRequestException("Unique id telah digunakan");
             }
             String UserPassword = member.getPassword().trim();
@@ -72,7 +70,7 @@ public class MemberImpl implements MemberService {
             }
             // Create new user's account
             Member admin = new Member();
-            admin.setUnique_id(member.getUnique_id());
+            admin.setUniqueId(member.getUniqueId());
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
@@ -89,7 +87,7 @@ public class MemberImpl implements MemberService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            if (memberRepository.findByUniqueId(member.getUnique_id()).isPresent()) {
+            if (memberRepository.findByUniqueId(member.getUniqueId()).isPresent()) {
                 throw new BadRequestException("Unique id telah digunakan");
             }
             String UserPassword = member.getPassword().trim();
@@ -99,7 +97,7 @@ public class MemberImpl implements MemberService {
             }
             // Create new user's account
             Member admin = new Member();
-            admin.setUnique_id(member.getUnique_id());
+            admin.setUniqueId(member.getUniqueId());
             admin.setPassword(encoder.encode(member.getPassword()));
             admin.setHp(member.getHp());
             admin.setName(member.getName());
@@ -135,11 +133,11 @@ public class MemberImpl implements MemberService {
     }
     @Override
     public Map<Object, Object> login(LoginMember loginRequest) {
-        Member member = memberRepository.findByUniqueId(loginRequest.getUnique_id()).orElseThrow(() -> new NotFoundException("Username not found"));
+        Member member = memberRepository.findByUniqueId(loginRequest.getUniqueId()).orElseThrow(() -> new NotFoundException("Username not found"));
         if (encoder.matches( loginRequest.getPassword(),member.getPassword())) {
 
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUnique_id(), loginRequest.getPassword()));
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUniqueId(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateTokenMember(authentication);
             LocalDateTime waktuSaatIni = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
@@ -161,10 +159,10 @@ public class MemberImpl implements MemberService {
     @Override
     public Member putPass(PasswordDTO member, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String uniqueId = claims.getSubject();
+        String unique_id = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Member")) {
-            Member update = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            Member update = memberRepository.findByUniqueId(unique_id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             boolean conPassword = encoder.matches(member.getOld_password(), update.getPassword());
             if (conPassword) {
                 if (member.getNew_password().equals(member.getConfirm_new_password())) {
@@ -184,10 +182,10 @@ public class MemberImpl implements MemberService {
     @Override
     public Member getProfileMember(String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String uniqueId = claims.getSubject();
+        String unique_id = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Member")) {
-            return memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            return memberRepository.findByUniqueId(unique_id).orElseThrow(() -> new NotFoundException("Id Not Found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -285,10 +283,10 @@ public class MemberImpl implements MemberService {
     @Override
     public Member update(Long id, MemberDTO memberDTO, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String uniqueId = claims.getSubject();
+        String unique_id = claims.getSubject();
         String typeToken = claims.getAudience();
         if (typeToken.equals("Member")) {
-            Member update = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            Member update = memberRepository.findByUniqueId(unique_id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(memberDTO.getName());
             update.setAddress(memberDTO.getAddress());
             update.setHp(memberDTO.getHp());

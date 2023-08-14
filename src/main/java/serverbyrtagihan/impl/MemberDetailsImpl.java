@@ -13,24 +13,24 @@ public class MemberDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
     private Long id;
     private String username;
-    private Long organizationId;
+    private Long organization_id;
 
     @JsonIgnore
     private String password;
 
-    public MemberDetailsImpl(Long id, String unique_id, String password, Long organizationId) {
+    public MemberDetailsImpl(Long id, String unique_id, String password, Long organization_id) {
         this.id = id;
         this.username = unique_id;
         this.password = password;
-        this.organizationId = organizationId;
+        this.organization_id = organization_id;
     }
 
     public static MemberDetailsImpl buildMember(Member admin) {
         return new MemberDetailsImpl(
                 admin.getId(),
-                admin.getUnique_id(),
+                admin.getUniqueId(),
                 admin.getPassword(),
-                admin.getOrganizationId());
+                admin.getOrganization_id());
     }
 
 
@@ -38,8 +38,8 @@ public class MemberDetailsImpl implements UserDetails {
         return id;
     }
 
-    public Long getOrganizationIdId() {
-        return organizationId;
+    public Long getOrganization_id() {
+        return organization_id;
     }
 
 
