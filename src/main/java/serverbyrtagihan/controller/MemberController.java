@@ -2,6 +2,8 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,11 +15,13 @@ import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.BadRequestException;
 import org.springframework.data.domain.Page;
+import serverbyrtagihan.impl.ForgotPasswordMemberImpl;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.service.ForgotPasswordService;
 import serverbyrtagihan.service.MemberService;
 import serverbyrtagihan.util.Pagination;
 
@@ -52,6 +56,13 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private ForgotPasswordMemberImpl forgotPasswordService;
+
+    @Autowired
+    private ForgotPasswordService forgotService;
+
+
 
     private static final String JWT_PREFIX = "jwt ";
 
@@ -72,6 +83,41 @@ public class MemberController {
         response.put("type-token", "Member");
         return ResponseHelper.ok(response);
 
+    }
+
+    @PostMapping("/member/forgot")
+    public ResponseEntity<?> forgotPassword(@RequestBody MemberDTO memberDTO) {
+
+        // Ambil nomor telepon dari objek DTO
+        String hp = memberDTO.getHp();
+
+        Member member = forgotService.findByHp(hp);
+        if (member != null) {
+            // Jika pengguna ditemukan, lakukan proses pengiriman kode reset password
+            // ... implementasi proses pengiriman kode reset password ...
+
+            // Jika berhasil, buat objek CustomResponse dengan nilai yang sesuai
+            int status = 200;
+            String code = "SUCCESS";
+            Object data = member;
+            String message = "Kode reset telah dikirim ke nomor telepon Anda";
+
+            CustomResponse response = new CustomResponse(status, code, data, message);
+
+            // Kembalikan respons dengan objek CustomResponse sebagai body dan status 200 OK
+            return ResponseEntity.ok(response);
+        } else {
+            // Jika pengguna tidak ditemukan, berikan respons error
+            int status = 400;
+            String code = "ERROR";
+            Object data = null;
+            String message = "User with the provided phone number not found.";
+
+            CustomResponse response = new CustomResponse(status, code, data, message);
+
+            // Kembalikan respons dengan objek CustomResponse sebagai body dan status 400 Bad Request
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
 
