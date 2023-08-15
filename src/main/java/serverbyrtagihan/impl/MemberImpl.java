@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.dto.LoginMember;
+import serverbyrtagihan.modal.Message;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
@@ -290,5 +291,33 @@ public class MemberImpl implements MemberService {
             throw new BadRequestException("Token not valid");
         }
 
+    }
+
+    @Override
+    public Member getProfile(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String unique = claims.getSubject();
+        if (typeToken.equals("Member")) {
+            return memberRepository.findByUniqueId(unique).get();
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public Member putProfile(Member member, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String unique = claims.getSubject();
+        if (typeToken.equals("Member")) {
+            Member update = memberRepository.findByUniqueId(unique).get();
+            update.setName(member.getName());
+            update.setAddress(member.getAddress());
+            update.setHp(member.getHp());
+            return memberRepository.save(update);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
     }
 }

@@ -60,6 +60,7 @@ public class EcollectionService {
                 if (responseDTO.getData() != null){
                     String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
                     JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
+                    responseDTO.setData(decryptedData);
                     responseDTO.setDatas(decryptedDataJson);
                 }
 
