@@ -482,93 +482,6 @@ public class MemberController {
 
     }
 
-
-        @PostMapping("/customer/member")
-        public CommonResponse<Member> registerMember (@RequestBody Member member, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.add(member, jwtToken));
-        }
-
-        @PostMapping("/user/member")
-        public CommonResponse<Member> registerMemberInUser (@RequestBody Member member, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-
-            return ResponseHelper.ok(service.addInUser(member, jwtToken));
-        }
-
-
-        @GetMapping(path = "/customer/member/{id}")
-        public CommonResponse<Member> getByID (@PathVariable("id") Long id, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.getById(id, jwtToken));
-        }
-
-        @GetMapping(path = "/user/member/{id}")
-        public CommonResponse<Member> getByIDInUser (@PathVariable("id") Long id, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.getByIdInUser(id, jwtToken));
-        }
-
-        @GetMapping(path = "/customer/member")
-        public PaginationResponse<List<Member>> getAll (
-                HttpServletRequest request,
-                @RequestParam(defaultValue = Pagination.page, required = false) Long page,
-                @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
-                @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
-                @RequestParam(required = false) String search
-    ){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-
-            Page<Member> channelPage;
-
-            if (search != null && !search.isEmpty()) {
-                channelPage = service.getAll(jwtToken, page, limit, sort, search);
-            } else {
-                channelPage = service.getAll(jwtToken, page, limit, sort, null);
-            }
-
-            List<Member> channels = channelPage.getContent();
-            long totalItems = channelPage.getTotalElements();
-            int totalPages = channelPage.getTotalPages();
-
-            Map<String, Integer> pagination = new HashMap<>();
-            pagination.put("total", (int) totalItems);
-            pagination.put("page", Math.toIntExact(page));
-            pagination.put("total_page", totalPages);
-
-            return ResponseHelper.okWithPagination(channels, pagination);
-        }
-
-        @GetMapping(path = "/user/member")
-        public PaginationResponse<List<Member>> getAllInUser (
-                HttpServletRequest request,
-                @RequestParam(defaultValue = Pagination.page, required = false) Long page,
-                @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
-                @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
-                @RequestParam(required = false) String search
-    ){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-
-            Page<Member> channelPage;
-
-            if (search != null && !search.isEmpty()) {
-                channelPage = service.getAllInUser(jwtToken, page, limit, sort, search);
-            } else {
-                channelPage = service.getAllInUser(jwtToken, page, limit, sort, null);
-            }
-
-            List<Member> channels = channelPage.getContent();
-            long totalItems = channelPage.getTotalElements();
-            int totalPages = channelPage.getTotalPages();
-
-            Map<String, Integer> pagination = new HashMap<>();
-            pagination.put("total", (int) totalItems);
-            pagination.put("page", Math.toIntExact(page));
-            pagination.put("total_page", totalPages);
-
-            return ResponseHelper.okWithPagination(channels, pagination);
-        }
-
         @GetMapping(path = "/member/profile")
         public CommonResponse<Member> getById (HttpServletRequest request){
             String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
@@ -580,41 +493,6 @@ public class MemberController {
         update, HttpServletRequest request){
             String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
             return ResponseHelper.ok(memberService.update(id, update, jwtToken));
-        }
-
-
-        @PutMapping(path = "/customer/member/{id}")
-        public CommonResponse<Member> put (@PathVariable("id") Long id, @RequestBody MemberDTO
-        memberDTO, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.put(modelMapper.map(memberDTO, Member.class), id, jwtToken));
-        }
-
-        @PutMapping(path = "/user/member/{id}")
-
-        public CommonResponse<Member> putInUser (@PathVariable("id") Long id, @RequestBody MemberUserDto
-        memberDTO, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
-        }
-
-        @PutMapping(path = "/customer/member/{id}/password")
-        public CommonResponse<Member> putPass (@PathVariable("id") Long id, @RequestBody Password
-        memberDTO, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.putPassword(modelMapper.map(memberDTO, Member.class), id, jwtToken));
-        }
-
-        @DeleteMapping(path = "/customer/member/{id}")
-        public CommonResponse<?> delete (@PathVariable("id") Long id, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.delete(id, jwtToken));
-        }
-
-        @DeleteMapping(path = "/user/member/{id}")
-        public CommonResponse<?> deleteInUser (@PathVariable("id") Long id, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(service.deleteInUser(id, jwtToken));
         }
 
         @PutMapping(path = "/member/password")

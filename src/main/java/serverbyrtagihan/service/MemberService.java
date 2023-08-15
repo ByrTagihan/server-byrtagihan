@@ -42,4 +42,9 @@ public interface MemberService {
     Map<String, Boolean> delete(Long id , String jwtToken);
 
     Map<String, Boolean> deleteInUser(Long id, String jwtToken);
+
+
+    Member getProfile(String jwtToken);
+
+    Member putProfile(Member member, String jwtToken);
 }

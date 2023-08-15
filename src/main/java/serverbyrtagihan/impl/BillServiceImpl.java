@@ -421,7 +421,6 @@ public class BillServiceImpl implements BillService {
             try {
                 String payloadJson = objectMapper.writeValueAsString(ecollectionDTO);
                 String parsedData = hash.hashData(payloadJson, cid, key);
-                String decodeData = hash.parseData(parsedData, cid, key);
 
                 bniRequestDTO.setClient_id(cid);
                 bniRequestDTO.setPrefix(prefix);

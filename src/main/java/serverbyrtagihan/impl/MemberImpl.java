@@ -338,4 +338,32 @@ public class MemberImpl implements MemberService {
         }
 
     }
+
+    @Override
+    public Member getProfile(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String unique = claims.getSubject();
+        if (typeToken.equals("Member")) {
+            return memberRepository.findByUniqueId(unique).get();
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public Member putProfile(Member member, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String unique = claims.getSubject();
+        if (typeToken.equals("Member")) {
+            Member update = memberRepository.findByUniqueId(unique).get();
+            update.setName(member.getName());
+            update.setAddress(member.getAddress());
+            update.setHp(member.getHp());
+            return memberRepository.save(update);
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
 }
