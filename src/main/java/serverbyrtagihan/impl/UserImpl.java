@@ -858,7 +858,7 @@ public class UserImpl implements UserService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         String email = claims.getSubject();
-        if (typeToken.equals("Member")) {
+        if (typeToken.equals("User")) {
             return userRepository.findByEmail(email).get();
         } else {
             throw new BadRequestException("Token not valid");
