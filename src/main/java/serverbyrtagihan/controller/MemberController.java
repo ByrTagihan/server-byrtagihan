@@ -488,13 +488,11 @@ public class MemberController {
             return ResponseHelper.ok(memberService.getProfileMember(jwtToken));
         }
 
-        @PutMapping(path = "/member/update{id}")
-        public CommonResponse<Member> update (@PathVariable("id") Long id, @RequestBody MemberDTO
-        update, HttpServletRequest request){
-            String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-            return ResponseHelper.ok(memberService.update(id, update, jwtToken));
-        }
-
+    @PutMapping(path = "/member/profile{id}")
+    public CommonResponse<Member> put(HttpServletRequest request, @RequestBody MemberDTO memberDTO) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(service.putProfile(modelMapper.map(memberDTO, Member.class), jwtToken));
+    }
         @PutMapping(path = "/member/password")
         public CommonResponse<Member> putPassword (@RequestBody PasswordDTO password, HttpServletRequest request){
             String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
