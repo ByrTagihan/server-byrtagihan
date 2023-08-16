@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.dto.LoginMember;
+import serverbyrtagihan.dto.MemberDTO;
+import serverbyrtagihan.dto.MemberProfileDTO;
 import serverbyrtagihan.modal.Message;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
@@ -45,7 +47,7 @@ public class MemberImpl implements MemberService {
     JwtUtils jwtUtils;
 
     @Override
-    public Member add(Member member, String jwtToken) {
+    public Member add(MemberDTO member, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("Customer")) {
@@ -72,7 +74,7 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public Member addInUser(Member member, String jwtToken) {
+    public Member addInUser(MemberDTO member, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
@@ -315,6 +317,7 @@ public class MemberImpl implements MemberService {
             update.setName(member.getName());
             update.setAddress(member.getAddress());
             update.setHp(member.getHp());
+            update.setPicture(member.getPicture());
             return memberRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");

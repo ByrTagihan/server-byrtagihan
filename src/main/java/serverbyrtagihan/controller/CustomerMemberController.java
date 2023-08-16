@@ -7,15 +7,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
+import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.PaginationResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.response.SignupRequest;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 import serverbyrtagihan.util.Pagination;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +77,7 @@ public class CustomerMemberController {
     }
 
     @PostMapping("/customer/member")
-    public CommonResponse<Member> registerMember(@RequestBody Member member, HttpServletRequest request) {
+    public CommonResponse<Member> registerMember(@RequestBody MemberDTO member, HttpServletRequest request) throws MessagingException{
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.add(member, jwtToken));
     }

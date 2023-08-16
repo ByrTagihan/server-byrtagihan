@@ -65,10 +65,6 @@ public class CustomerController {
     @Autowired
     CustomerRepository customerRepository;
 
-    public static final String DEFAULT_PAGE_NUMBER = "1";
-    public static final String DEFAULT_PAGE_SIZE = "10";
-    public static final String DEFAULT_SORT_BY = "id";
-    public static final String DEFAULT_SORT_DIRECTION = "asc";
     private static final String JWT_PREFIX = "jwt ";
 
     @GetMapping(path = "/customer/profile")
@@ -101,69 +97,16 @@ public class CustomerController {
         return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
     }
 
-    @DeleteMapping(path = "/user/customer/{id}")
-    public CommonResponse<?> delete(@PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(customerService.delete(id, jwtToken));
-    }
-
 
     @PostMapping("/customer/login")
     public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseHelper.ok(customerService.login(loginRequest));
     }
 
-    @PostMapping("/user/customer")
-    public CommonResponse<Customer> registerUser(@RequestBody SignupRequest customer, HttpServletRequest request) throws MessagingException {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(customerService.post(customer, jwtToken));
-    }
-
     @PostMapping("/customer/forgot_password")
     public CommonResponse<ForGotPass> sendEmail(@RequestBody ForGotPass forGotPass) throws MessagingException {
         return ResponseHelper.ok(customerService.sendEmail(forGotPass));
 
-    }
-
-    @GetMapping(path = "/user/customer")
-    public PaginationResponse<List<Customer>> getAll(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = Pagination.page, required = false) Long page,
-            @RequestParam(defaultValue = Pagination.limit, required = false) Long limit,
-            @RequestParam(defaultValue = Pagination.sort, required = false) String sort,
-            @RequestParam(required = false) String search
-    ) {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-
-        Page<Customer> customerPage;
-
-        if (search != null && !search.isEmpty()) {
-            customerPage = customerService.getAll(jwtToken, page, limit, sort, search);
-        } else {
-            customerPage = customerService.getAll(jwtToken, page, limit, sort, null);
-        }
-
-        List<Customer> customers = customerPage.getContent();
-        long totalItems = customerPage.getTotalElements();
-        int totalPages = customerPage.getTotalPages();
-
-        Map<String, Integer> pagination = new HashMap<>();
-        pagination.put("total", (int) totalItems);
-        pagination.put("page", Math.toIntExact(page));
-        pagination.put("total_page", totalPages);
-
-        return ResponseHelper.okWithPagination(customers, pagination);
-    }
-
-    @GetMapping("/user/customer/{id}")
-    public CommonResponse<Customer> Preview(@PathVariable("id") Long id) {
-        return ResponseHelper.ok(customerService.getById(id));
-    }
-
-    @PutMapping(path = "/user/customer/{id}")
-    public CommonResponse<Customer> put(@RequestBody PutCustomer putCustomer, @PathVariable("id") Long id, HttpServletRequest request) {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(customerService.put2(modelMapper.map(putCustomer, Customer.class), jwtToken, id));
     }
 
 }

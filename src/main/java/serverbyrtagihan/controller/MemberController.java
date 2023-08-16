@@ -62,9 +62,9 @@ public class MemberController {
     }
 
     @PutMapping(path = "/member/profile")
-    public CommonResponse<Member> put(HttpServletRequest request, @RequestBody MemberDTO memberDTO) {
+    public CommonResponse<Member> put(HttpServletRequest request, @RequestBody MemberProfileDTO memberProfileDTO) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(service.putProfile(modelMapper.map(memberDTO, Member.class), jwtToken));
+        return ResponseHelper.ok(service.putProfile(modelMapper.map(memberProfileDTO, Member.class), jwtToken));
     }
 
     @PutMapping(path = "/member/password")

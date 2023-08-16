@@ -62,7 +62,7 @@ public class UserMemberController {
     }
 
     @PostMapping("/user/member")
-    public CommonResponse<Member> registerMemberInUser(@RequestBody Member member, HttpServletRequest request) {
+    public CommonResponse<Member> registerMemberInUser(@RequestBody MemberDTO member, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.addInUser(member, jwtToken));
     }
