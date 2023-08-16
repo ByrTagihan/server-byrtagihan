@@ -12,11 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import serverbyrtagihan.modal.ForGotPassword;
-import serverbyrtagihan.modal.Member;
-import serverbyrtagihan.modal.User;
-import serverbyrtagihan.repository.GetVerification;
-import serverbyrtagihan.repository.UserRepository;
+import serverbyrtagihan.modal.*;
+import serverbyrtagihan.repository.*;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.exception.BadRequestException;
@@ -41,6 +38,13 @@ public class UserImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    BillRepository billRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
+
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -854,10 +858,30 @@ public class UserImpl implements UserService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         String email = claims.getSubject();
-        if (typeToken.equals("Member")) {
+        if (typeToken.equals("User")) {
             return userRepository.findByEmail(email).get();
         } else {
             throw new BadRequestException("Token not valid");
         }
     }
+    @Override
+    public Map<String, Integer> getRecapTotal(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            List<Member> members = memberRepository.findAll();
+            List<Bill> bills = billRepository.findAll();
+            List<Transaction> transactions = transactionRepository.findAll();
+
+            Map<String, Integer> res = new HashMap<>();
+            res.put("member", members.size());
+            res.put("bill", bills.size());
+            res.put("transaction", transactions.size());
+
+            return res;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
 }

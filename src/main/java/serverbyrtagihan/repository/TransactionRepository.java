@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.modal.Channel;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.modal.Transaction;
 
 import java.util.List;
@@ -32,4 +34,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
             "GROUP BY priode " +
             "ORDER BY priode",nativeQuery = true)
     List<Object[]> getReportRoleUser(int year);
+    @Query(value = "SELECT * FROM transaction WHERE organization_id = :organizationId ", nativeQuery = true)
+    List<Transaction> findByOrganizationId(String organizationId);
 }

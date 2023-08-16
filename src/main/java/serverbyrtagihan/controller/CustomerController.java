@@ -106,5 +106,10 @@ public class CustomerController {
         return ResponseHelper.ok(customerService.sendEmail(forGotPass));
 
     }
+    @GetMapping(path = "/customer/report/total")
+    public CommonResponse<?> getReportTotal(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(customerService.getRecapTotal(jwtToken));
+    }
 
 }

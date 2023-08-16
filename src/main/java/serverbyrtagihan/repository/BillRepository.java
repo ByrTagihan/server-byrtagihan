@@ -53,5 +53,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
             "GROUP BY periode " +
             "ORDER BY periode", nativeQuery = true)
     List<Object[]> getReportRoleUser(int year);
+    @Query(value = "SELECT * FROM bill WHERE organization_id = :organizationId ", nativeQuery = true)
+    List<Bill> findByOrganizationId(String organizationId);
 
 }

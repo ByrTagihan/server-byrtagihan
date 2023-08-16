@@ -26,4 +26,6 @@ public interface UserService {
     User updatePassword(Long id, User user);
 
     User getProfile(String jwtToken);
+
+    Map<String, Integer> getRecapTotal(String jwtToken);
 }
