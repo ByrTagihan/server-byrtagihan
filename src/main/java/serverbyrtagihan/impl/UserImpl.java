@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
 import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.modal.User;
 import serverbyrtagihan.repository.GetVerification;
 import serverbyrtagihan.repository.UserRepository;
@@ -849,12 +850,12 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllTagihan(String jwtToken) {
+    public User getProfile(String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String email = claims.getSubject();
         String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            return userRepository.findAll();
+        String email = claims.getSubject();
+        if (typeToken.equals("Member")) {
+            return userRepository.findByEmail(email).get();
         } else {
             throw new BadRequestException("Token not valid");
         }

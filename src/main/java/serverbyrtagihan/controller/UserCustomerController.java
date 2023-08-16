@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.ForGotPassword;
-import serverbyrtagihan.repository.CustomerOrganizationRepository;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
@@ -48,8 +47,7 @@ public class UserCustomerController {
     JwtUtils jwtUtils;
     @Autowired
     private JavaMailSender javaMailSender;
-    @Autowired
-    CustomerOrganizationRepository organizationRepository;
+
     @Autowired
     CustomerRepository customerRepository;
     private static final String JWT_PREFIX = "jwt ";

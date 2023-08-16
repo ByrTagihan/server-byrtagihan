@@ -31,7 +31,7 @@ Member extends DateConfig {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "hp")
+    @Column(name = "hp", unique = true)
     private String hp;
 
     @Column(name = "password")

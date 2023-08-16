@@ -2,34 +2,23 @@ package serverbyrtagihan.dto;
 
 public class CustomerOrganizationDTO {
 
-    public long id;
+    private String name;
 
-    public String name;
-    public String addres;
-    public String hp;
-    public String email;
-    public String city;
-    public String provinsi;
-    public String balance;
-    public String bank_acount_number;
-    public String bank_account_name;
-    public String bank_name;
+    private String address;
 
-    public String getHp() {
-        return hp;
-    }
+    private String hp;
 
-    public void setHp(String hp) {
-        this.hp = hp;
-    }
+    private String email;
 
-    public long getId() {
-        return id;
-    }
+    private String city;
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    private String provinsi;
+
+    private String bank_acount_number;
+
+    private String bank_account_name;
+
+    private String bank_name;
 
     public String getName() {
         return name;
@@ -39,15 +28,21 @@ public class CustomerOrganizationDTO {
         this.name = name;
     }
 
-    public String getAddres() {
-        return addres;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddres(String addres) {
-        this.addres = addres;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
+    public String getHp() {
+        return hp;
+    }
 
+    public void setHp(String hp) {
+        this.hp = hp;
+    }
 
     public String getEmail() {
         return email;
@@ -73,12 +68,8 @@ public class CustomerOrganizationDTO {
         this.provinsi = provinsi;
     }
 
-    public String getBalance() {
-        return balance;
-    }
-
-    public void setBalance(String balance) {
-        this.balance = balance;
+    public String getBank_acount_number() {
+        return bank_acount_number;
     }
 
     public void setBank_acount_number(String bank_acount_number) {

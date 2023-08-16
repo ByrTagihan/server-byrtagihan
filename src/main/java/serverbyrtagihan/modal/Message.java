@@ -46,11 +46,19 @@ public class Message extends DateConfig {
     @Column(name = "send_as")
     private String send_as;
 
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    @Column(name = "content")
+    private String content;
+
+
     public Message() {
 
     }
 
-    public Message(Long id, Long message_type_id, String message_type_name, String subject, String message, Long message_status_id, String message_status_name, String receiver, String receiver_cc, String attachment, Long resend, String send_as) {
+    public Message(Long id, Long message_type_id, String message_type_name, String subject, String message, Long message_status_id, String message_status_name, String receiver, String receiver_cc, String attachment, Long resend, String send_as, Member member, String content) {
         this.id = id;
         this.message_type_id = message_type_id;
         this.message_type_name = message_type_name;
@@ -63,6 +71,8 @@ public class Message extends DateConfig {
         this.attachment = attachment;
         this.resend = resend;
         this.send_as = send_as;
+        this.member = member;
+        this.content = content;
     }
 
     public Long getId() {
@@ -159,5 +169,21 @@ public class Message extends DateConfig {
 
     public void setSend_as(String send_as) {
         this.send_as = send_as;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }

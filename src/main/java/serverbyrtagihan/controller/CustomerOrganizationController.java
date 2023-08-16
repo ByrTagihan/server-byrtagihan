@@ -4,13 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.dto.OrganizationDto;
 import serverbyrtagihan.modal.Channel;
-import serverbyrtagihan.modal.CustomerOrganizationModel;
+import serverbyrtagihan.modal.Organization;
 import serverbyrtagihan.response.PaginationResponse;
-import serverbyrtagihan.service.CustomerOrganizationService;
 import serverbyrtagihan.dto.CustomerOrganizationDTO;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.ResponseHelper;
+import serverbyrtagihan.service.OrganizationService;
 import serverbyrtagihan.util.Pagination;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,19 +24,20 @@ import java.util.Map;
 public class CustomerOrganizationController {
 
     @Autowired
-    private CustomerOrganizationService customerOrganizationService;
+    private OrganizationService organizationService;
     @Autowired
     private ModelMapper modelMapper;
 
     private static final String JWT_PREFIX = "jwt ";
-    @PutMapping(path = "/customer/organization/{id}")
-    public CommonResponse<CustomerOrganizationModel> Put(@RequestBody CustomerOrganizationDTO organizationDTO, @PathVariable("id") Long id, HttpServletRequest request) {
+    @PutMapping(path = "/customer/organization")
+    public CommonResponse<Organization> Put(@RequestBody CustomerOrganizationDTO organizationDTO, @PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(customerOrganizationService.put(id, modelMapper.map(organizationDTO, CustomerOrganizationModel.class), jwtToken));
+        return ResponseHelper.ok(organizationService.putByCustomerId(modelMapper.map(organizationDTO, Organization.class), jwtToken));
     }
 
     @GetMapping(path = "/customer/organization")
-    public CommonResponse<List<CustomerOrganizationModel>> Get(HttpServletRequest request) {
-        return null;
+    public CommonResponse<Organization> Get(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(organizationService.getByCustomerId(jwtToken));
     }
 }

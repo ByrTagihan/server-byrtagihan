@@ -10,6 +10,6 @@ import serverbyrtagihan.modal.Payment;
 
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    @Query(value = "SELECT * FROM table_payment  WHERE description  LIKE CONCAT('%',:keyword, '%') OR priode LIKE CONCAT('%',:keyword, '%') OR amount LIKE CONCAT('%',:keyword, '%')", nativeQuery = true)
+    @Query(value = "SELECT * FROM payment  WHERE description  LIKE CONCAT('%',:keyword, '%') OR priode LIKE CONCAT('%',:keyword, '%') OR amount LIKE CONCAT('%',:keyword, '%')", nativeQuery = true)
     Page<Payment> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
 }

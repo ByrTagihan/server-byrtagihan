@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import serverbyrtagihan.impl.CustomerDetailsImpl;
 import serverbyrtagihan.impl.UserDetailsImpl;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.service.UserService;
 import serverbyrtagihan.dto.*;
@@ -433,14 +434,10 @@ public class UserController {
         return ResponseHelper.ok(userService.update(update, jwtToken));
     }
 
-    @PutMapping(path = "/user/password{id}")
-    public CommonResponse<User> updatePassword(@PathVariable("id") Long id, @RequestBody Password password) {
-        return ResponseHelper.ok(userService.updatePassword(id, modelMapper.map(password, User.class)));
-    }
-
-    @GetMapping("/user/profile")
-    public CommonResponse<List<User>> getAll(String jwtToken) {
-        return ResponseHelper.ok(userService.getAllTagihan(jwtToken));
+    @GetMapping(path = "/user/profile")
+    public CommonResponse<User> getById(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(userService.getProfile(jwtToken));
     }
 
     @PostMapping("/user/forgot_password")

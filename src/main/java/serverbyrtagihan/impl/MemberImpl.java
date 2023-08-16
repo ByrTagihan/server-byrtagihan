@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.dto.MemberProfileDTO;
@@ -21,6 +22,7 @@ import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
 import org.springframework.security.core.Authentication;
+import serverbyrtagihan.repository.MessageRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 
@@ -36,6 +38,9 @@ public class MemberImpl implements MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -168,6 +173,35 @@ public class MemberImpl implements MemberService {
         } else {
             throw new BadRequestException("Token not valid");
         }
+    }
+
+    @Override
+    public Member findByHp(String hp) {
+        return memberRepository.findByHp(hp);
+    }
+
+    public void forgotPassword(@RequestParam("hp")String hp) {
+
+        Member member = memberRepository.findByHp(hp);
+        if (member != null) {
+            String resetCode = generateResetCode();
+
+            Message message = new Message();
+            message.setMember(member);
+            message.setContent("Kode reset password Anda: " + resetCode);
+            messageRepository.save(message);
+            sendResetCodeViaSMS(hp, resetCode);
+        } else {
+            throw new NotFoundException("Nomor telepon tidak ditemukan.");
+        }
+    }
+
+    private String generateResetCode() {
+        return "YOUR_GENERATED_RESET_CODE";
+    }
+
+    private void sendResetCodeViaSMS(String hp, String resetCode) {
+        System.out.println("Mengirim SMS ke " + hp + ": " + resetCode);
     }
 
     @Override

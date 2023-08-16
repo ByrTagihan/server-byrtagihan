@@ -13,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.modal.Bill;
-import serverbyrtagihan.repository.CustomerOrganizationRepository;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.dto.PasswordDTO;
@@ -60,8 +59,7 @@ public class CustomerController {
     JwtUtils jwtUtils;
     @Autowired
     private JavaMailSender javaMailSender;
-    @Autowired
-    CustomerOrganizationRepository organizationRepository;
+
     @Autowired
     CustomerRepository customerRepository;
 

@@ -3,6 +3,8 @@ package serverbyrtagihan.controller;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,6 +55,33 @@ public class MemberController {
     public CommonResponse<?> authenticate(@RequestBody LoginMember loginRequest) {
             return ResponseHelper.ok(service.login(loginRequest));
 
+    }
+
+    @PostMapping("/member/forgot_password")
+    public ResponseEntity<?> forgotPassword(@RequestBody MemberDTO memberDTO) {
+
+        String hp = memberDTO.getHp();
+
+        Member member = service.findByHp(hp);
+        if (member != null) {
+            int status = 200;
+            String code = "SUCCESS";
+            Object data = member;
+            String message = "Kode reset telah dikirim ke nomor telepon Anda";
+
+            CustomResponse response = new CustomResponse(status, code, data, message);
+
+            return ResponseEntity.ok(response);
+        } else {
+            int status = 400;
+            String code = "ERROR";
+            Object data = null;
+            String message = "User with the provided phone number not found.";
+
+            CustomResponse response = new CustomResponse(status, code, data, message);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     @GetMapping(path = "/member/profile")

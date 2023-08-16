@@ -16,7 +16,7 @@ public class Organization extends DateConfig {
     private String name;
 
     @Column(name = "customer_id")
-    private Long customer_id;
+    private Long customer_id = 0L;
 
     @Column(name = "address")
     private String address;
@@ -44,6 +44,9 @@ public class Organization extends DateConfig {
 
     @Column(name = "bank_name")
     private String bank_name;
+
+    @Column(name = "fee_admin")
+    private Double fee_admin = 0.0;
 
     public Organization() {
     }
@@ -142,5 +145,13 @@ public class Organization extends DateConfig {
 
     public void setBank_name(String bank_name) {
         this.bank_name = bank_name;
+    }
+
+    public Double getFee_admin() {
+        return fee_admin;
+    }
+
+    public void setFee_admin(Double fee_admin) {
+        this.fee_admin = fee_admin;
     }
 }

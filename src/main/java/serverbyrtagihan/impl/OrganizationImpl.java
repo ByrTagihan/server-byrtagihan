@@ -2,7 +2,13 @@ package serverbyrtagihan.impl;
 
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.repository.OrganizationRepository;
 import serverbyrtagihan.dto.OrganizationDto;
 import serverbyrtagihan.exception.BadRequestException;
@@ -29,14 +35,26 @@ public class OrganizationImpl implements OrganizationService {
     private JwtUtils jwtUtils;
 
     @Override
-    public List<Organization> get(String jwtToken) {
+    public Page<Organization> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
+
+        Sort.Direction direction = Sort.Direction.ASC;
+        if (sort.startsWith("-")) {
+            sort = sort.substring(1);
+            direction = Sort.Direction.DESC;
+        }
+
+        Pageable pageable = PageRequest.of(Math.toIntExact(page - 1), Math.toIntExact(limit), direction, sort);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-       if (typeToken.equals("User")) {
-          return organizationRepository.findAll();
-       } else {
-          throw new BadRequestException("Token not valid");
-       }
+        if (typeToken.equals("User")) {
+            if (search != null && !search.isEmpty()) {
+                return organizationRepository.findAllByKeyword(search, pageable);
+            } else {
+                return organizationRepository.findAll(pageable);
+            }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
     }
 
     @Override
@@ -53,20 +71,21 @@ public class OrganizationImpl implements OrganizationService {
     @Override
     public Organization put(Long id, Organization organization, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
-      String typeToken = claims.getAudience();
+        String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            organization.setName(organization.getName());
-           organization.setCustomer_id(organization.getCustomer_id());
-           organization.setAddress(organization.getAddress());
-            organization.setHp(organization.getHp());
-            organization.setEmail(organization.getEmail());
-           organization.setCity(organization.getCity());
-            organization.setProvinsi(organization.getProvinsi());
-           organization.setBalance(organization.getBalance());
-           organization.setBank_account_number(organization.getBank_account_number());
-           organization.setBank_account_name(organization.getBank_account_name());
-            organization.setBank_name(organization.getBank_name());
-           return organizationRepository.save(organization);
+            Organization organizations = organizationRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
+            organizations.setName(organization.getName());
+            organizations.setCustomer_id(organization.getCustomer_id());
+            organizations.setAddress(organization.getAddress());
+            organizations.setHp(organization.getHp());
+            organizations.setEmail(organization.getEmail());
+            organizations.setCity(organization.getCity());
+            organizations.setProvinsi(organization.getProvinsi());
+            organizations.setBalance(organization.getBalance());
+            organizations.setBank_account_number(organization.getBank_account_number());
+            organizations.setBank_account_name(organization.getBank_account_name());
+            organizations.setBank_name(organization.getBank_name());
+           return organizationRepository.save(organizations);
        } else {throw new BadRequestException("Token not valid");
 }
     }
@@ -76,17 +95,6 @@ public class OrganizationImpl implements OrganizationService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
-            organization.setName(organization.getName());
-            organization.setCustomer_id(organization.getCustomer_id());
-            organization.setAddress(organization.getAddress());
-            organization.setHp(organization.getHp());
-            organization.setEmail(organization.getEmail());
-            organization.setCity(organization.getCity());
-            organization.setProvinsi(organization.getProvinsi());
-            organization.setBalance(organization.getBalance());
-            organization.setBank_account_number(organization.getBank_account_number());
-            organization.setBank_account_name(organization.getBank_account_name());
-            organization.setBank_name(organization.getBank_name());
            return organizationRepository.save(organization);
        } else {
             throw new BadRequestException("Token not valid");
@@ -108,6 +116,40 @@ public class OrganizationImpl implements OrganizationService {
            }
        } else {
             throw new BadRequestException("Token not valid");
+        }
+    }
+
+    //Customer
+    @Override
+    public Organization getByCustomerId(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String email = claims.getSubject();
+        if (typeToken.equals("Customer")) {
+            return organizationRepository.findByEmail(email).get();
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+    @Override
+    public Organization putByCustomerId(Organization organization, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String email = claims.getSubject();
+        if (typeToken.equals("User")) {
+            Organization organizations = organizationRepository.findByEmail(email).get();
+            organizations.setName(organization.getName());
+            organizations.setAddress(organization.getAddress());
+            organizations.setHp(organization.getHp());
+            organizations.setEmail(organization.getEmail());
+            organizations.setCity(organization.getCity());
+            organizations.setProvinsi(organization.getProvinsi());
+            organizations.setBank_account_number(organization.getBank_account_number());
+            organizations.setBank_account_name(organization.getBank_account_name());
+            organizations.setBank_name(organization.getBank_name());
+            return organizationRepository.save(organizations);
+        } else {throw new BadRequestException("Token not valid");
         }
     }
 }

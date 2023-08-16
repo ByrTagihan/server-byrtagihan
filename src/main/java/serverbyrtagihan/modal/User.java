@@ -8,7 +8,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "table_user")
+@Table(name = "user")
 public class User extends DateConfig {
 
     @Id

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.modal.Message;
 
 import java.util.List;
@@ -35,4 +35,5 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
             @Param("send_as") String sendAs,
             Pageable pageable);
 
+    List<Message> findByMember(Member member);
 }
