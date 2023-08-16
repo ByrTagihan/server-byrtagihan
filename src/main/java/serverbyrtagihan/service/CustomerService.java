@@ -38,4 +38,6 @@ public interface CustomerService {
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 
     Map<String, Boolean> delete(Long id , String jwtToken);
+
+    Map<String, Integer> getRecapTotal(String jwtToken);
 }

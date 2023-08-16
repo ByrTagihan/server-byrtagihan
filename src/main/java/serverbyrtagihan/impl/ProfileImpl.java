@@ -16,8 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
-import serverbyrtagihan.repository.CustomerRepository;
-import serverbyrtagihan.repository.GetVerification;
+import serverbyrtagihan.modal.*;
+import serverbyrtagihan.repository.*;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.exception.BadRequestException;
@@ -26,16 +26,12 @@ import serverbyrtagihan.exception.VerificationCodeValidator;
 import serverbyrtagihan.response.LoginRequest;
 import serverbyrtagihan.response.SignupRequest;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.modal.Customer;
-import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.service.CustomerService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -53,6 +49,12 @@ public class ProfileImpl implements CustomerService {
     private JavaMailSender javaMailSender;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    MemberRepository memberRepository;
+    @Autowired
+    BillRepository billRepository;
+    @Autowired
+    TransactionRepository transactionRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -1330,4 +1332,27 @@ public class ProfileImpl implements CustomerService {
         }
 
     }
+    @Override
+    public Map<String, Integer> getRecapTotal(String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String typeToken = claims.getAudience();
+        String organizationId = claims.getId();
+
+        if (typeToken.equals("Customer")) {
+            List<Member> members = memberRepository.findByOrganizationId(organizationId);
+            List<Bill> bills = billRepository.findByOrganizationId(organizationId);
+            List<Transaction> transactions = transactionRepository.findByOrganizationId(organizationId);
+
+            Map<String, Integer> res = new HashMap<>();
+            res.put("member", members.size());
+            res.put("bill", bills.size());
+            res.put("transaction", transactions.size());
+
+            return res;
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
+
+
 }

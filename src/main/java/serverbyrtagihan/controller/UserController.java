@@ -62,7 +62,7 @@ public class UserController {
 
     @PostMapping("/user/login")
     public CommonResponse<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-            return ResponseHelper.ok(userService.login(loginRequest));
+        return ResponseHelper.ok(userService.login(loginRequest));
     }
 
     @PostMapping("/user/register")
@@ -449,5 +449,11 @@ public class UserController {
     @PostMapping(path = "/user/verification_code")
     public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
         return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
+    }
+
+    @GetMapping(path = "/user/report/total")
+    public CommonResponse<?> getReportTotal(HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(userService.getRecapTotal(jwtToken));
     }
 }

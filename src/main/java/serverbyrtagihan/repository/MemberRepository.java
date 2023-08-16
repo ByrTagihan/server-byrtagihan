@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import serverbyrtagihan.modal.Member;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -19,4 +20,6 @@ public interface MemberRepository  extends JpaRepository<Member, Long> {
 
     @Query("SELECT u FROM Member u WHERE u.hp = ?1")
     Member findByHp(String hp);
+    @Query(value = "SELECT * FROM member WHERE organization_id = :organizationId ", nativeQuery = true)
+    List<Member> findByOrganizationId(String organizationId);
 }
