@@ -837,8 +837,8 @@ public class UserImpl implements UserService {
         if (typeToken.equals("User")) {
             User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(profileDTO.getName());
-            update.setDomain(profileDTO.getAddress());
-            update.setOrigin(profileDTO.getHp());
+            update.setAddress(profileDTO.getAddress());
+            update.setHp(profileDTO.getHp());
             update.setPicture(profileDTO.getPicture());
             return userRepository.save(update);
         } else {
