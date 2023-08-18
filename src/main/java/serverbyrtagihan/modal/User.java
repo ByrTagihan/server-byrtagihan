@@ -22,38 +22,38 @@ public class User extends DateConfig {
 
     @Column(name = "password")
     private String password;
+
+
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "hp")
+    private String hp;
+
+    @Column(name = "token")
+    private String token;
+
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     @Column(name = "last_login")
     private Date last_login;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "active")
+    private boolean active;
+
+    @Column(name = "role_id")
+    private int role_id;
+
+    @Column(name = "role_name")
+    private String role_name;
 
     @Lob
     @Column(name = "picture")
     private String picture;
 
-    @Column(name = "domain")
-    private String domain;
-
-    @Column(name = "active")
-    private boolean active;
-
-    @Column(name = "origin")
-    private String origin;
-
-    @Column(name = "token")
-    private String token;
-
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
+    @Column(name = "address")
+    private String address;
 
     public Long getId() {
         return id;
@@ -87,20 +87,20 @@ public class User extends DateConfig {
         this.name = name;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getHp() {
+        return hp;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setHp(String hp) {
+        this.hp = hp;
     }
 
-    public String getDomain() {
-        return domain;
+    public String getToken() {
+        return token;
     }
 
-    public void setDomain(String domain) {
-        this.domain = domain;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public boolean isActive() {
@@ -111,12 +111,12 @@ public class User extends DateConfig {
         this.active = active;
     }
 
-    public String getOrigin() {
-        return origin;
+    public int getRole_id() {
+        return role_id;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public void setRole_id(int role_id) {
+        this.role_id = role_id;
     }
 
     public Date getLast_login() {
@@ -125,6 +125,29 @@ public class User extends DateConfig {
 
     public void setLast_login(Date last_login) {
         this.last_login = last_login;
+    }
+    public String getRole_name() {
+        return role_name;
+    }
+
+    public void setRole_name(String role_name) {
+        this.role_name = role_name;
+    }
+
+    public String getPicture() {
+        return picture;
+    }
+
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
 

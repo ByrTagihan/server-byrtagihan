@@ -419,10 +419,12 @@ public class UserController {
         admin.setEmail(signUpRequest.getEmail());
         admin.setPassword(encoder.encode(signUpRequest.getPassword()));
         admin.setActive(signUpRequest.isActive());
-        admin.setOrigin(signUpRequest.getHp());
+        admin.setHp(signUpRequest.getHp());
         admin.setName(signUpRequest.getName());
-        admin.setDomain(signUpRequest.getAddress());
+        admin.setAddress(signUpRequest.getAddress());
         admin.setToken("Kosong");
+        admin.setRole_id(1);
+        admin.setRole_name("Admin");
         userRepository.save(admin);
         javaMailSender.send(message);
         return ResponseHelper.ok(new MessageResponse("Register telah berhasil!"));

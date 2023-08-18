@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
 import serverbyrtagihan.dto.MemberProfileDTO;
+import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Message;
+import serverbyrtagihan.modal.Organization;
+import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
@@ -23,6 +26,7 @@ import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
 import org.springframework.security.core.Authentication;
 import serverbyrtagihan.repository.MessageRepository;
+import serverbyrtagihan.repository.OrganizationRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 
@@ -45,6 +49,11 @@ public class MemberImpl implements MemberService {
     private MessageRepository messageRepository;
 
     @Autowired
+    private CustomerRepository customerRepository;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
+    @Autowired
     PasswordEncoder encoder;
 
     @Autowired
@@ -57,6 +66,7 @@ public class MemberImpl implements MemberService {
     public Member add(MemberDTO member, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
+        String email = claims.getSubject();
         if (typeToken.equals("Customer")) {
             if (memberRepository.findByUniqueId(member.getUnique_id()).isPresent()) {
                 throw new BadRequestException("Unique id telah digunakan");
@@ -73,7 +83,10 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
-            admin.setOrganization_id(0L);
+            Customer customer = customerRepository.findByEmail(email).get();
+            admin.setOrganization_id(customer.getOrganization_id());
+            Organization organization = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
+            admin.setOrganization_name(organization.getName());
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");
