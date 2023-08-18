@@ -9,6 +9,7 @@ import serverbyrtagihan.response.LoginRequest;
 import serverbyrtagihan.response.SignupRequest;
 
 import javax.mail.MessagingException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ public interface CustomerService {
 
     Page<Customer> getAll(String jwtToken, Long page, Long pageSize, String sortBy, String sortDirection);
 
-    Map<Object, Object> login(LoginRequest loginRequest);
+    Map<Object, Object> login(LoginRequest loginRequest) throws ParseException;
 
     ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
 

@@ -10,7 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
+import java.util.TimeZone;
 
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 public class ServerByrtagihanApplication extends SpringBootServletInitializer {
@@ -30,11 +32,12 @@ public class ServerByrtagihanApplication extends SpringBootServletInitializer {
 				.driverClassName("com.mysql.cj.jdbc.Driver")
 				.url("jdbc:mysql://localhost:3306/byr_tagihan")
 				.username("root")
-				.password("12345678")
+				.password("")
 				.build();
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(ServerByrtagihanApplication.class, args);
+		TimeZone.setDefault(TimeZone.getTimeZone("GMT+7:00"));
 		System.out.println("Selesai");
 	}
 

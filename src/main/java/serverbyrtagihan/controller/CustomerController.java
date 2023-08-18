@@ -31,6 +31,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -97,7 +98,7 @@ public class CustomerController {
 
 
     @PostMapping("/customer/login")
-    public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
+    public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) throws ParseException {
         return ResponseHelper.ok(customerService.login(loginRequest));
     }
 

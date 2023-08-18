@@ -25,13 +25,11 @@ import serverbyrtagihan.service.UserService;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Service
 public class UserImpl implements UserService {
@@ -40,6 +38,8 @@ public class UserImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    CustomerRepository customerRepository;
     @Autowired
     BillRepository billRepository;
     @Autowired
@@ -436,7 +436,7 @@ public class UserImpl implements UserService {
         String code = code();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        if (userRepository.existsByEmail(forGotPass.getEmail())) {
+        if (userRepository.existsByEmail(forGotPass.getEmail()) || customerRepository.existsByEmail(forGotPass.getEmail())) {
             helper.setTo(forGotPass.getEmail());
             helper.setSubject("Konfirmasi Reset Password");
             helper.setText("", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
@@ -688,9 +688,7 @@ public class UserImpl implements UserService {
                     "\n" +
                     "                              <div class=\"v-text-align\" align=\"left\">\n" +
                     "                                <!--[if mso]><table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-spacing: 0; border-collapse: collapse; mso-table-lspace:0pt; mso-table-rspace:0pt;font-family:arial,helvetica,sans-serif;\"><tr><td class=\"v-text-align v-button-colors\" style=\"font-family:arial,helvetica,sans-serif;\" align=\"left\"><v:roundrect xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"urn:schemas-microsoft-com:office:word\" href=\"\" style=\"height:37px; v-text-anchor:middle; width:178px;\" arcsize=\"16%\" stroke=\"f\" fillcolor=\"#00afef\"><w:anchorlock/><center style=\"color:#FFFFFF;font-family:arial,helvetica,sans-serif;\"><![endif]-->\n" +
-                    "                                <a href=\"youtube.com\" target=\"_blank\" class=\"v-size-width v-button-colors v-border v-border-radius\" style=\"box-sizing: border-box;display: inline-block;font-family:arial,helvetica,sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #00afef; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;\">\n" +
-                    "                                  <span class=\"v-line-height v-padding\" style=\"display:block;padding:10px 20px;line-height:120%;\"><span style=\"font-size: 14px; line-height: 16.8px;\">Setel Ulang Password</span></span>\n" +
-                    "                                </a>\n" +
+                    "                                \n" +
                     "                                <!--[if mso]></center></v:roundrect></td></tr></table><![endif]-->\n" +
                     "                              </div>\n" +
                     "\n" +
@@ -781,22 +779,42 @@ public class UserImpl implements UserService {
                     "</body>\n" +
                     "\n" +
                     "</html>");
-            User user = userRepository.findByEmail(forGotPass.getEmail()).get();
-            user.setToken(code);
-            var checkingCode = getVerification.findByEmail(user.getEmail());
-            if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
-                getVerification.deleteById(checkingCode.get().getId());
-                ForGotPassword pass = new ForGotPassword();
-                pass.setEmail(forGotPass.getEmail());
+            if (userRepository.existsByEmail(forGotPass.getEmail())) {
+                User user = userRepository.findByEmail(forGotPass.getEmail()).get();
                 user.setToken(code);
-                pass.setCode(code);
-                getVerification.save(pass);
-                userRepository.save(user);
-            } else {
-                ForGotPassword pass = new ForGotPassword();
-                pass.setEmail(forGotPass.getEmail());
-                pass.setCode(code);
-                getVerification.save(pass);
+                var checkingCode = getVerification.findByEmail(user.getEmail());
+                if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
+                    getVerification.deleteById(checkingCode.get().getId());
+                    ForGotPassword pass = new ForGotPassword();
+                    pass.setEmail(forGotPass.getEmail());
+                    user.setToken(code);
+                    pass.setCode(code);
+                    getVerification.save(pass);
+                    userRepository.save(user);
+                } else {
+                    ForGotPassword pass = new ForGotPassword();
+                    pass.setEmail(forGotPass.getEmail());
+                    pass.setCode(code);
+                    getVerification.save(pass);
+                }
+            } else if (customerRepository.existsByEmail(forGotPass.getEmail())) {
+                Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
+                customer.setToken(code);
+                var checkingCode = getVerification.findByEmail(customer.getEmail());
+                if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
+                    getVerification.deleteById(checkingCode.get().getId());
+                    ForGotPassword pass = new ForGotPassword();
+                    pass.setEmail(forGotPass.getEmail());
+                    customer.setToken(code);
+                    pass.setCode(code);
+                    getVerification.save(pass);
+                    customerRepository.save(customer);
+                } else {
+                    ForGotPassword pass = new ForGotPassword();
+                    pass.setEmail(forGotPass.getEmail());
+                    pass.setCode(code);
+                    getVerification.save(pass);
+                }
             }
             javaMailSender.send(message);
         } else {
@@ -810,19 +828,19 @@ public class UserImpl implements UserService {
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
         if (encoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            LocalDateTime waktuSaatIni = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String waktuFormatted = waktuSaatIni.format(formatter);
-            user.setLast_login(waktuFormatted);
             userRepository.save(user);
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateToken(authentication);
+            user.setLast_login(new Date());
+            userRepository.save(user);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String formattedLastLogin = sdf.format(user.getLast_login());
             Map<Object, Object> response = new HashMap<>();
             response.put("data", user);
             response.put("token", jwt);
-            response.put("last_login", waktuFormatted);
+            response.put("last_login", formattedLastLogin);
             response.put("type_token", "User");
             return response;
         }
