@@ -83,7 +83,7 @@ public class ProfileImpl implements CustomerService {
     }
 
 
-    private BindingResult validateVerificationCode(ForGotPassword verificationCode) {
+    private BindingResult validateVerificationCode(Reset_Password verificationCode) {
         // Membuat BindingResult untuk menampung hasil validasi
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(verificationCode, "verificationCode");
 
@@ -142,7 +142,7 @@ public class ProfileImpl implements CustomerService {
     }
 
     @Override
-    public ForGotPassword verificationPass(ForGotPassword verification) throws MessagingException {
+    public Reset_Password verificationPass(Reset_Password verification) throws MessagingException {
         BindingResult bindingResult = validateVerificationCode(verification);
         String newPass = newPassword();
         verificationCodeValidator.validate(verification, bindingResult);
@@ -830,14 +830,14 @@ public class ProfileImpl implements CustomerService {
             var checkingCode = getVerification.findByEmail(customer.getEmail());
             if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
                 getVerification.deleteById(checkingCode.get().getId());
-                ForGotPassword pass = new ForGotPassword();
+                Reset_Password pass = new Reset_Password();
                 pass.setEmail(forGotPass.getEmail());
                 customer.setToken(code);
                 pass.setCode(code);
                 getVerification.save(pass);
                 customerRepository.save(customer);
             } else {
-                ForGotPassword pass = new ForGotPassword();
+                Reset_Password pass = new Reset_Password();
                 pass.setEmail(forGotPass.getEmail());
                 pass.setCode(code);
                 getVerification.save(pass);
@@ -1226,7 +1226,6 @@ public class ProfileImpl implements CustomerService {
             admin.setHp(signupRequest.getHp());
             admin.setName(signupRequest.getName());
             admin.setAddress(signupRequest.getAddress());
-            admin.setOrganization_id(null);
             admin.setToken("Kosong");
             javaMailSender.send(message);
             return customerRepository.save(admin);

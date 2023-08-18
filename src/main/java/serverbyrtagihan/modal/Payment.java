@@ -15,25 +15,25 @@ public class Payment extends DateConfig {
     private Long id;
 
     @Column(name = "organization_id")
-    private Long organization_id;
+    private Long organization_id = 0L;
 
     @Column(name = "member_id")
-    private Long member_id;
+    private Long member_id = 0L;
 
     @Column(name = "channel_id")
-    private Long channel_id;
+    private Long channel_id = 0L;
 
     @Column(name = "organization_name")
-    private String organization_name;
+    private String organization_name = "";
 
     @Column(name = "channel_name")
-    private String channel_name;
+    private String channel_name = "";
 
     @Column(name = "bill_ids")
-    private String bill_ids;
+    private String bill_ids = "";
 
     @Column(name = "va_number")
-    private String va_number;
+    private String va_number = "";
 
     @Column(name = "va_expired_date")
     private String va_expired_date;
@@ -48,7 +48,7 @@ public class Payment extends DateConfig {
     private Date periode;
 
     @Column(name = "amount")
-    private Double amount;
+    private Double amount = 0.0;
 
     @Column(name = "fee_admin")
     private Double fee_admin = 0.0;

@@ -28,22 +28,22 @@ public class Organization extends DateConfig {
     private String email;
 
     @Column(name = "city")
-    private String city;
+    private String city = "";
 
     @Column(name = "provinsi")
-    private String provinsi;
+    private String provinsi = "";
 
     @Column(name = "balance")
     private Double balance = 0.0;
 
     @Column(name = "bank_account_number")
-    private int bank_account_number;
+    private String bank_account_number = "";
 
     @Column(name = "bank_account_name")
-    private String bank_account_name;
+    private String bank_account_name = "";
 
     @Column(name = "bank_name")
-    private String bank_name;
+    private String bank_name = "";
 
     @Column(name = "fee_admin")
     private Double fee_admin = 0.0;
@@ -123,11 +123,11 @@ public class Organization extends DateConfig {
         this.balance = balance;
     }
 
-    public int getBank_account_number() {
+    public String getBank_account_number() {
         return bank_account_number;
     }
 
-    public void setBank_account_number(int bank_account_number) {
+    public void setBank_account_number(String bank_account_number) {
         this.bank_account_number = bank_account_number;
     }
 

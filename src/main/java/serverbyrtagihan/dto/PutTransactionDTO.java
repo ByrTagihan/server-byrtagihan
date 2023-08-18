@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class PutTransactionDTO {
     private String description;
-    private Date priode;
+    private Date periode;
     private Float amount;
 
     public String getDescription() {
@@ -15,12 +15,12 @@ public class PutTransactionDTO {
         this.description = description;
     }
 
-    public Date getPriode() {
-        return priode;
+    public Date getPeriode() {
+        return periode;
     }
 
-    public void setPriode(Date priode) {
-        this.priode = priode;
+    public void setPeriode(Date periode) {
+        this.periode = periode;
     }
 
     public Float getAmount() {

@@ -20,10 +20,10 @@ public class Customer extends DateConfig {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "nama")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "no_hp")
+    @Column(name = "hp")
     private String hp;
 
     @Lob
@@ -45,7 +45,7 @@ public class Customer extends DateConfig {
 
 
     @Column(name = "organization_id")
-    private Long organization_id;
+    private Long organization_id = 0L;
 
 
     public Customer() {

@@ -26,11 +26,11 @@ public class PaymentController {
 
     private static final String JWT_PREFIX = "jwt ";
 
-    @PostMapping(path = "/user/payment")
-    public CommonResponse<Payment> post(@RequestBody PaymentDto paymentDto, HttpServletRequest request) {
-        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-        return ResponseHelper.ok(paymentService.Add(paymentDto, jwtToken));
-    }
+//    @PostMapping(path = "/user/payment")
+//    public CommonResponse<Payment> post(@RequestBody PaymentDto paymentDto, HttpServletRequest request) {
+//        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+//        return ResponseHelper.ok(paymentService.Add(paymentDto, jwtToken));
+//    }
     @PutMapping(path = "/user/payment/{id}")
     public CommonResponse<Payment> Put(@RequestBody PaymentDto paymentDto, @PathVariable("id") Long id, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());

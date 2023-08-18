@@ -3,25 +3,16 @@ package serverbyrtagihan.response;
 import javax.persistence.Column;
 
 public class SignupRequest {
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "password")
     private String password;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "address")
     private String address;
 
-    @Column(name = "no_hp")
     private String hp;
 
-    @Column(name = "organization_id")
-    private Long organizationId;
-
-    @Column(name = "active")
     private boolean active;
 
 
@@ -71,13 +62,5 @@ public class SignupRequest {
 
     public void setActive(boolean active) {
         this.active = active;
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
     }
 }

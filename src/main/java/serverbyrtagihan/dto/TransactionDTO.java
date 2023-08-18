@@ -6,7 +6,7 @@ public class TransactionDTO {
     private Long organization_id;
     private Long member_id;
     private String description;
-    private Date priode;
+    private Date periode;
     private Float amount;
 
     public Long getOrganization_id() {
@@ -33,12 +33,12 @@ public class TransactionDTO {
         this.description = description;
     }
 
-    public Date getPriode() {
-        return priode;
+    public Date getPeriode() {
+        return periode;
     }
 
-    public void setPriode(Date priode) {
-        this.priode = priode;
+    public void setPeriode(Date periode) {
+        this.periode = periode;
     }
 
     public Float getAmount() {

@@ -18,7 +18,7 @@ public class OrganizationDto {
 
     private Double balance;
 
-    private String bank_acount_number;
+    private String bank_account_number;
 
     private String bank_account_name;
 
@@ -88,12 +88,12 @@ public class OrganizationDto {
         this.balance = balance;
     }
 
-    public String getBank_acount_number() {
-        return bank_acount_number;
+    public String getBank_account_number() {
+        return bank_account_number;
     }
 
-    public void setBank_acount_number(String bank_acount_number) {
-        this.bank_acount_number = bank_acount_number;
+    public void setBank_account_number(String bank_account_number) {
+        this.bank_account_number = bank_account_number;
     }
 
     public String getBank_account_name() {

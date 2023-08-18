@@ -3,10 +3,8 @@ package serverbyrtagihan.dto;
 import javax.persistence.Column;
 
 public class LoginMember {
-    @Column(name = "unique_id")
     private String unique_id;
 
-    @Column(name = "password")
     private String password;
 
     public String getUnique_id() {

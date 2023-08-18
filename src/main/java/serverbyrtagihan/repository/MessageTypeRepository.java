@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import serverbyrtagihan.modal.Message_Type;
 
 @Repository
-public interface MessageTypeRepository extends JpaRepository<Message_Type, Long> {
+public interface MessageTypeRepository extends JpaRepository<Message_Type, Integer> {
 
 }

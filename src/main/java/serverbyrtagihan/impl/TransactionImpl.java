@@ -44,7 +44,7 @@ public class TransactionImpl implements TransactionService {
             Member memberId = memberRepository.findById(transaction.getMember_id()).orElseThrow(() -> new NotFoundException("Id Member not found"));
             Organization organization = organizationRepository.findById(transaction.getOrganization_Id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
             add.setAmount(transaction.getAmount());
-            add.setPriode(transaction.getPriode());
+            add.setPriode(transaction.getPeriode());
             add.setDescription(transaction.getDescription());
             add.setMember_id(memberId.getId());
             add.setOrganization_Id(organization.getId());
@@ -96,7 +96,7 @@ public class TransactionImpl implements TransactionService {
         if (typeToken.equals("User")) {
             Transaction update = transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
             update.setDescription(transaction.getDescription());
-            update.setPriode(transaction.getPriode());
+            update.setPriode(transaction.getPeriode());
             update.setAmount(transaction.getAmount());
             return transactionRepository.save(update);
         } else {

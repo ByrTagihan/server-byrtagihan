@@ -18,8 +18,6 @@ public interface PaymentService {
 
     Payment Put(Long id , PaymentDto paymentDto , String jwtToken);
 
-    Payment Add(PaymentDto paymentDto, String jwtToken);
-
     Map<String, Boolean> Delete(Long id , String jwtToken);
 
 }

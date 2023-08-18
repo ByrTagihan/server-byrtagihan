@@ -26,7 +26,7 @@ public class EcollectionController {
         this.ecollectionService = ecollectionService;
     }
 
-    @PostMapping("/sendToEcollection")
+    @PostMapping("/uatbni")
     public ResponseEntity<EcollectionResponseDTO> sendToEcollection(@RequestBody EcollectionDTO payload, HttpServletRequest request) {
         String apiUrl = "https://apibeta.bni-ecollection.com/";
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());

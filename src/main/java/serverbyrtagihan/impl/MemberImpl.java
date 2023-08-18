@@ -72,7 +72,7 @@ public class MemberImpl implements MemberService {
             String UserPassword = member.getPassword().trim();
             boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
             if (PasswordIsNotValid) {
-                throw new BadRequestException("Passowrd tidak valid!!");
+                throw new BadRequestException("Password tidak valid!!");
             }
             // Create new user's account
             Member admin = new Member();
@@ -82,6 +82,9 @@ public class MemberImpl implements MemberService {
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
             Customer customer = customerRepository.findByEmail(email).get();
+            if (customer.getOrganization_id() == null) {
+                throw new BadRequestException("Customer tidak punya organization id");
+            }
             admin.setOrganization_id(customer.getOrganization_id());
             Organization organization = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
             admin.setOrganization_name(organization.getName());
