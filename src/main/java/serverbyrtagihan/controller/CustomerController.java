@@ -20,6 +20,11 @@ import serverbyrtagihan.service.CustomerService;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api")
@@ -83,7 +88,7 @@ public class CustomerController {
 
 
     @PostMapping("/customer/login")
-    public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) {
+    public CommonResponse<?> authenticateAdmin(@Valid @RequestBody LoginRequest loginRequest) throws ParseException {
         return ResponseHelper.ok(customerService.login(loginRequest));
     }
 
