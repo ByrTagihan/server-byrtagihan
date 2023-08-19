@@ -29,7 +29,7 @@ public class User extends DateConfig {
     private String name;
 
     @Column(name = "hp")
-    private String hp;
+    private String hp = "";
 
     @Column(name = "token")
     private String token;
@@ -43,17 +43,17 @@ public class User extends DateConfig {
     private boolean active;
 
     @Column(name = "role_id")
-    private int role_id;
+    private int role_id = 0;
 
     @Column(name = "role_name")
     private String role_name;
 
     @Lob
     @Column(name = "picture")
-    private String picture;
+    private String picture = "";
 
     @Column(name = "address")
-    private String address;
+    private String address = "";
 
     public Long getId() {
         return id;

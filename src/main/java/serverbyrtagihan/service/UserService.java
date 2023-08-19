@@ -1,22 +1,19 @@
 package serverbyrtagihan.service;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.ProfileDTO;
-import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.Reset_Password;
 import serverbyrtagihan.modal.User;
 import serverbyrtagihan.response.LoginRequest;
 
 import javax.mail.MessagingException;
-import java.util.List;
 import java.util.Map;
 
 public interface UserService {
 
     ForGotPass sendEmail(ForGotPass forGotPass) throws MessagingException;
 
-    ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
+    Reset_Password verificationPass(Reset_Password verification ) throws MessagingException;
 
 
     Map<Object, Object> login(LoginRequest loginRequest);

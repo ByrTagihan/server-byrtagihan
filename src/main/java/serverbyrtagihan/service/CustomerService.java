@@ -4,7 +4,7 @@ import org.springframework.data.domain.Page;
 import serverbyrtagihan.dto.ForGotPass;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Customer;
-import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.Reset_Password;
 import serverbyrtagihan.response.LoginRequest;
 import serverbyrtagihan.response.SignupRequest;
 
@@ -36,7 +36,7 @@ public interface CustomerService {
 
     Map<Object, Object> login(LoginRequest loginRequest) throws ParseException;
 
-    ForGotPassword verificationPass(ForGotPassword verification ) throws MessagingException;
+    Reset_Password verificationPass(Reset_Password verification ) throws MessagingException;
 
     Map<String, Boolean> delete(Long id , String jwtToken);
 

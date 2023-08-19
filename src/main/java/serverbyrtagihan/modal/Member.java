@@ -37,10 +37,11 @@ Member extends DateConfig {
     private String hp;
 
     @Column(name = "password")
-    private String password;
+    private String password = "";
 
     @Column(name = "token")
-    private String token;
+    private String token = "";
+
     @Temporal(TemporalType.TIMESTAMP)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     @Column(name = "last_login")
@@ -48,16 +49,16 @@ Member extends DateConfig {
 
     @Lob
     @Column(name = "picture")
-    private String picture;
+    private String picture = "";
 
     @Column(name = "va_bni")
-    private String va_bni;
+    private String va_bni = "";
 
     @Column(name = "last_payment_id_bni")
-    private Long last_payment_id_bni;
+    private Long last_payment_id_bni = 0L;
 
     @Column(name = "trx_id_bni")
-    private Long trx_id_bni;
+    private Long trx_id_bni = 0L;
 
     public Member() {
     }

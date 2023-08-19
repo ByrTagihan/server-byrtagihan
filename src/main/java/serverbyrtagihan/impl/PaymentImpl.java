@@ -78,35 +78,9 @@ public class PaymentImpl implements PaymentService {
         String typeToken = claims.getAudience();
         if (typeToken.equals("User")) {
             Payment update = paymentRepository.findById(id).orElseThrow(() -> new NotFoundException("Id not found"));
-            update.setOrganization_id(paymentDto.getOrganizationId());
-            update.setMember_id(paymentDto.getMemberId());
             update.setDescription(paymentDto.getDescription());
             update.setPeriode(paymentDto.getPeriode());
             update.setAmount(paymentDto.getAmount());
-            return paymentRepository.save(update);
-        } else {
-            throw new BadRequestException("Token not valid");
-        }
-    }
-
-    @Override
-    public Payment Add(PaymentDto paymentDto, String jwtToken) {
-        Claims claims = jwtUtils.decodeJwt(jwtToken);
-        String typeToken = claims.getAudience();
-        if (typeToken.equals("User")) {
-            Payment update = new Payment();
-            update.setOrganization_id(paymentDto.getOrganizationId());
-            update.setMember_id(paymentDto.getMemberId());
-            update.setDescription(paymentDto.getDescription());
-            update.setPeriode(paymentDto.getPeriode());
-            update.setAmount(paymentDto.getAmount());
-            update.setVa_number(update.getVa_number());
-            update.setBill_ids(update.getBill_ids());
-            update.setChannel_name(update.getChannel_name());
-            update.setStatus(update.getStatus());
-            update.setOrganization_name(update.getOrganization_name());
-            update.setChannel_id(update.getChannel_id());
-            update.setFee_admin(update.getFee_admin());
             return paymentRepository.save(update);
         } else {
             throw new BadRequestException("Token not valid");

@@ -43,6 +43,10 @@ public class BillServiceImpl implements BillService {
     @Autowired
     MemberRepository memberRepository;
     @Autowired
+    OrganizationRepository organizationRepository;
+    @Autowired
+    CustomerRepository customerRepository;
+    @Autowired
     PaymentRepository paymentRepository;
     @Autowired
     private JwtUtils jwtUtils;
@@ -79,7 +83,20 @@ public class BillServiceImpl implements BillService {
     public Bill add(Bill bill, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
+        String email = claims.getSubject();
         if (typeToken.equals("Customer")) {
+            Member members = memberRepository.findById(bill.getMember_id()).orElseThrow(() -> new NotFoundException("Not found"));
+            if (members.getId() == null){
+                throw new NotFoundException("Member Id tidak ditemukan");
+            }
+            bill.setMember_name(members.getName());
+            Customer customer = customerRepository.findByEmail(email).get();
+            bill.setOrganization_id(customer.getOrganization_id());
+            if (customer.getOrganization_id() == null) {
+                throw new BadRequestException("Customer tidak punya organization id");
+            }
+            Organization organization = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
+            bill.setOrganization_name(organization.getName());
             return billRepository.save(bill);
         } else {
             throw new BadRequestException("Token not valid");
@@ -343,8 +360,6 @@ public class BillServiceImpl implements BillService {
         } catch (Exception e) {
             e.printStackTrace();
 
-            // If an exception occurs, return an appropriate ResponseEntity indicating the failure.
-            // You can customize the response based on your requirements.
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to send payload to Ecollection: " + e.getMessage());
         }

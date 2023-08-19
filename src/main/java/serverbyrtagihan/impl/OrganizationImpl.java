@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import serverbyrtagihan.modal.Bill;
+import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.repository.OrganizationRepository;
 import serverbyrtagihan.dto.OrganizationDto;
@@ -126,7 +127,11 @@ public class OrganizationImpl implements OrganizationService {
         String typeToken = claims.getAudience();
         String email = claims.getSubject();
         if (typeToken.equals("Customer")) {
-            return organizationRepository.findByEmail(email).get();
+            Customer customer = customerRepository.findByEmail(email).get();
+            if (customer.getOrganization_id() == null) {
+                throw new BadRequestException("Customer tidak punya organization id");
+            }
+            return organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id not found"));
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -137,8 +142,12 @@ public class OrganizationImpl implements OrganizationService {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
         String email = claims.getSubject();
-        if (typeToken.equals("User")) {
-            Organization organizations = organizationRepository.findByEmail(email).get();
+        if (typeToken.equals("Customer")) {
+            Customer customer = customerRepository.findByEmail(email).get();
+            if (customer.getOrganization_id() == null) {
+                throw new BadRequestException("Customer tidak punya organization id");
+            }
+            Organization organizations = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id not found"));
             organizations.setName(organization.getName());
             organizations.setAddress(organization.getAddress());
             organizations.setHp(organization.getHp());

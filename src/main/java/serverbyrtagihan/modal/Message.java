@@ -13,7 +13,7 @@ public class Message extends DateConfig {
     private Long id;
 
     @Column(name = "message_type_id")
-    private Long message_type_id;
+    private int message_type_id;
 
     @Column(name = "message_type_name")
     private String message_type_name = "";
@@ -26,13 +26,13 @@ public class Message extends DateConfig {
     private String message;
 
     @Column(name = "message_status_id")
-    private Long message_status_id = 0L;
+    private int message_status_id = 0;
 
     @Column(name = "message_status_name")
     private String message_status_name = "";
 
     @Column(name = "receiver")
-    private String receiver;
+    private String receiver = "";
 
     @Column(name = "receiver_cc")
     private String receiver_cc = "";
@@ -41,7 +41,7 @@ public class Message extends DateConfig {
     private String attachment = "";
 
     @Column(name = "resend")
-    private Long resend;
+    private int resend  = 0;
 
     @Column(name = "send_as")
     private String send_as;
@@ -58,23 +58,6 @@ public class Message extends DateConfig {
 
     }
 
-    public Message(Long id, Long message_type_id, String message_type_name, String subject, String message, Long message_status_id, String message_status_name, String receiver, String receiver_cc, String attachment, Long resend, String send_as, Member member, String content) {
-        this.id = id;
-        this.message_type_id = message_type_id;
-        this.message_type_name = message_type_name;
-        this.subject = subject;
-        this.message = message;
-        this.message_status_id = message_status_id;
-        this.message_status_name = message_status_name;
-        this.receiver = receiver;
-        this.receiver_cc = receiver_cc;
-        this.attachment = attachment;
-        this.resend = resend;
-        this.send_as = send_as;
-        this.member = member;
-        this.content = content;
-    }
-
     public Long getId() {
         return id;
     }
@@ -83,11 +66,11 @@ public class Message extends DateConfig {
         this.id = id;
     }
 
-    public Long getMessage_type_id() {
+    public int getMessage_type_id() {
         return message_type_id;
     }
 
-    public void setMessage_type_id(Long message_type_id) {
+    public void setMessage_type_id(int message_type_id) {
         this.message_type_id = message_type_id;
     }
 
@@ -115,11 +98,11 @@ public class Message extends DateConfig {
         this.message = message;
     }
 
-    public Long getMessage_status_id() {
+    public int getMessage_status_id() {
         return message_status_id;
     }
 
-    public void setMessage_status_id(Long message_status_id) {
+    public void setMessage_status_id(int message_status_id) {
         this.message_status_id = message_status_id;
     }
 
@@ -155,11 +138,11 @@ public class Message extends DateConfig {
         this.attachment = attachment;
     }
 
-    public Long getResend() {
+    public int getResend() {
         return resend;
     }
 
-    public void setResend(Long resend) {
+    public void setResend(int resend) {
         this.resend = resend;
     }
 

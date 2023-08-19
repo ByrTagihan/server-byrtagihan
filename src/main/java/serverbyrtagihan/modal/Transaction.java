@@ -16,19 +16,25 @@ public class Transaction extends DateConfig {
     private Long organization_Id;
 
     @Column(name = "member_id")
-    private Long member_id;
+    private Long member_id = 0L;
 
     @Column(name = "description")
     private String description;
 
-    @Column(name = "priode")
-    private Date priode;
+    @Column(name = "periode")
+    private Date periode;
 
     @Column(name = "amount")
-    private Double amount;
+    private Double amount = 0.0;
 
     @Column(name = "organization_name")
     private String organization_name;
+
+    @Column(name = "payment_id")
+    private Long payment_id = 0L;
+
+    @Column(name = "payload_webhook")
+    private String payload_webhook;
 
     public Transaction() {
     }
@@ -65,12 +71,12 @@ public class Transaction extends DateConfig {
         this.description = description;
     }
 
-    public Date getPriode() {
-        return priode;
+    public Date getPeriode() {
+        return periode;
     }
 
-    public void setPriode(Date priode) {
-        this.priode = priode;
+    public void setPriode(Date periode) {
+        this.periode = periode;
     }
 
     public Double getAmount() {
@@ -87,5 +93,25 @@ public class Transaction extends DateConfig {
 
     public void setOrganization_name(String organization_name) {
         this.organization_name = organization_name;
+    }
+
+    public void setPeriode(Date periode) {
+        this.periode = periode;
+    }
+
+    public Long getPayment_id() {
+        return payment_id;
+    }
+
+    public void setPayment_id(Long payment_id) {
+        this.payment_id = payment_id;
+    }
+
+    public String getPayload_webhook() {
+        return payload_webhook;
+    }
+
+    public void setPayload_webhook(String payload_webhook) {
+        this.payload_webhook = payload_webhook;
     }
 }

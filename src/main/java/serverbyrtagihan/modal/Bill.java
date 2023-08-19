@@ -32,7 +32,7 @@ public class Bill extends DateConfig {
     private Date periode;
 
     @Column(name = "amount")
-    private Double amount;
+    private Double amount = 0.0;
 
     @Column(name = "member_name")
     private String member_name = "";

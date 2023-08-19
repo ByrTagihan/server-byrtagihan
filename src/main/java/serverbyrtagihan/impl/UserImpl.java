@@ -87,7 +87,7 @@ public class UserImpl implements UserService {
         return result;
     }
 
-    private BindingResult validateVerificationCode(ForGotPassword verificationCode) {
+    private BindingResult validateVerificationCode(Reset_Password verificationCode) {
         // Membuat BindingResult untuk menampung hasil validasi
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(verificationCode, "verificationCode");
 
@@ -98,7 +98,7 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public ForGotPassword verificationPass(ForGotPassword verification) throws MessagingException {
+    public Reset_Password verificationPass(Reset_Password verification) throws MessagingException {
         BindingResult bindingResult = validateVerificationCode(verification);
         String newPass = newPassword();
         verificationCodeValidator.validate(verification, bindingResult);
@@ -786,14 +786,14 @@ public class UserImpl implements UserService {
                 var checkingCode = getVerification.findByEmail(user.getEmail());
                 if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
                     getVerification.deleteById(checkingCode.get().getId());
-                    ForGotPassword pass = new ForGotPassword();
+                    Reset_Password pass = new Reset_Password();
                     pass.setEmail(forGotPass.getEmail());
                     user.setToken(code);
                     pass.setCode(code);
                     getVerification.save(pass);
                     userRepository.save(user);
                 } else {
-                    ForGotPassword pass = new ForGotPassword();
+                    Reset_Password pass = new Reset_Password();
                     pass.setEmail(forGotPass.getEmail());
                     pass.setCode(code);
                     getVerification.save(pass);

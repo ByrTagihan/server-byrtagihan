@@ -89,7 +89,7 @@ public class CustomerMemberController {
     }
 
     @PutMapping(path = "/customer/member/{id}")
-    public CommonResponse<Member> put(@PathVariable("id") Long id, @RequestBody MemberDTO memberDTO, HttpServletRequest request) {
+    public CommonResponse<Member> put(@PathVariable("id") Long id, @RequestBody MemberUpdateDTO memberDTO, HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(service.put(modelMapper.map(memberDTO, Member.class), id, jwtToken));
     }

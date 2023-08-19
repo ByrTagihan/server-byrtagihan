@@ -2,39 +2,29 @@ package serverbyrtagihan.controller;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import serverbyrtagihan.exception.NotFoundException;
-import serverbyrtagihan.modal.Bill;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.PictureDTO;
 import serverbyrtagihan.dto.ProfileDTO;
-import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.impl.CustomerDetailsImpl;
 import serverbyrtagihan.modal.Customer;
-import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.Reset_Password;
 import serverbyrtagihan.service.CustomerService;
-import serverbyrtagihan.util.Pagination;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 @RestController
 @RequestMapping("/api")
@@ -92,8 +82,8 @@ public class CustomerController {
 
 
     @PostMapping(path = "/customer/verification_code")
-    public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
-        return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
+    public CommonResponse<Reset_Password> verificationCode(@RequestBody Verification verification) throws MessagingException {
+        return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, Reset_Password.class)));
     }
 
 

@@ -5,32 +5,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import serverbyrtagihan.impl.CustomerDetailsImpl;
-import serverbyrtagihan.impl.UserDetailsImpl;
-import serverbyrtagihan.modal.Member;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.service.UserService;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.exception.BadRequestException;
-import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
-import serverbyrtagihan.modal.ForGotPassword;
+import serverbyrtagihan.modal.Reset_Password;
 import serverbyrtagihan.modal.User;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -449,8 +438,8 @@ public class UserController {
     }
 
     @PostMapping(path = "/user/verification_code")
-    public CommonResponse<ForGotPassword> verificationCode(@RequestBody Verification verification) throws MessagingException {
-        return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification, ForGotPassword.class)));
+    public CommonResponse<Reset_Password> verificationCode(@RequestBody Verification verification) throws MessagingException {
+        return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification, Reset_Password.class)));
     }
 
     @GetMapping(path = "/user/report/total")

@@ -9,7 +9,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.modal.Customer;
-import serverbyrtagihan.modal.ForGotPassword;
 import serverbyrtagihan.repository.CustomerRepository;
 import serverbyrtagihan.response.*;
 import serverbyrtagihan.security.jwt.JwtUtils;
@@ -18,7 +17,6 @@ import serverbyrtagihan.util.Pagination;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
