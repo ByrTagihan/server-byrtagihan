@@ -1,6 +1,8 @@
 package serverbyrtagihan.modal;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
@@ -21,6 +23,8 @@ public class User extends DateConfig {
     @Column(name = "password")
     private String password;
 
+
+
     @Column(name = "name")
     private String name;
 
@@ -30,8 +34,10 @@ public class User extends DateConfig {
     @Column(name = "token")
     private String token;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     @Column(name = "last_login")
-    private String last_login;
+    private Date last_login;
 
     @Column(name = "active")
     private boolean active;
@@ -97,14 +103,6 @@ public class User extends DateConfig {
         this.token = token;
     }
 
-    public String getLast_login() {
-        return last_login;
-    }
-
-    public void setLast_login(String last_login) {
-        this.last_login = last_login;
-    }
-
     public boolean isActive() {
         return active;
     }
@@ -121,6 +119,13 @@ public class User extends DateConfig {
         this.role_id = role_id;
     }
 
+    public Date getLast_login() {
+        return last_login;
+    }
+
+    public void setLast_login(Date last_login) {
+        this.last_login = last_login;
+    }
     public String getRole_name() {
         return role_name;
     }
