@@ -1,6 +1,7 @@
 package serverbyrtagihan.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import serverbyrtagihan.dto.BNIRequestDTO;
 import serverbyrtagihan.dto.EcollectionDTO;
+import serverbyrtagihan.dto.EcollectionResponseDTO;
 import serverbyrtagihan.dto.ReportBill;
 import serverbyrtagihan.modal.*;
 import serverbyrtagihan.repository.*;
@@ -51,10 +53,6 @@ public class BillServiceImpl implements BillService {
     @Autowired
     private JwtUtils jwtUtils;
 
-    EcollectionDTO ecollectionDTO;
-
-    BNIRequestDTO bniRequestDTO;
-
     //Customer
     @Override
     public Page<Bill> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
@@ -86,7 +84,7 @@ public class BillServiceImpl implements BillService {
         String email = claims.getSubject();
         if (typeToken.equals("Customer")) {
             Member members = memberRepository.findById(bill.getMember_id()).orElseThrow(() -> new NotFoundException("Not found"));
-            if (members.getId() == null){
+            if (members.getId() == null) {
                 throw new NotFoundException("Member Id tidak ditemukan");
             }
             bill.setMember_name(members.getName());
@@ -330,33 +328,33 @@ public class BillServiceImpl implements BillService {
 
     public ResponseEntity<String> sendPayloadToEcollection(String apiUrl, EcollectionDTO payload) {
         try {
-                HttpHeaders headers = new HttpHeaders();
-                headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
 
-                ObjectMapper objectMapper = new ObjectMapper();
-                String payloadJson = objectMapper.writeValueAsString(payload);
+            ObjectMapper objectMapper = new ObjectMapper();
+            String payloadJson = objectMapper.writeValueAsString(payload);
 
-                BniEncryption hash = new BniEncryption();
-                String cid = "99129"; // from BNI
-                String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
-                String prefix = "988"; // from BNI
+            BniEncryption hash = new BniEncryption();
+            String cid = "99129"; // from BNI
+            String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
+            String prefix = "988"; // from BNI
 
-                String va_number = prefix + cid + "69813549";
+            String va_number = prefix + cid + "69813549";
 
-                String parsedData = hash.hashData(payloadJson, cid, key);
-                String decodeData = hash.parseData(parsedData, cid, key);
-                System.out.println(parsedData);
-                System.out.println(decodeData);
-                System.out.println(va_number);
+            String parsedData = hash.hashData(payloadJson, cid, key);
+            String decodeData = hash.parseData(parsedData, cid, key);
+            System.out.println(parsedData);
+            System.out.println(decodeData);
+            System.out.println(va_number);
 
-                BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
-                bniRequestDTO.setClient_id(cid);
-                bniRequestDTO.setPrefix(prefix);
-                bniRequestDTO.setData(parsedData);
+            BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
+            bniRequestDTO.setClient_id(cid);
+            bniRequestDTO.setPrefix(prefix);
+            bniRequestDTO.setData(parsedData);
 
-                HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
-                System.out.println("Percobaan");
-                return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+            HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
+            System.out.println("Percobaan");
+            return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -366,34 +364,28 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public BNIRequestDTO paymentById(Payment payment, Long id, String jwtToken) {
+    public EcollectionResponseDTO paymentById(Payment payment, Long id, String jwtToken) {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
-        Long memberId = Long.valueOf(claims.getId());
-
-        BniEncryption hash = new BniEncryption();
-        String cid = "99129"; // from BNI
-        String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
-        String prefix = "988"; // from BNI
-
-        String uniqueId = claims.getSubject();
         if (typeToken.equals("Member")) {
+            Long memberId = Long.valueOf(claims.getId());
+
+            BniEncryption hash = new BniEncryption();
+            String cid = "99129"; // from BNI
+            String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
+            String prefix = "988"; // from BNI
+
+            String uniqueId = claims.getSubject();
             Bill bills = billRepository.findByIdInMember(memberId, id);
-            Member members = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Member Not found"));;
+            Member members = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Member Not found"));
+            ;
             if (bills.getPaid_id() != 0) {
                 throw new NotFoundException("Tagihan Sudah Dibayar");
             }
             Channel channels = channelRepository.findById(payment.getChannel_id()).orElseThrow(() -> new NotFoundException("Channel Not found"));
-            bills.setPaid_id(2L);
-            bills.setPaid_date(new Date());
-            bills.setPaid_amount(bills.getAmount());
-            bills.setPayment_id(payment.getId());
-            billRepository.save(bills);
-
             String va_number = prefix + cid + members.getHp();
 
             payment.setOrganization_id(bills.getOrganization_id());
@@ -417,38 +409,65 @@ public class BillServiceImpl implements BillService {
 
             paymentRepository.save(payment);
 
-            ecollectionDTO.setClient_id(cid);
-            ecollectionDTO.setTrx_amount(String.valueOf(payment.getAmount() + payment.getFee_admin()));
-            ecollectionDTO.setCustomer_name(members.getName());
-            ecollectionDTO.setCustomer_email("");
-            ecollectionDTO.setCustomer_phone(members.getHp());
-            ecollectionDTO.setVirtual_account(payment.getVa_number());
-            ecollectionDTO.setDatetime_expired(payment.getVa_expired_date());
-            ecollectionDTO.setDescription(payment.getDescription());
-            if (members.getVa_bni() == null) {
-                members.setVa_bni(va_number);
-                ecollectionDTO.setType("createBilling");
-            } else if (members.getVa_bni() != null) {
-                ecollectionDTO.setType("updateBilling");
-            }
-            ecollectionDTO.setTrx_id(String.valueOf(payment.getId()));
-            ecollectionDTO.setBilling_type("c");
+            bills.setPaid_id(2L);
+            bills.setPaid_date(new Date());
+            bills.setPaid_amount(bills.getAmount());
+            bills.setPayment_id(payment.getId());
+            billRepository.save(bills);
 
             try {
+                EcollectionDTO ecollectionDTO = new EcollectionDTO();
+
+                ecollectionDTO.setClient_id(cid);
+                ecollectionDTO.setTrx_amount(String.valueOf(payment.getAmount() + payment.getFee_admin()));
+                ecollectionDTO.setCustomer_name(members.getName());
+                ecollectionDTO.setCustomer_email("");
+                ecollectionDTO.setCustomer_phone(members.getHp());
+                ecollectionDTO.setVirtual_account(payment.getVa_number());
+                ecollectionDTO.setDatetime_expired(payment.getVa_expired_date());
+                ecollectionDTO.setDescription(payment.getDescription());
+                if (members.getVa_bni() == null) {
+                    members.setVa_bni(va_number);
+                    memberRepository.save(members);
+                    ecollectionDTO.setType("createBilling");
+                } else if (members.getVa_bni() != null) {
+                    ecollectionDTO.setType("updateBilling");
+                } else if (memberRepository.existsByVa_number(members.getVa_bni())) {
+                    String integer = "1";
+                    String va_num = members.getVa_bni();
+                    members.setVa_bni(va_num + integer);
+                    memberRepository.save(members);
+                }
+                ecollectionDTO.setTrx_id(String.valueOf(payment.getId()));
+                ecollectionDTO.setBilling_type("c");
+
                 String payloadJson = objectMapper.writeValueAsString(ecollectionDTO);
                 String parsedData = hash.hashData(payloadJson, cid, key);
 
+                BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
                 bniRequestDTO.setClient_id(cid);
                 bniRequestDTO.setPrefix(prefix);
                 bniRequestDTO.setData(parsedData);
 
-                HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
                 String apiUrl = "https://apibeta.bni-ecollection.com/";
-                sendPayloadToEcollection(apiUrl, ecollectionDTO);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+
+                HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
+                ResponseEntity<String> responseEntity = restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
+                String responseBody = responseEntity.getBody();
+
+                EcollectionResponseDTO responseDTO = objectMapper.readValue(responseBody, EcollectionResponseDTO.class);
+                if (responseDTO.getData() != null) {
+                    String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
+                    JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
+                    responseDTO.setData(decryptedData);
+                    responseDTO.setDatas(decryptedDataJson);
+                }
+                return responseDTO;
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                throw new BadRequestException("Failed to send payload to Ecollection");
             }
-            return bniRequestDTO;
         } else {
             throw new BadRequestException("Token not valid");
         }
@@ -480,6 +499,7 @@ public class BillServiceImpl implements BillService {
             throw new BadRequestException("Token not valid");
         }
     }
+
     @Override
     public List<ReportBill> getReportRecapBillUser(String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
@@ -513,7 +533,7 @@ public class BillServiceImpl implements BillService {
         if (typeToken.equals("Member")) {
             String unique = claims.getSubject();
             Member member = memberRepository.findByUniqueId(unique).get();
-            String id = String.valueOf( member.getOrganization_id());
+            String id = String.valueOf(member.getOrganization_id());
             int year = Calendar.getInstance().get(Calendar.YEAR);
             List<Object[]> billingSummaryResults = billRepository.getReport(year, id);
             List<ReportBill> billingSummaryDTOList = new ArrayList<>();
