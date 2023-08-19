@@ -52,7 +52,7 @@ Member extends DateConfig {
     private String picture = "";
 
     @Column(name = "va_bni")
-    private String va_bni = "";
+    private String va_bni;
 
     @Column(name = "last_payment_id_bni")
     private Long last_payment_id_bni = 0L;
