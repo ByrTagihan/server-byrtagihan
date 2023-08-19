@@ -121,10 +121,9 @@ public class ProfileImpl implements CustomerService {
     }
 
     @Override
-    public Map<Object, Object> login(LoginRequest loginRequest) throws ParseException {
+    public Map<Object, Object> login(LoginRequest loginRequest) {
         Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
         if (encoder.matches( loginRequest.getPassword(),customer.getPassword())) {
-            Date lastLogin = new Date();
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -825,25 +824,7 @@ public class ProfileImpl implements CustomerService {
                     "</body>\n" +
                     "\n" +
                     "</html>");
-            if (userRepository.existsByEmail(forGotPass.getEmail())) {
-                User user = userRepository.findByEmail(forGotPass.getEmail()).get();
-                user.setToken(code);
-                var checkingCode = getVerification.findByEmail(user.getEmail());
-                if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
-                    getVerification.deleteById(checkingCode.get().getId());
-                    ForGotPassword pass = new ForGotPassword();
-                    pass.setEmail(forGotPass.getEmail());
-                    user.setToken(code);
-                    pass.setCode(code);
-                    getVerification.save(pass);
-                    userRepository.save(user);
-                } else {
-                    ForGotPassword pass = new ForGotPassword();
-                    pass.setEmail(forGotPass.getEmail());
-                    pass.setCode(code);
-                    getVerification.save(pass);
-                }
-            } else if (customerRepository.existsByEmail(forGotPass.getEmail())) {
+             if (customerRepository.existsByEmail(forGotPass.getEmail())) {
                 Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
                 customer.setToken(code);
                 var checkingCode = getVerification.findByEmail(customer.getEmail());
@@ -1226,17 +1207,17 @@ public class ProfileImpl implements CustomerService {
                     "\n" +
                     "</html>");
             if (customerRepository.existsByEmail(signupRequest.getEmail())) {
-                throw new NotFoundException("Kesalahan: Email telah digunakan!");
+                throw new NotFoundException(" Email telah digunakan!");
             }
             String UserEmail = signupRequest.getEmail().trim();
             boolean EmailIsNotValid = !UserEmail.matches("^(.+)@(\\S+)$");
             if (EmailIsNotValid) {
-                throw new BadRequestException("Kesalahan: Email tidak valid");
+                throw new BadRequestException(" Email tidak valid");
             }
             String UserPassword = signupRequest.getPassword().trim();
             boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
             if (PasswordIsNotValid) {
-                throw new BadRequestException("Kesalahan: Password tidak valid");
+                throw new BadRequestException(" Password tidak valid");
             }
             // Create new user's account
             Customer admin = new Customer();

@@ -780,6 +780,7 @@ public class UserImpl implements UserService {
                     "\n" +
                     "</html>");
             if (userRepository.existsByEmail(forGotPass.getEmail())) {
+                Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
                 User user = userRepository.findByEmail(forGotPass.getEmail()).get();
                 user.setToken(code);
                 var checkingCode = getVerification.findByEmail(user.getEmail());
@@ -797,24 +798,6 @@ public class UserImpl implements UserService {
                     pass.setCode(code);
                     getVerification.save(pass);
                 }
-            } else if (customerRepository.existsByEmail(forGotPass.getEmail())) {
-                Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
-                customer.setToken(code);
-                var checkingCode = getVerification.findByEmail(customer.getEmail());
-                if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
-                    getVerification.deleteById(checkingCode.get().getId());
-                    ForGotPassword pass = new ForGotPassword();
-                    pass.setEmail(forGotPass.getEmail());
-                    customer.setToken(code);
-                    pass.setCode(code);
-                    getVerification.save(pass);
-                    customerRepository.save(customer);
-                } else {
-                    ForGotPassword pass = new ForGotPassword();
-                    pass.setEmail(forGotPass.getEmail());
-                    pass.setCode(code);
-                    getVerification.save(pass);
-                }
             }
             javaMailSender.send(message);
         } else {
@@ -825,10 +808,8 @@ public class UserImpl implements UserService {
 
     @Override
     public Map<Object, Object> login(LoginRequest loginRequest) {
-
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
         if (encoder.matches(loginRequest.getPassword(), user.getPassword())) {
-            userRepository.save(user);
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
