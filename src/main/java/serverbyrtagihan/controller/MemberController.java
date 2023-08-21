@@ -82,7 +82,7 @@ public class MemberController {
         return ResponseHelper.ok(service.putPass(password, jwtToken));
     }
 
-    @PostMapping("/member/forgot")
+    @PostMapping("/member/forgot_password")
     public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
         String uniqueId = request.get("unique_id");
         memberImpl.sendForgotPasswordSMSByUniqueId(uniqueId);
