@@ -88,17 +88,15 @@ public class UserImpl implements UserService {
     }
 
     private BindingResult validateVerificationCode(Reset_Password verificationCode) {
-        // Membuat BindingResult untuk menampung hasil validasi
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(verificationCode, "verificationCode");
 
-        // Validasi objek VerificationCode menggunakan validator
         verificationCodeValidator.validate(verificationCode, bindingResult);
 
         return bindingResult;
     }
 
     @Override
-    public Reset_Password verificationPass(Reset_Password verification) throws MessagingException {
+    public  Map<String, Object> verificationPass(Reset_Password verification) throws MessagingException {
         BindingResult bindingResult = validateVerificationCode(verification);
         String newPass = newPassword();
         verificationCodeValidator.validate(verification, bindingResult);
@@ -428,7 +426,9 @@ public class UserImpl implements UserService {
         user.setToken("Kosong");
         userRepository.save(user);
         javaMailSender.send(message);
-        return verification;
+        Map<String, Object> res = new HashMap<>();
+        res.put("new password" , newPass);
+        return res;
     }
 
     @Override
@@ -780,13 +780,11 @@ public class UserImpl implements UserService {
                     "\n" +
                     "</html>");
             if (userRepository.existsByEmail(forGotPass.getEmail())) {
-                Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
                 User user = userRepository.findByEmail(forGotPass.getEmail()).get();
                 user.setToken(code);
-                var checkingCode = getVerification.findByEmail(user.getEmail());
+
                 if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
-                    getVerification.deleteById(checkingCode.get().getId());
-                    Reset_Password pass = new Reset_Password();
+                    Reset_Password pass = getVerification.findByEmail(forGotPass.getEmail()).orElseThrow(() -> new NotFoundException("Email not found"));
                     pass.setEmail(forGotPass.getEmail());
                     user.setToken(code);
                     pass.setCode(code);
@@ -841,7 +839,7 @@ public class UserImpl implements UserService {
             update.setPicture(profileDTO.getPicture());
             return userRepository.save(update);
         } else {
-            throw new BadRequestException("Token Tidak Cocok");
+            throw new BadRequestException("Token not valid");
         }
     }
 

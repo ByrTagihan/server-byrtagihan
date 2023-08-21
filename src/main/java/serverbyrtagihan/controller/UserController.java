@@ -438,7 +438,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/user/verification_code")
-    public CommonResponse<Reset_Password> verificationCode(@RequestBody Verification verification) throws MessagingException {
+    public CommonResponse<?> verificationCode(@RequestBody Verification verification) throws MessagingException {
         return ResponseHelper.ok(userService.verificationPass(modelMapper.map(verification, Reset_Password.class)));
     }
 

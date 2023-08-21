@@ -36,7 +36,7 @@ public interface CustomerService {
 
     Map<Object, Object> login(LoginRequest loginRequest) throws ParseException;
 
-    Reset_Password verificationPass(Reset_Password verification ) throws MessagingException;
+    Map<String, Object> verificationPass(Reset_Password verification ) throws MessagingException;
 
     Map<String, Boolean> delete(Long id , String jwtToken);
 
