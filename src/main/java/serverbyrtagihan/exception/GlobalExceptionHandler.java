@@ -9,6 +9,11 @@ import serverbyrtagihan.response.ResponseHelper;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(MemberNotFoundException.class)
+    public ResponseEntity<String> handleMemberNotFoundException(MemberNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> notFound(NotFoundException notFoundException) {
         return ResponseHelper.error(notFoundException.getMessage(), HttpStatus.NOT_FOUND);

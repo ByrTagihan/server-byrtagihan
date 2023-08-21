@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.impl.MemberDetailsImpl;
+import serverbyrtagihan.impl.MemberImpl;
 import serverbyrtagihan.impl.UserDetailsImpl;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.repository.MemberRepository;
@@ -35,6 +36,10 @@ import java.util.*;
 public class MemberController {
     @Autowired
     private MemberService service;
+
+    @Autowired
+    private MemberImpl memberImpl;
+
     @Autowired
     MemberRepository memberRepository;
 
@@ -57,32 +62,7 @@ public class MemberController {
 
     }
 
-    @PostMapping("/member/forgot_password")
-    public ResponseEntity<?> forgotPassword(@RequestBody MemberDTO memberDTO) {
 
-        String hp = memberDTO.getHp();
-
-        Member member = service.findByHp(hp);
-        if (member != null) {
-            int status = 200;
-            String code = "SUCCESS";
-            Object data = member;
-            String message = "Kode reset telah dikirim ke nomor telepon Anda";
-
-            CustomResponse response = new CustomResponse(status, code, data, message);
-
-            return ResponseEntity.ok(response);
-        } else {
-            int status = 400;
-            String code = "ERROR";
-            Object data = null;
-            String message = "User with the provided phone number not found.";
-
-            CustomResponse response = new CustomResponse(status, code, data, message);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        }
-    }
 
     @GetMapping(path = "/member/profile")
     public CommonResponse<Member> getById(HttpServletRequest request) {
@@ -102,5 +82,11 @@ public class MemberController {
         return ResponseHelper.ok(service.putPass(password, jwtToken));
     }
 
+    @PostMapping("/member/forgot_password")
+    public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
+        String uniqueId = request.get("unique_id");
+        memberImpl.sendForgotPasswordSMSByUniqueId(uniqueId);
+        return ResponseEntity.ok("Forgot password SMS sent. Message saved.");
+    }
 
 }

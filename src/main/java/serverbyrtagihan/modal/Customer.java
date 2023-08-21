@@ -2,8 +2,6 @@ package serverbyrtagihan.modal;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.format.annotation.DateTimeFormat;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;

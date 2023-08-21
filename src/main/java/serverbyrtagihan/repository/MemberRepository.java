@@ -18,8 +18,6 @@ public interface MemberRepository  extends JpaRepository<Member, Long> {
     @Query(value = "SELECT * FROM member  WHERE unique_id LIKE :unique_id", nativeQuery = true)
     Optional<Member> findByUniqueId(String unique_id);
 
-    @Query("SELECT u FROM Member u WHERE u.hp = ?1")
-    Member findByHp(String hp);
     @Query(value = "SELECT * FROM member WHERE organization_id = :organizationId ", nativeQuery = true)
     List<Member> findByOrganizationId(String organizationId);
 
