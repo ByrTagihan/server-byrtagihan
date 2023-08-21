@@ -24,7 +24,6 @@ public interface MemberService {
     Map<Object, Object> login(LoginMember loginRequest);
 
     Member putPass(PasswordDTO member, String jwtToken);
-    Member findByHp(String hp);
 
     Page<Member> getAll(String jwtToken, Long page, Long limit, String sort, String search);
 
@@ -43,4 +42,5 @@ public interface MemberService {
     Member getProfile(String jwtToken);
 
     Member putProfile(Member member, String jwtToken);
+
 }

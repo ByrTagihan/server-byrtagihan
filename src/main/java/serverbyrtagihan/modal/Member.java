@@ -1,11 +1,10 @@
 package serverbyrtagihan.modal;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "member")

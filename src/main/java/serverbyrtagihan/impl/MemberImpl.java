@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
-import serverbyrtagihan.dto.MemberProfileDTO;
+import serverbyrtagihan.exception.MemberNotFoundException;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Message;
 import serverbyrtagihan.modal.Organization;
@@ -36,6 +36,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class MemberImpl implements MemberService {
@@ -191,34 +192,6 @@ public class MemberImpl implements MemberService {
         }
     }
 
-    @Override
-    public Member findByHp(String hp) {
-        return memberRepository.findByHp(hp);
-    }
-
-    public void forgotPassword(@RequestParam("hp")String hp) {
-
-        Member member = memberRepository.findByHp(hp);
-        if (member != null) {
-            String resetCode = generateResetCode();
-
-            Message message = new Message();
-            message.setMember(member);
-            message.setContent("Kode reset password Anda: " + resetCode);
-            messageRepository.save(message);
-            sendResetCodeViaSMS(hp, resetCode);
-        } else {
-            throw new NotFoundException("Nomor telepon tidak ditemukan.");
-        }
-    }
-
-    private String generateResetCode() {
-        return "YOUR_GENERATED_RESET_CODE";
-    }
-
-    private void sendResetCodeViaSMS(String hp, String resetCode) {
-        System.out.println("Mengirim SMS ke " + hp + ": " + resetCode);
-    }
 
     @Override
     public Page<Member> getAll(String jwtToken, Long page, Long limit, String sort, String search) {
@@ -372,5 +345,23 @@ public class MemberImpl implements MemberService {
         } else {
             throw new BadRequestException("Token not valid");
         }
+    }
+
+    public void sendForgotPasswordSMSByUniqueId(String unique_id) {
+        Optional<Member> memberOptional = memberRepository.findByUniqueId(unique_id);
+        if (memberOptional.isPresent()) {
+            Member member = memberOptional.get();
+            String hp = member.getHp();
+            // ...
+        } else {
+            throw new MemberNotFoundException(unique_id);
+        }
+    }
+
+
+    private void saveMessage(String content) {
+        Message message = new Message();
+        message.setContent(content);
+        messageRepository.save(message);
     }
 }
