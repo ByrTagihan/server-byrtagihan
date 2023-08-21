@@ -1,10 +1,11 @@
 package serverbyrtagihan.modal;
 
 
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import serverbyrtagihan.auditing.DateConfig;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "member")
@@ -39,15 +40,17 @@ Member extends DateConfig {
     @Column(name = "token")
     private String token = "";
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     @Column(name = "last_login")
-    private String last_login;
+    private Date last_login;
 
     @Lob
     @Column(name = "picture")
     private String picture = "";
 
     @Column(name = "va_bni")
-    private String va_bni = "";
+    private String va_bni;
 
     @Column(name = "last_payment_id_bni")
     private Long last_payment_id_bni = 0L;
@@ -130,11 +133,11 @@ Member extends DateConfig {
         this.token = token;
     }
 
-    public String getLast_login() {
+    public Date getLast_login() {
         return last_login;
     }
 
-    public void setLast_login(String last_login) {
+    public void setLast_login(Date last_login) {
         this.last_login = last_login;
     }
 

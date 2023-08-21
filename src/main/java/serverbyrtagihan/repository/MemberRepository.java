@@ -20,4 +20,7 @@ public interface MemberRepository  extends JpaRepository<Member, Long> {
 
     @Query(value = "SELECT * FROM member WHERE organization_id = :organizationId ", nativeQuery = true)
     List<Member> findByOrganizationId(String organizationId);
+
+    @Query(value = "SELECT * FROM member WHERE va_number = :va_number ", nativeQuery = true)
+    Boolean existsByVa_number(String va_number);
 }
