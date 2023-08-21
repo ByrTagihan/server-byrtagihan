@@ -88,17 +88,15 @@ public class UserImpl implements UserService {
     }
 
     private BindingResult validateVerificationCode(Reset_Password verificationCode) {
-        // Membuat BindingResult untuk menampung hasil validasi
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(verificationCode, "verificationCode");
 
-        // Validasi objek VerificationCode menggunakan validator
         verificationCodeValidator.validate(verificationCode, bindingResult);
 
         return bindingResult;
     }
 
     @Override
-    public Reset_Password verificationPass(Reset_Password verification) throws MessagingException {
+    public  Map<String, Object> verificationPass(Reset_Password verification) throws MessagingException {
         BindingResult bindingResult = validateVerificationCode(verification);
         String newPass = newPassword();
         verificationCodeValidator.validate(verification, bindingResult);
@@ -428,7 +426,9 @@ public class UserImpl implements UserService {
         user.setToken("Kosong");
         userRepository.save(user);
         javaMailSender.send(message);
-        return verification;
+        Map<String, Object> res = new HashMap<>();
+        res.put("new password" , newPass);
+        return res;
     }
 
     @Override

@@ -13,7 +13,7 @@ public interface UserService {
 
     ForGotPass sendEmail(ForGotPass forGotPass) throws MessagingException;
 
-    Reset_Password verificationPass(Reset_Password verification ) throws MessagingException;
+    Map<String, Object> verificationPass(Reset_Password verification ) throws MessagingException;
 
 
     Map<Object, Object> login(LoginRequest loginRequest);

@@ -139,7 +139,7 @@ public class CustomerImpl implements CustomerService {
     }
 
     @Override
-    public Reset_Password verificationPass(Reset_Password verification) throws MessagingException {
+    public Map<String, Object> verificationPass(Reset_Password verification) throws MessagingException {
         BindingResult bindingResult = validateVerificationCode(verification);
         String newPass = newPassword();
         verificationCodeValidator.validate(verification, bindingResult);
@@ -469,7 +469,9 @@ public class CustomerImpl implements CustomerService {
         customer.setToken("Kosong");
         customerRepository.save(customer);
         javaMailSender.send(message);
-        return verification;
+        Map<String, Object> res = new HashMap<>();
+        res.put("new password" , newPass);
+        return res;
     }
 
     @Override

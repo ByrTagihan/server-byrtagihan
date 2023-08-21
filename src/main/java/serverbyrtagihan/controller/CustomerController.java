@@ -82,7 +82,7 @@ public class CustomerController {
 
 
     @PostMapping(path = "/customer/verification_code")
-    public CommonResponse<Reset_Password> verificationCode(@RequestBody Verification verification) throws MessagingException {
+    public CommonResponse<?> verificationCode(@RequestBody Verification verification) throws MessagingException {
         return ResponseHelper.ok(customerService.verificationPass(modelMapper.map(verification, Reset_Password.class)));
     }
 
