@@ -49,7 +49,7 @@ public class Customer extends DateConfig {
 
 
     @Column(name = "organization_id")
-    private Long organization_id = 0L;
+    private Long organization_id;
 
 
     public Customer() {
