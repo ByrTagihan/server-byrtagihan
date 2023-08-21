@@ -119,7 +119,7 @@ public class CustomerImpl implements CustomerService {
     @Override
     public Map<Object, Object> login(LoginRequest loginRequest) {
         Customer customer = customerRepository.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NotFoundException("Username not found"));
-        if (encoder.matches( loginRequest.getPassword(),customer.getPassword())) {
+        if (encoder.matches(loginRequest.getPassword(), customer.getPassword())) {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -820,13 +820,11 @@ public class CustomerImpl implements CustomerService {
                     "</body>\n" +
                     "\n" +
                     "</html>");
-             if (customerRepository.existsByEmail(forGotPass.getEmail())) {
+            if (customerRepository.existsByEmail(forGotPass.getEmail())) {
                 Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
                 customer.setToken(code);
-                var checkingCode = getVerification.findByEmail(customer.getEmail());
                 if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
-                    getVerification.deleteById(checkingCode.get().getId());
-                    Reset_Password pass = new Reset_Password();
+                    Reset_Password pass = getVerification.findByEmail(customer.getEmail()).orElseThrow(() -> new NotFoundException("Email not found"));
                     pass.setEmail(forGotPass.getEmail());
                     customer.setToken(code);
                     pass.setCode(code);
@@ -1329,6 +1327,7 @@ public class CustomerImpl implements CustomerService {
         }
 
     }
+
     @Override
     public Map<String, Integer> getRecapTotal(String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);

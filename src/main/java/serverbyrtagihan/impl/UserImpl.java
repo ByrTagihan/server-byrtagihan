@@ -780,13 +780,11 @@ public class UserImpl implements UserService {
                     "\n" +
                     "</html>");
             if (userRepository.existsByEmail(forGotPass.getEmail())) {
-                Customer customer = customerRepository.findByEmail(forGotPass.getEmail()).get();
                 User user = userRepository.findByEmail(forGotPass.getEmail()).get();
                 user.setToken(code);
-                var checkingCode = getVerification.findByEmail(user.getEmail());
+
                 if (getVerification.findByEmail(forGotPass.getEmail()).isPresent()) {
-                    getVerification.deleteById(checkingCode.get().getId());
-                    Reset_Password pass = new Reset_Password();
+                    Reset_Password pass = getVerification.findByEmail(forGotPass.getEmail()).orElseThrow(() -> new NotFoundException("Email not found"));
                     pass.setEmail(forGotPass.getEmail());
                     user.setToken(code);
                     pass.setCode(code);
@@ -841,7 +839,7 @@ public class UserImpl implements UserService {
             update.setPicture(profileDTO.getPicture());
             return userRepository.save(update);
         } else {
-            throw new BadRequestException("Token Tidak Cocok");
+            throw new BadRequestException("Token not valid");
         }
     }
 
