@@ -145,7 +145,11 @@ public class OrganizationImpl implements OrganizationService {
         if (typeToken.equals("Customer")) {
             Customer customer = customerRepository.findByEmail(email).get();
             if (customer.getOrganization_id() == null) {
-                throw new BadRequestException("Customer tidak punya organization id");
+                organization.setCustomer_id(customer.getId());
+                organizationRepository.save(organization);
+                Organization organization1 = organizationRepository.findByCustomerId(organization.getCustomer_id()).orElseThrow(() -> new NotFoundException("Id not found"));
+                customer.setOrganization_id(organization1.getId());
+                customerRepository.save(customer);
             }
             Organization organizations = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id not found"));
             organizations.setName(organization.getName());

@@ -18,4 +18,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     Page<Organization> findAllByKeyword(@Param("keyword") String keyword, Pageable pageable);
     @Query(value = "SELECT * FROM organization  WHERE email LIKE :email", nativeQuery = true)
     Optional<Organization> findByEmail(String email);
+
+    @Query(value = "SELECT * FROM organization  WHERE customer_id LIKE :customerId", nativeQuery = true)
+    Optional<Organization> findByCustomerId(Long customerId);
 }
