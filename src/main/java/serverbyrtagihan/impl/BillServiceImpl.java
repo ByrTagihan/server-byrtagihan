@@ -89,10 +89,10 @@ public class BillServiceImpl implements BillService {
             }
             bill.setMember_name(members.getName());
             Customer customer = customerRepository.findByEmail(email).get();
-            bill.setOrganization_id(customer.getOrganization_id());
             if (customer.getOrganization_id() == null) {
                 throw new BadRequestException("Customer tidak punya organization id");
             }
+            bill.setOrganization_id(customer.getOrganization_id());
             Organization organization = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
             bill.setOrganization_name(organization.getName());
             return billRepository.save(bill);
@@ -245,8 +245,20 @@ public class BillServiceImpl implements BillService {
     public Bill addByMemberId(Bill bill, Long memberId, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
+        String email = claims.getSubject();
         if (typeToken.equals("Customer")) {
-            bill.setMember_id(memberId);
+            Member members = memberRepository.findById(bill.getMember_id()).orElseThrow(() -> new NotFoundException("Not found"));
+            if (members.getId() == null) {
+                throw new NotFoundException("Member Id tidak ditemukan");
+            }
+            bill.setMember_name(members.getName());
+            Customer customer = customerRepository.findByEmail(email).get();
+            if (customer.getOrganization_id() == null) {
+                throw new BadRequestException("Customer tidak punya organization id");
+            }
+            bill.setOrganization_id(customer.getOrganization_id());
+            Organization organization = organizationRepository.findById(customer.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
+            bill.setOrganization_name(organization.getName());
             return billRepository.save(bill);
         } else {
             throw new BadRequestException("Token not valid");
@@ -260,7 +272,7 @@ public class BillServiceImpl implements BillService {
         if (typeToken.equals("Customer")) {
             Bill bills = billRepository.findByIdInMember(memberId, id);
             if (bills == null) {
-                throw new NotFoundException("Member Not Found");
+                throw new NotFoundException("Bill Not Found");
             }
             bills.setDescription(bill.getDescription());
             bills.setPeriode(bill.getPeriode());
@@ -370,18 +382,17 @@ public class BillServiceImpl implements BillService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
+        String uniqueId = claims.getSubject();
         if (typeToken.equals("Member")) {
-            Long memberId = Long.valueOf(claims.getId());
 
             BniEncryption hash = new BniEncryption();
             String cid = "99129"; // from BNI
             String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
             String prefix = "988"; // from BNI
 
-            String uniqueId = claims.getSubject();
-            Bill bills = billRepository.findByIdInMember(memberId, id);
             Member members = memberRepository.findByUniqueId(uniqueId).orElseThrow(() -> new NotFoundException("Member Not found"));
-            ;
+            Bill bills = billRepository.findByIdInMember(members.getId(), id);
+
             if (bills.getPaid_id() != 0) {
                 throw new NotFoundException("Tagihan Sudah Dibayar");
             }
