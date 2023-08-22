@@ -398,6 +398,7 @@ public class BillServiceImpl implements BillService {
             }
             Channel channels = channelRepository.findById(payment.getChannel_id()).orElseThrow(() -> new NotFoundException("Channel Not found"));
             String va_number = prefix + cid + members.getHp();
+            Organization organizations = organizationRepository.findById(bills.getOrganization_id()).orElseThrow(() -> new NotFoundException("Organization Not found"));
 
             payment.setOrganization_id(bills.getOrganization_id());
             payment.setOrganization_name(bills.getOrganization_name());
@@ -430,7 +431,8 @@ public class BillServiceImpl implements BillService {
                 EcollectionDTO ecollectionDTO = new EcollectionDTO();
 
                 ecollectionDTO.setClient_id(cid);
-                ecollectionDTO.setTrx_amount(String.valueOf(payment.getAmount() + payment.getFee_admin()));
+                String amount = "" + (payment.getAmount() + organizations.getFee_admin());
+                ecollectionDTO.setTrx_amount(amount.substring(0, amount.length() - 2 ));
                 ecollectionDTO.setCustomer_name(members.getName());
                 ecollectionDTO.setCustomer_email("");
                 ecollectionDTO.setCustomer_phone(members.getHp());
