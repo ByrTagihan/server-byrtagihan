@@ -140,12 +140,10 @@ public class CustomerImpl implements CustomerService {
 
     @Override
     public Map<String, Object> verificationPass(Reset_Password verification) throws MessagingException {
-        BindingResult bindingResult = validateVerificationCode(verification);
         String newPass = newPassword();
-        verificationCodeValidator.validate(verification, bindingResult);
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        if (bindingResult.hasErrors()) {
+        if (getVerification.findByCode(verification.getCode()).isEmpty()) {
             throw new NotFoundException("Code not valid");
         }
         String token = verification.getCode();
