@@ -442,9 +442,10 @@ public class BillServiceImpl implements BillService {
                 if (members.getVa_bni() == null) {
                     members.setVa_bni(va_number);
                     memberRepository.save(members);
-                    ecollectionDTO.setType("createBilling");
+                    ecollectionDTO.setType("createbilling");
                 } else if (members.getVa_bni() != null) {
-                    ecollectionDTO.setType("updateBilling");
+                    ecollectionDTO.setVirtual_account("");
+                    ecollectionDTO.setType("updatebilling");
                 } else if (memberRepository.existsByVa_number(members.getVa_bni())) {
                     String integer = "1";
                     String va_num = members.getVa_bni();
