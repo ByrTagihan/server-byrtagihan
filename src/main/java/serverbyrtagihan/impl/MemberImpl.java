@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
+import serverbyrtagihan.dto.MemberUserDTO;
 import serverbyrtagihan.exception.MemberNotFoundException;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Message;
@@ -98,9 +99,10 @@ public class MemberImpl implements MemberService {
     }
 
     @Override
-    public Member addInUser(MemberDTO member, String jwtToken) {
+    public Member addInUser(MemberUserDTO member, String jwtToken) {
         Claims claims = jwtUtils.decodeJwt(jwtToken);
         String typeToken = claims.getAudience();
+        String email = claims.getSubject();
         if (typeToken.equals("User")) {
             if (memberRepository.findByUniqueId(member.getUnique_id()).isPresent()) {
                 throw new BadRequestException("Unique id telah digunakan");
@@ -108,7 +110,7 @@ public class MemberImpl implements MemberService {
             String UserPassword = member.getPassword().trim();
             boolean PasswordIsNotValid = !UserPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=\\S+$).{8,20}");
             if (PasswordIsNotValid) {
-                throw new BadRequestException("Passowrd tidak valid!!");
+                throw new BadRequestException("Password tidak valid!!");
             }
             // Create new user's account
             Member admin = new Member();
@@ -117,7 +119,9 @@ public class MemberImpl implements MemberService {
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
-            admin.setOrganization_id(0L);
+            admin.setOrganization_id(member.getOrganization_id());
+            Organization organization = organizationRepository.findById(member.getOrganization_id()).orElseThrow(() -> new NotFoundException("Id Organization not found"));
+            admin.setOrganization_name(organization.getName());
             return memberRepository.save(admin);
         } else {
             throw new BadRequestException("Token not valid");

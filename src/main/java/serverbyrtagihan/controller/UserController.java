@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.repository.UserRepository;
 import serverbyrtagihan.service.UserService;
 import serverbyrtagihan.dto.*;
@@ -446,5 +447,10 @@ public class UserController {
     public CommonResponse<?> getReportTotal(HttpServletRequest request) {
         String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
         return ResponseHelper.ok(userService.getRecapTotal(jwtToken));
+    }
+    @PutMapping(path = "/user/password")
+    public CommonResponse<User> putPassword(@RequestBody PasswordDTO password, HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(userService.putPassword(password, jwtToken));
     }
 }

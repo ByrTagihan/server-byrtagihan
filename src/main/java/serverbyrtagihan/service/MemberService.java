@@ -4,6 +4,7 @@ package serverbyrtagihan.service;
 import org.springframework.data.domain.Page;
 import serverbyrtagihan.dto.LoginMember;
 import serverbyrtagihan.dto.MemberDTO;
+import serverbyrtagihan.dto.MemberUserDTO;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Member;
@@ -15,7 +16,7 @@ import java.util.*;
 public interface MemberService {
     Member add(MemberDTO memberDTO, String jwtToken) throws MessagingException;
 
-    Member addInUser(MemberDTO member, String jwtToken);
+    Member addInUser(MemberUserDTO member, String jwtToken);
 
     Member getById(Long id , String jwtToken);
 

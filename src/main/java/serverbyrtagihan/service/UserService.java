@@ -1,6 +1,7 @@
 package serverbyrtagihan.service;
 
 import serverbyrtagihan.dto.ForGotPass;
+import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.dto.ProfileDTO;
 import serverbyrtagihan.modal.Reset_Password;
 import serverbyrtagihan.modal.User;
@@ -25,4 +26,6 @@ public interface UserService {
     User getProfile(String jwtToken);
 
     Map<String, Integer> getRecapTotal(String jwtToken);
+
+    User putPassword(PasswordDTO passwordDTO, String jwtToken);
 }
