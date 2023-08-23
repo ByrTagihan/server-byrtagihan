@@ -18,15 +18,12 @@ import serverbyrtagihan.exception.MemberNotFoundException;
 import serverbyrtagihan.modal.Customer;
 import serverbyrtagihan.modal.Message;
 import serverbyrtagihan.modal.Organization;
-import serverbyrtagihan.repository.CustomerRepository;
-import serverbyrtagihan.repository.MemberRepository;
+import serverbyrtagihan.repository.*;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.Member;
 import org.springframework.security.core.Authentication;
-import serverbyrtagihan.repository.MessageRepository;
-import serverbyrtagihan.repository.OrganizationRepository;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.service.MemberService;
 
@@ -47,7 +44,10 @@ public class MemberImpl implements MemberService {
     private MemberRepository memberRepository;
 
     @Autowired
-    private MessageRepository messageRepository;
+    private MessageMemberImpl messageMemberImpl;
+
+    @Autowired
+    private MessageMemberRepository messageMemberRepository;
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -348,21 +348,14 @@ public class MemberImpl implements MemberService {
         }
     }
 
-    public void sendForgotPasswordSMSByUniqueId(String unique_id) {
-        Optional<Member> memberOptional = memberRepository.findByUniqueId(unique_id);
-        if (memberOptional.isPresent()) {
-            Member member = memberOptional.get();
-            String hp = member.getHp();
-            // ...
-        } else {
-            throw new MemberNotFoundException(unique_id);
+
+
+
+    public void sendForgotPasswordSMSByUniqueId(String uniqueId) {
+        Optional<Member> optionalMember = memberRepository.findByUniqueId(uniqueId);
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            messageMemberImpl.sendForgotPasswordSMS(uniqueId, member);
         }
-    }
-
-
-    private void saveMessage(String content) {
-        Message message = new Message();
-        message.setContent(content);
-        messageRepository.save(message);
     }
 }
