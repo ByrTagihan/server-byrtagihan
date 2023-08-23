@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
+import serverbyrtagihan.dto.PasswordDTO;
 import serverbyrtagihan.modal.*;
 import serverbyrtagihan.repository.*;
 import serverbyrtagihan.dto.ForGotPass;
@@ -26,9 +27,6 @@ import serverbyrtagihan.service.UserService;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -878,5 +876,26 @@ public class UserImpl implements UserService {
             throw new BadRequestException("Token not valid");
         }
     }
-
+    @Override
+    public User putPassword(PasswordDTO passwordDTO, String jwtToken) {
+        Claims claims = jwtUtils.decodeJwt(jwtToken);
+        String email = claims.getSubject();
+        String typeToken = claims.getAudience();
+        if (typeToken.equals("User")) {
+            User update = userRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Id Not Found"));
+            boolean conPassword = encoder.matches(passwordDTO.getOld_password(), update.getPassword());
+            if (conPassword) {
+                if (passwordDTO.getNew_password().equals(passwordDTO.getConfirm_new_password())) {
+                    update.setPassword(encoder.encode(passwordDTO.getNew_password()));
+                    return userRepository.save(update);
+                } else {
+                    throw new BadRequestException("Password tidak sesuai");
+                }
+            } else {
+                throw new NotFoundException("Password lama tidak sesuai");
+            }
+        } else {
+            throw new BadRequestException("Token not valid");
+        }
+    }
 }

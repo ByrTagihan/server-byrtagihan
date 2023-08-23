@@ -6,7 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import serverbyrtagihan.dto.*;
 import serverbyrtagihan.modal.Member;
-import serverbyrtagihan.repository.MemberRepository;
 import serverbyrtagihan.response.CommonResponse;
 import serverbyrtagihan.response.PaginationResponse;
 import serverbyrtagihan.response.ResponseHelper;
@@ -61,11 +60,11 @@ public class UserMemberController {
         return ResponseHelper.okWithPagination(channels, pagination);
     }
 
-//    @PostMapping("/user/member")
-//    public CommonResponse<Member> registerMemberInUser(@RequestBody MemberDTO member, HttpServletRequest request) {
-//        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-//        return ResponseHelper.ok(service.addInUser(member, jwtToken));
-//    }
+    @PostMapping("/user/member")
+    public CommonResponse<Member> registerMemberInUser(@RequestBody MemberUserDTO member, HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(service.addInUser(member, jwtToken));
+    }
 
     @GetMapping(path = "/user/member/{id}")
     public CommonResponse<Member> getByIDInUser(@PathVariable("id") Long id, HttpServletRequest request) {
@@ -73,11 +72,11 @@ public class UserMemberController {
         return ResponseHelper.ok(service.getByIdInUser(id, jwtToken));
     }
 
-//    @PutMapping(path = "/user/member/{id}")
-//    public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberUserDto memberDTO, HttpServletRequest request) {
-//        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
-//        return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
-//    }
+    @PutMapping(path = "/user/member/{id}")
+    public CommonResponse<Member> putInUser(@PathVariable("id") Long id, @RequestBody MemberUserDTO memberDTO, HttpServletRequest request) {
+        String jwtToken = request.getHeader("auth-tgh").substring(JWT_PREFIX.length());
+        return ResponseHelper.ok(service.putInUser(modelMapper.map(memberDTO, Member.class), id, jwtToken));
+    }
 
     @DeleteMapping(path = "/user/member/{id}")
     public CommonResponse<?> deleteInUser(@PathVariable("id") Long id, HttpServletRequest request) {
