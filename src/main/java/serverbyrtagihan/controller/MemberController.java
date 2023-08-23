@@ -83,10 +83,10 @@ public class MemberController {
     }
 
     @PostMapping("/member/forgot_password")
-    public ResponseEntity<String> forgotPassword(@RequestBody Map<String, String> request) {
-        String uniqueId = request.get("unique_id");
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequestDTO requestDTO) {
+        String uniqueId = requestDTO.getUnique_id();
         memberImpl.sendForgotPasswordSMSByUniqueId(uniqueId);
-        return ResponseEntity.ok("Forgot password SMS sent. Message saved.");
+        return ResponseEntity.ok("Forgot password SMS sent.");
     }
 
 }
