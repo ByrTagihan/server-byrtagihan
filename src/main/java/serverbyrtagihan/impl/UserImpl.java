@@ -432,7 +432,7 @@ public class UserImpl implements UserService {
         String code = code();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        if (userRepository.existsByEmail(forGotPass.getEmail()) || customerRepository.existsByEmail(forGotPass.getEmail())) {
+        if (userRepository.existsByEmail(forGotPass.getEmail())) {
             helper.setTo(forGotPass.getEmail());
             helper.setSubject("Konfirmasi Reset Password");
             helper.setText("", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional //EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n" +
