@@ -26,11 +26,11 @@ public class EcollectionService {
     }
 
     public EcollectionResponseDTO sendPayloadToEcollection(String apiUrl, EcollectionDTO payload, String jwtToken) {
-        try {
             Claims claims = JwtUtils.decodeJwt(jwtToken);
             String typeToken = claims.getAudience();
 
             if (typeToken.equals("User")) {
+                try {
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.APPLICATION_JSON);
@@ -65,13 +65,13 @@ public class EcollectionService {
                 }
 
                 return responseDTO;
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                    throw new BadRequestException("Failed to send payload to Ecollection");
+                }
             } else {
                 throw new BadRequestException("Token not valid");
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            throw new BadRequestException("Failed to send payload to Ecollection");
-        }
     }
 }
