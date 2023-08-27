@@ -82,6 +82,14 @@ public class MemberImpl implements MemberService {
             Member admin = new Member();
             admin.setUnique_id(member.getUnique_id());
             admin.setPassword(encoder.encode(member.getPassword()));
+            if (member.getHp() == null || member.getHp() == "") {
+                throw new BadRequestException("Nomer HP tidak boleh kosong");
+            }
+            String Handphone = member.getHp().trim();
+            boolean HandphoneIsNotValid = !Handphone.matches(".*[0-9].{8,12}");
+            if (HandphoneIsNotValid) {
+                throw new BadRequestException("Nomer HP tidak valid, harus angka, min 8 karakter max 12 karakter");
+            }
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
@@ -116,6 +124,14 @@ public class MemberImpl implements MemberService {
             Member admin = new Member();
             admin.setUnique_id(member.getUnique_id());
             admin.setPassword(encoder.encode(member.getPassword()));
+            if (member.getHp() == null || member.getHp() == "") {
+                throw new BadRequestException("Nomer HP tidak boleh kosong");
+            }
+            String Handphone = member.getHp().trim();
+            boolean HandphoneIsNotValid = !Handphone.matches(".*[0-9].{8,12}");
+            if (HandphoneIsNotValid) {
+                throw new BadRequestException("Nomer HP tidak valid, harus angka, min 8 karakter max 12 karakter");
+            }
             admin.setHp(member.getHp());
             admin.setName(member.getName());
             admin.setAddress(member.getAddress());
@@ -250,6 +266,17 @@ public class MemberImpl implements MemberService {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
             update.setAddress(member.getAddress());
+            if (memberRepository.existsByHp(member.getHp())) {
+                throw new BadRequestException("Member " + member.getHp() + " sudah ada");
+            }
+            if (member.getHp() == null || member.getHp() == "") {
+                throw new BadRequestException("Nomer HP tidak boleh kosong");
+            }
+            String Handphone = member.getHp().trim();
+            boolean HandphoneIsNotValid = !Handphone.matches(".*[0-9].{8,12}");
+            if (HandphoneIsNotValid) {
+                throw new BadRequestException("Nomer HP tidak valid, harus angka, min 8 karakter max 12 karakter");
+            }
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
@@ -264,6 +291,17 @@ public class MemberImpl implements MemberService {
             Member update = memberRepository.findById(id).orElseThrow(() -> new NotFoundException("Id Not Found"));
             update.setName(member.getName());
             update.setAddress(member.getAddress());
+            if (memberRepository.existsByHp(member.getHp())) {
+                throw new BadRequestException("Member " + member.getHp() + " sudah ada");
+            }
+            if (member.getHp() == null || member.getHp() == "") {
+                throw new BadRequestException("Nomer HP tidak boleh kosong");
+            }
+            String Handphone = member.getHp().trim();
+            boolean HandphoneIsNotValid = !Handphone.matches(".*[0-9].{8,12}");
+            if (HandphoneIsNotValid) {
+                throw new BadRequestException("Nomer HP tidak valid, harus angka, min 8 karakter max 12 karakter");
+            }
             update.setHp(member.getHp());
             return memberRepository.save(update);
         } else {
@@ -344,6 +382,17 @@ public class MemberImpl implements MemberService {
             Member update = memberRepository.findByUniqueId(unique).get();
             update.setName(member.getName());
             update.setAddress(member.getAddress());
+            if (memberRepository.existsByHp(member.getHp())) {
+                throw new BadRequestException("Member " + member.getHp() + " sudah ada");
+            }
+            if (member.getHp() == null || member.getHp() == "") {
+                throw new BadRequestException("Nomer HP tidak boleh kosong");
+            }
+            String Handphone = member.getHp().trim();
+            boolean HandphoneIsNotValid = !Handphone.matches(".*[0-9].{8,12}");
+            if (HandphoneIsNotValid) {
+                throw new BadRequestException("Nomer HP tidak valid, harus angka, min 8 karakter max 12 karakter");
+            }
             update.setHp(member.getHp());
             update.setPicture(member.getPicture());
             return memberRepository.save(update);

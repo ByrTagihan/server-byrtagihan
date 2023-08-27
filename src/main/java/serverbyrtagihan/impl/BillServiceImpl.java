@@ -22,6 +22,7 @@ import serverbyrtagihan.service.BillService;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
+import serverbyrtagihan.util.PhoneNumberUtil;
 
 import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
@@ -338,43 +339,6 @@ public class BillServiceImpl implements BillService {
         }
     }
 
-    public ResponseEntity<String> sendPayloadToEcollection(String apiUrl, EcollectionDTO payload) {
-        try {
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            String payloadJson = objectMapper.writeValueAsString(payload);
-
-            BniEncryption hash = new BniEncryption();
-            String cid = "99129"; // from BNI
-            String key = "6ae8bbf31b9629a62940aab16ca386cc"; // from BNI
-            String prefix = "988"; // from BNI
-
-            String va_number = prefix + cid + "69813549";
-
-            String parsedData = hash.hashData(payloadJson, cid, key);
-            String decodeData = hash.parseData(parsedData, cid, key);
-            System.out.println(parsedData);
-            System.out.println(decodeData);
-            System.out.println(va_number);
-
-            BNIRequestDTO bniRequestDTO = new BNIRequestDTO();
-            bniRequestDTO.setClient_id(cid);
-            bniRequestDTO.setPrefix(prefix);
-            bniRequestDTO.setData(parsedData);
-
-            HttpEntity<BNIRequestDTO> requestEntity = new HttpEntity<>(bniRequestDTO, headers);
-            System.out.println("Percobaan");
-            return restTemplate.exchange(apiUrl, HttpMethod.POST, requestEntity, String.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to send payload to Ecollection: " + e.getMessage());
-        }
-    }
-
     @Override
     public EcollectionResponseDTO paymentById(Payment payment, Long id, String jwtToken) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -397,8 +361,9 @@ public class BillServiceImpl implements BillService {
                 throw new NotFoundException("Tagihan Sudah Dibayar");
             }
             Channel channels = channelRepository.findById(payment.getChannel_id()).orElseThrow(() -> new NotFoundException("Channel Not found"));
-            String va_number = prefix + cid + members.getHp();
             Organization organizations = organizationRepository.findById(bills.getOrganization_id()).orElseThrow(() -> new NotFoundException("Organization Not found"));
+
+            String va_number = prefix + cid + PhoneNumberUtil.extractLastEightDigits(members.getHp());
 
             payment.setOrganization_id(bills.getOrganization_id());
             payment.setOrganization_name(bills.getOrganization_name());
