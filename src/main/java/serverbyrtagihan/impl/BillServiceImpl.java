@@ -52,6 +52,8 @@ public class BillServiceImpl implements BillService {
     @Autowired
     PaymentRepository paymentRepository;
     @Autowired
+    TransactionRepository transactionRepository;
+    @Autowired
     private JwtUtils jwtUtils;
 
     //Customer
@@ -440,6 +442,17 @@ public class BillServiceImpl implements BillService {
                     JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
                     responseDTO.setData(decryptedData);
                     responseDTO.setDatas(decryptedDataJson);
+
+                    Transaction transaction = new Transaction();
+                    transaction.setOrganization_Id(bills.getOrganization_id());
+                    transaction.setOrganization_name(bills.getOrganization_name());
+                    transaction.setDescription(bills.getDescription());
+                    transaction.setAmount(bills.getAmount());
+                    transaction.setMember_id(bills.getMember_id());
+                    transaction.setPayment_id(bills.getPayment_id());
+                    transaction.setPayload_webhook(decryptedData);
+                    transaction.setPeriode(bills.getPeriode());
+                    transactionRepository.save(transaction);
                 }
                 return responseDTO;
             } catch (Exception e) {

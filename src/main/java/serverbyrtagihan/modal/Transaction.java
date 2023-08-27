@@ -75,7 +75,7 @@ public class Transaction extends DateConfig {
         return periode;
     }
 
-    public void setPriode(Date periode) {
+    public void setPeriode(Date periode) {
         this.periode = periode;
     }
 
@@ -93,10 +93,6 @@ public class Transaction extends DateConfig {
 
     public void setOrganization_name(String organization_name) {
         this.organization_name = organization_name;
-    }
-
-    public void setPeriode(Date periode) {
-        this.periode = periode;
     }
 
     public Long getPayment_id() {
