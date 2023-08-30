@@ -138,7 +138,7 @@ public class BillServiceImpl implements BillService {
         if (typeToken.equals("Customer")) {
             Bill bills = billRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
             bills.setPaid_id(1L);
-            bills.setPaid_date(bill.getPaid_date());
+            bills.setPaid_date(new Date());
             bills.setPaid_amount(bill.getPaid_amount());
 
             return billRepository.save(bills);
@@ -296,7 +296,7 @@ public class BillServiceImpl implements BillService {
                 throw new NotFoundException("Member Not Found");
             }
             bills.setPaid_id(1L);
-            bills.setPaid_date(bill.getPaid_date());
+            bills.setPaid_date(new Date());
             bills.setPaid_amount(bill.getPaid_amount());
             return billRepository.save(bills);
         } else {
