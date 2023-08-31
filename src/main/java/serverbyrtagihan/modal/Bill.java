@@ -40,7 +40,8 @@ public class Bill extends DateConfig {
     @Column(name = "paid_id")
     private Long paid_id = 0L;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Temporal(TemporalType.TIMESTAMP)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Jakarta")
     @Column(name = "paid_date")
     private Date paid_date;
 
