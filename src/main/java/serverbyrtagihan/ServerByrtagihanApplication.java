@@ -3,6 +3,7 @@ package serverbyrtagihan;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.jdbc.DataSourceBuilder;
@@ -37,8 +38,13 @@ public class ServerByrtagihanApplication extends SpringBootServletInitializer {
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(ServerByrtagihanApplication.class, args);
-		TimeZone.setDefault(TimeZone.getTimeZone("GMT+7:00"));
 		System.out.println("Selesai");
+	}
+	@Bean
+	public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperCustomization() {
+		return jacksonObjectMapperBuilder -> {
+			jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone("Asia/Jakarta"));
+		};
 	}
 
 	@Override
