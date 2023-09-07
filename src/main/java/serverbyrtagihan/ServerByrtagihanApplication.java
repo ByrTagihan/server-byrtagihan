@@ -33,7 +33,7 @@ public class ServerByrtagihanApplication extends SpringBootServletInitializer {
 				.driverClassName("com.mysql.cj.jdbc.Driver")
 				.url("jdbc:mysql://localhost:3306/byr_tagihan")
 				.username("root")
-				.password("")
+				.password("12345678")
 				.build();
 	}
 	public static void main(String[] args) {
