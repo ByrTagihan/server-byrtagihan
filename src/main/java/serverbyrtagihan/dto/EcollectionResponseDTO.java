@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class EcollectionResponseDTO {
     private String status;
     private String data;
-    private JsonNode datas;
+    private EcollectionDataDTO  datas;
 
     private String message;
 
@@ -35,11 +35,11 @@ public class EcollectionResponseDTO {
         this.message = message;
     }
 
-    public JsonNode getDatas() {
+    public EcollectionDataDTO getDatas() {
         return datas;
     }
 
-    public void setDatas(JsonNode datas) {
+    public void setDatas(EcollectionDataDTO datas) {
         this.datas = datas;
     }
 }

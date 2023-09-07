@@ -1,6 +1,5 @@
 package serverbyrtagihan.impl;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -12,10 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import serverbyrtagihan.dto.BNIRequestDTO;
-import serverbyrtagihan.dto.EcollectionDTO;
-import serverbyrtagihan.dto.EcollectionResponseDTO;
-import serverbyrtagihan.dto.ReportBill;
+import serverbyrtagihan.dto.*;
 import serverbyrtagihan.modal.*;
 import serverbyrtagihan.repository.*;
 import serverbyrtagihan.service.BillService;
@@ -24,13 +20,12 @@ import serverbyrtagihan.exception.NotFoundException;
 import serverbyrtagihan.security.jwt.JwtUtils;
 import serverbyrtagihan.util.PhoneNumberUtil;
 
-import java.text.SimpleDateFormat;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
-public class BillServiceImpl implements BillService {
+public  class BillServiceImpl implements BillService {
 
     private final RestTemplate restTemplate;
 
@@ -341,6 +336,7 @@ public class BillServiceImpl implements BillService {
         }
     }
 
+
     @Override
     public EcollectionResponseDTO paymentById(Payment payment, Long id, String jwtToken) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -440,8 +436,9 @@ public class BillServiceImpl implements BillService {
                 if (responseDTO.getData() != null) {
                     String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
                     JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
+                    EcollectionDataDTO dataDTO = new EcollectionDataDTO();
                     responseDTO.setData(decryptedData);
-                    responseDTO.setDatas(decryptedDataJson);
+                    responseDTO.setDatas(dataDTO);
 
                     Transaction transaction = new Transaction();
                     transaction.setOrganization_Id(bills.getOrganization_id());

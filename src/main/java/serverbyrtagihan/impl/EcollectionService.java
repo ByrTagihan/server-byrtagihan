@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import serverbyrtagihan.dto.BNIRequestDTO;
 import serverbyrtagihan.dto.EcollectionDTO;
+import serverbyrtagihan.dto.EcollectionDataDTO;
 import serverbyrtagihan.dto.EcollectionResponseDTO;
 import serverbyrtagihan.exception.BadRequestException;
 import serverbyrtagihan.security.jwt.JwtUtils;
@@ -60,8 +61,10 @@ public class EcollectionService {
                 if (responseDTO.getData() != null){
                     String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
                     JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
+
+                    EcollectionDataDTO dataDTO = new EcollectionDataDTO();
                     responseDTO.setData(decryptedData);
-                    responseDTO.setDatas(decryptedDataJson);
+                    responseDTO.setDatas(dataDTO);
                 }
 
                 return responseDTO;
