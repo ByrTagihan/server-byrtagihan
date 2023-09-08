@@ -6,8 +6,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class EcollectionResponseDTO {
     private String status;
-    private String data;
-    private EcollectionDataDTO  datas;
+
+    private Integer code;
+    private EcollectionDataDTO data;
 
     private String message;
 
@@ -19,12 +20,20 @@ public class EcollectionResponseDTO {
         this.status = status;
     }
 
-    public String getData() {
+    public EcollectionDataDTO getData() {
         return data;
     }
 
-    public void setData(String data) {
+    public void setData(EcollectionDataDTO data) {
         this.data = data;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
     public String getMessage() {
@@ -35,12 +44,6 @@ public class EcollectionResponseDTO {
         this.message = message;
     }
 
-    public EcollectionDataDTO getDatas() {
-        return datas;
-    }
 
-    public void setDatas(EcollectionDataDTO datas) {
-        this.datas = datas;
-    }
 }
 
