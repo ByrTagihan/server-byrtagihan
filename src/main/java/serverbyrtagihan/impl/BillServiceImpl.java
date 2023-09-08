@@ -434,11 +434,7 @@ public  class BillServiceImpl implements BillService {
 
                 EcollectionResponseDTO responseDTO = objectMapper.readValue(responseBody, EcollectionResponseDTO.class);
                 if (responseDTO.getData() != null) {
-                    String decryptedData = hash.parseData(responseDTO.getData(), cid, key);
-                    JsonNode decryptedDataJson = objectMapper.readTree(decryptedData);
                     EcollectionDataDTO dataDTO = new EcollectionDataDTO();
-                    responseDTO.setData(decryptedData);
-                    responseDTO.setDatas(dataDTO);
 
                     Transaction transaction = new Transaction();
                     transaction.setOrganization_Id(bills.getOrganization_id());
@@ -447,11 +443,21 @@ public  class BillServiceImpl implements BillService {
                     transaction.setAmount(bills.getAmount());
                     transaction.setMember_id(bills.getMember_id());
                     transaction.setPayment_id(bills.getPayment_id());
-                    transaction.setPayload_webhook(decryptedData);
+
                     transaction.setPeriode(bills.getPeriode());
                     transactionRepository.save(transaction);
                 }
-                return responseDTO;
+
+                // Buat objek respons
+                EcollectionResponseDTO customResponse = new EcollectionResponseDTO();
+                customResponse.setStatus("200 OK");
+                customResponse.setCode(200);
+                customResponse.setData(responseDTO.getData());
+                customResponse.setMessage("success");
+
+                return customResponse;
+
+
             } catch (Exception e) {
                 e.printStackTrace();
 
